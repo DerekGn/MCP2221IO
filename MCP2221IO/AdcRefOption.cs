@@ -22,31 +22,20 @@
 * SOFTWARE.
 */
 
-using System.IO;
-
-namespace MCP2221IO.Commands
+namespace MCP2221IO
 {
     /// <summary>
-    /// Read the flash data section of the MCP2221 device
+    /// ADC Reference Output Selection
     /// </summary>
-    internal class ReadFlashDataCommand : BaseCommand
+    public enum AdcRefOption
     {
-        public ReadFlashDataCommand(ReadFlashSubCode subCode) : base(CommandCodes.ReadFlashData)
-        {
-            SubCode = subCode;
-        }
-        
         /// <summary>
-        /// The flash section to read
+        /// ADC reference output is ADC VRM voltage selection (factory default)
         /// </summary>
-        public ReadFlashSubCode SubCode { get; set; }
-
-        // <inheritdoc/>
-        public override void Serialise(Stream stream)
-        {
-            base.Serialise(stream);
-            stream.WriteByte((byte)CommandCode);
-            stream.WriteByte((byte)SubCode);
-        }
+        VDD = 1,
+        /// <summary>
+        /// ADC reference output is VDD
+        /// </summary>
+        VRM = 0
     }
 }

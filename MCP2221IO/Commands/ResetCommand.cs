@@ -38,6 +38,7 @@ namespace MCP2221IO.Commands
         {
 
         }
+
         // <inheritdoc/>
         public override void Serialise(Stream stream)
         {

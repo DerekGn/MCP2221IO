@@ -22,31 +22,28 @@
 * SOFTWARE.
 */
 
-using System.IO;
-
-namespace MCP2221IO.Commands
+namespace MCP2221IO
 {
     /// <summary>
-    /// Read the flash data section of the MCP2221 device
+    /// ADC Internal Voltage Reference (ADC VRM) Selection
     /// </summary>
-    internal class ReadFlashDataCommand : BaseCommand
+    public enum AdcRefVoltage
     {
-        public ReadFlashDataCommand(ReadFlashSubCode subCode) : base(CommandCodes.ReadFlashData)
-        {
-            SubCode = subCode;
-        }
-        
         /// <summary>
-        /// The flash section to read
+        /// Reference voltage is 4.096V (only if VDD is above this voltage)
         /// </summary>
-        public ReadFlashSubCode SubCode { get; set; }
-
-        // <inheritdoc/>
-        public override void Serialise(Stream stream)
-        {
-            base.Serialise(stream);
-            stream.WriteByte((byte)CommandCode);
-            stream.WriteByte((byte)SubCode);
-        }
+        VRM4_096V = 0b11,
+        /// <summary>
+        /// Reference voltage is 2.048V
+        /// </summary>
+        VRM2_048V = 0b10,
+        /// <summary>
+        /// Reference voltage is 1.024V
+        /// </summary>
+        VRM1_024V = 0b01,
+        /// <summary>
+        /// Reference voltage is off
+        /// </summary>
+        VRMOff = 0
     }
 }

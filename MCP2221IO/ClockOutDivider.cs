@@ -22,31 +22,44 @@
 * SOFTWARE.
 */
 
-using System.IO;
-
-namespace MCP2221IO.Commands
+namespace MCP2221IO
 {
     /// <summary>
-    /// Read the flash data section of the MCP2221 device
+    /// Clock-Out Divider Output
     /// </summary>
-    internal class ReadFlashDataCommand : BaseCommand
+    public enum ClockOutDivider
     {
-        public ReadFlashDataCommand(ReadFlashSubCode subCode) : base(CommandCodes.ReadFlashData)
-        {
-            SubCode = subCode;
-        }
-        
         /// <summary>
-        /// The flash section to read
+        /// 375 kHz clock output
         /// </summary>
-        public ReadFlashSubCode SubCode { get; set; }
-
-        // <inheritdoc/>
-        public override void Serialise(Stream stream)
-        {
-            base.Serialise(stream);
-            stream.WriteByte((byte)CommandCode);
-            stream.WriteByte((byte)SubCode);
-        }
+        Clock375kHz = 0b111,
+        /// <summary>
+        /// 750 kHz clock output
+        /// </summary>
+        Clock750kHz = 0b110,
+        /// <summary>
+        /// 1.5 MHz clock output
+        /// </summary>
+        Clock1_5MHz = 0b101,
+        /// <summary>
+        /// 3 MHz clock output
+        /// </summary>
+        Clock3MHz = 0b100,
+        /// <summary>
+        /// 6 MHz clock output
+        /// </summary>
+        Clock6MHz = 0b011,
+        /// <summary>
+        /// 12 MHz clock output (factory default)
+        /// </summary>
+        Clock12MHz = 0b010,
+        /// <summary>
+        /// 24 MHz clock output
+        /// </summary>
+        Clock24Mhz = 0b001,
+        /// <summary>
+        /// Reserved
+        /// </summary>
+        Reserved = 0
     }
 }

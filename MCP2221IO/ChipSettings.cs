@@ -26,5 +26,68 @@ namespace MCP2221IO
 {
     public class ChipSettings
     {
+        /// <summary>
+        /// The current clock out divider value
+        /// </summary>
+        public ClockOutDivider ClockDivider { get; private set; }
+
+        /// <summary>
+        /// DAC Reference voltage option
+        /// </summary>
+        public DacRefVoltage DacRefVoltage { get; private set; }
+
+        /// <summary>
+        /// DAC reference option
+        /// </summary>
+        public DacRefOption DacRefOption { get; private set; }
+
+        /// <summary>
+        /// Initial DAC Output Value
+        /// </summary>
+        public byte DacOutput { get; private set; }
+
+        /// <summary>
+        /// If set, the interrupt detection flag will be set when a
+        /// negative edge occurs.
+        /// </summary>
+        public bool InterruptNegativeEdge { get; private set; }
+
+        /// <summary>
+        /// If set, the interrupt detection flag will be set when a
+        /// positive edge occurs.
+        /// </summary>
+        public bool InterruptPositiveEdge { get; private set; }
+
+        /// <summary>
+        /// ADC Reference voltage option
+        /// </summary>
+        public AdcRefVoltage AdcRefVoltage { get; private set; }
+
+        /// <summary>
+        /// ADC reference option
+        /// </summary>
+        public AdcRefOption AdcRefOption { get; private set; }
+
+        /// <summary>
+        /// The Usb vendor id
+        /// </summary>
+        public ushort Vid { get; private set; }
+
+        /// <summary>
+        /// The Usb product id
+        /// </summary>
+        public ushort Pid { get; private set; }
+
+        /// <summary>
+        /// This value will be used by the MCP2221’s USB 
+        /// Configuration Descriptor(power attributes value) 
+        /// during the USB enumeration.
+        /// </summary>
+        public UsbPowerAttributes PowerAttributes { get; private set; }
+
+        /// <summary>
+        /// The requested mA value during the USB enumeration
+        /// </summary>
+        public int PowerRequestMa { get; private set; }
     }
 }

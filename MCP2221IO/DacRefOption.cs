@@ -22,31 +22,20 @@
 * SOFTWARE.
 */
 
-using System.IO;
-
-namespace MCP2221IO.Commands
+namespace MCP2221IO
 {
     /// <summary>
-    /// Read the flash data section of the MCP2221 device
+    /// DAC Reference Output Selection
     /// </summary>
-    internal class ReadFlashDataCommand : BaseCommand
+    public enum DacRefOption
     {
-        public ReadFlashDataCommand(ReadFlashSubCode subCode) : base(CommandCodes.ReadFlashData)
-        {
-            SubCode = subCode;
-        }
-        
         /// <summary>
-        /// The flash section to read
+        /// DAC reference output is DAC VRM voltage selection
         /// </summary>
-        public ReadFlashSubCode SubCode { get; set; }
-
-        // <inheritdoc/>
-        public override void Serialise(Stream stream)
-        {
-            base.Serialise(stream);
-            stream.WriteByte((byte)CommandCode);
-            stream.WriteByte((byte)SubCode);
-        }
+        VDD = 1,
+        /// <summary>
+        /// DAC reference output is VDD (factory default)
+        /// </summary>
+        VRM = 0
     }
 }

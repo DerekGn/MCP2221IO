@@ -31,7 +31,15 @@ namespace MCP2221IO
         const int I2CMaxSpeed = 500000;
         const int I2CMinSpeed = 46875;
 
+        /// <summary>
+        /// Get the device <see cref="DeviceStatus"/>
+        /// </summary>
         DeviceStatus Status { get; }
+
+        /// <summary>
+        /// Get the device <see cref="ChipSettings"/>
+        /// </summary>
+        ChipSettings ChipSettings { get; }
 
         ///// <summary>
         ///// Get or Set the communication speed for I2C/SMBus operations.

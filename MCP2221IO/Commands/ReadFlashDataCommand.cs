@@ -29,24 +29,24 @@ namespace MCP2221IO.Commands
     /// <summary>
     /// Read the flash data section of the MCP2221 device
     /// </summary>
-    internal class ReadFlashDataCommand : BaseCommand
+    internal abstract class ReadFlashDataCommand : BaseCommand
     {
-        public ReadFlashDataCommand(ReadFlashSubCode subCode) : base(CommandCodes.ReadFlashData)
+        protected ReadFlashDataCommand(ReadFlashSubCode subCode) : base(CommandCodes.ReadFlashData)
         {
             SubCode = subCode;
         }
-        
+
         /// <summary>
-        /// The flash section to read
+        /// The <see cref="ReadFlashSubCode"/>
         /// </summary>
-        public ReadFlashSubCode SubCode { get; set; }
+        public ReadFlashSubCode SubCode { get; }
 
         // <inheritdoc/>
         public override void Serialise(Stream stream)
         {
             base.Serialise(stream);
             stream.WriteByte((byte)CommandCode);
-            stream.WriteByte((byte)SubCode);
+            //stream.WriteByte((byte)SubCode);
         }
     }
 }

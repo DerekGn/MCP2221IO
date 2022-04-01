@@ -24,7 +24,18 @@
 
 namespace MCP2221IO
 {
-    public class UsbPowerAttributes
+    /// <summary>
+    /// USB Remote Wake-Up Capability
+    /// </summary>
+    public enum UsbRemoteWake
     {
+        /// <summary>
+        /// Chip will enumerate on the USB bus as being able to wake-up the USB hos
+        /// </summary>
+        Enabled = 1,
+        /// <summary>
+        /// Chip will enumerate as not being capable of remote wake-up of the USB host (factory default)
+        /// </summary>
+        Disabled = 0
     }
 }

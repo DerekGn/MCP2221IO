@@ -22,20 +22,26 @@
 * SOFTWARE.
 */
 
-namespace MCP2221IO
+using MCP2221IO.Commands;
+using System.IO;
+
+namespace MCP2221IO.Responses
 {
-    /// <summary>
-    /// DAC Reference Output Selection
-    /// </summary>
-    public enum DacRefOption
+    internal class ChipSettingsResponse : BaseResponse
     {
-        /// <summary>
-        /// DAC reference output is DAC VRM voltage selection
-        /// </summary>
-        Vrm = 1,
-        /// <summary>
-        /// DAC reference output is VDD (factory default)
-        /// </summary>
-        VDD = 0
+        public ChipSettingsResponse() : base(CommandCodes.ReadFlashData)
+        {
+        }
+
+        public ChipSettings ChipSettings { get; private set; }
+
+        public override void Deserialise(Stream stream)
+        {
+            base.Deserialise(stream);
+
+            ChipSettings = new ChipSettings();
+
+            ChipSettings.Deserialise(stream);
+        }
     }
 }

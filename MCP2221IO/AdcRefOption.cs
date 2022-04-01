@@ -32,10 +32,10 @@ namespace MCP2221IO
         /// <summary>
         /// ADC reference output is ADC VRM voltage selection (factory default)
         /// </summary>
-        VDD = 1,
+        Vdd = 1,
         /// <summary>
         /// ADC reference output is VDD
         /// </summary>
-        VRM = 0
+        Vrm = 0
     }
 }

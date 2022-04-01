@@ -22,10 +22,20 @@
 * SOFTWARE.
 */
 
+using System.IO;
+using System.Text;
+
 namespace MCP2221IO
 {
     public class ChipSettings
     {
+        /// <summary>
+        /// Enables USB serial number usage during the USB enumeration of the CDC interface.
+        /// </summary>
+        public bool CdcSerialNumberEnable { get; private set; }
+
+        public ChipSecurity ChipSecurity { get; private set; }
+
         /// <summary>
         /// The current clock out divider value
         /// </summary>
@@ -79,15 +89,77 @@ namespace MCP2221IO
         public ushort Pid { get; private set; }
 
         /// <summary>
-        /// This value will be used by the MCP2221’s USB 
-        /// Configuration Descriptor(power attributes value) 
-        /// during the USB enumeration.
+        /// USB Self-Powered Attribute
         /// </summary>
-        public UsbPowerAttributes PowerAttributes { get; private set; }
+        public UsbSelfPowered SelfPowered { get; private set; }
+
+        /// <summary>
+        /// USB Remote Wake-Up Capability
+        /// </summary>
+        public UsbRemoteWake RemoteWake { get; private set; }
 
         /// <summary>
         /// The requested mA value during the USB enumeration
         /// </summary>
         public int PowerRequestMa { get; private set; }
+
+        public override string ToString()
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+
+            stringBuilder.Append($"CdcSerialNumberEnable: {CdcSerialNumberEnable}\r\n");
+            stringBuilder.Append($"ChipSecurity: {ChipSecurity}\r\n");
+            stringBuilder.Append($"ClockDivider: {ClockDivider}\r\n");
+            stringBuilder.Append($"DacRefVoltage: {DacRefVoltage}\r\n");
+            stringBuilder.Append($"DacRefOption: {DacRefOption}\r\n");
+            stringBuilder.Append($"DacOutput: 0x{DacOutput:X}\r\n");
+            stringBuilder.Append($"InterruptNegativeEdge: {InterruptNegativeEdge}\r\n");
+            stringBuilder.Append($"InterruptPositiveEdge: {InterruptPositiveEdge}\r\n");
+            stringBuilder.Append($"AdcRefVoltage: {AdcRefVoltage}\r\n");
+            stringBuilder.Append($"AdcRefOption: {AdcRefOption}\r\n");
+            stringBuilder.Append($"Vid: 0x{Vid:X}\r\n");
+            stringBuilder.Append($"Pid: 0x{Pid:X}\r\n");
+            stringBuilder.Append($"SelfPowered: {SelfPowered}\r\n");
+            stringBuilder.Append($"RemoteWake: {RemoteWake}\r\n");
+            stringBuilder.Append($"PowerRequestMa: 0x{PowerRequestMa:X}\r\n");
+
+            return stringBuilder.ToString();
+        }
+
+        internal void Deserialise(Stream stream)
+        {
+            stream.ReadByte();
+
+            int temp = stream.ReadByte();
+
+            CdcSerialNumberEnable = (temp & 0x80) == 0x80;
+            ChipSecurity = (ChipSecurity)(temp & 0b11);
+            ClockDivider = (ClockOutDivider) (stream.ReadByte() & 0x0F);
+
+            temp = stream.ReadByte();
+
+            DacRefVoltage = (DacRefVoltage)((temp & 0xC0) >> 6);
+            DacRefOption = (DacRefOption)((temp & 0x10) >> 4);
+            DacOutput = (byte)(temp & 0x0F);
+
+            temp = stream.ReadByte();
+
+            InterruptNegativeEdge = (temp & 0x40) == 0x40;
+            InterruptPositiveEdge = (temp & 0x20) == 0x20;
+            AdcRefVoltage = (AdcRefVoltage)((temp & 0x18) >> 3);
+            AdcRefOption = (AdcRefOption)((temp & 0x4) >> 2);
+
+            Vid = (byte)stream.ReadByte();
+            Vid += (ushort)(stream.ReadByte() << 8);
+
+            Pid = (byte)stream.ReadByte();
+            Pid += (ushort)(stream.ReadByte() << 8);
+
+            temp = stream.ReadByte();
+
+            SelfPowered = (UsbSelfPowered)((temp & 0x40) >> 6);
+            RemoteWake = (UsbRemoteWake)((temp & 0x20) >> 5);
+            PowerRequestMa = stream.ReadByte() * 2;
+        }
     }
 }

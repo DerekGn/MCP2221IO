@@ -32,18 +32,18 @@ namespace MCP2221IO
         /// <summary>
         /// Reference voltage is 4.096V (only if VDD is above this voltage)
         /// </summary>
-        VRM4_096V = 0b11,
+        Vrm4096V = 0b11,
         /// <summary>
         /// Reference voltage is 2.048V
         /// </summary>
-        VRM2_048V = 0b10,
+        Vrm2048V = 0b10,
         /// <summary>
         /// Reference voltage is 1.024V
         /// </summary>
-        VRM1_024V = 0b01,
+        Vrm1024V = 0b01,
         /// <summary>
         /// Reference voltage is off (this is useful for the case in which the DAC uses other reference than VRM DAC; e.g., VDD )
         /// </summary>
-        VRMOff = 0
+        VrmOff = 0
     }
 }

@@ -102,6 +102,47 @@ namespace MCP2221IO.UnitTests
             _output.WriteLine(deviceStatus.ToString());
         }
 
+        [Fact]
+        public void TestChipSettingsOk()
+        {
+            // Arrange
+            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()))
+                .Callback<Stream, Stream>
+                (
+                    (a, b) =>
+                    {
+                        WriteTestChipSettingsResponse(b);
+                    }
+                );
+
+            // Act
+            ChipSettings chipSettings = _device.ChipSettings;
+
+            // Assert
+            chipSettings.Should().NotBeNull();
+
+            _output.WriteLine(chipSettings.ToString());
+        }
+
+        private void WriteTestChipSettingsResponse(Stream stream)
+        {
+            stream.Write(new byte[64], 0, 64);
+            stream.Position = 0;
+            stream.WriteByte((byte)CommandCodes.ReadFlashData);
+            stream.WriteByte(0);
+            stream.WriteByte(0);
+            stream.WriteByte(0xF1); // CDC enabled
+            stream.WriteByte(0x02); // clock divider
+            stream.WriteByte(0xFF); // DAC
+            stream.WriteByte(0xFF); // int and adc
+            stream.WriteByte(0xED); // VID
+            stream.WriteByte(0xFE); // VID
+            stream.WriteByte(0xAD); // PID
+            stream.WriteByte(0xDE); // PID
+            stream.WriteByte(0x60); // Usb
+            stream.WriteByte(0x32); // usb power
+        }
+
         private void WriteTestStatusSetParametersResponse(Stream stream, byte status)
         {
             stream.Write(new byte[64], 0, 64);

@@ -25,17 +25,17 @@
 namespace MCP2221IO
 {
     /// <summary>
-    /// DAC Reference Output Selection
+    /// USB Self-Powered Attribute
     /// </summary>
-    public enum DacRefOption
+    public enum UsbSelfPowered
     {
         /// <summary>
-        /// DAC reference output is DAC VRM voltage selection
+        /// Chip will enumerate on the USB bus as being self-powered
         /// </summary>
-        Vrm = 1,
+        SelfPowered = 1,
         /// <summary>
-        /// DAC reference output is VDD (factory default)
+        /// Chip will enumerate on the USB bus as being USB-bus powered (factory default)
         /// </summary>
-        VDD = 0
+        BusPowered = 0
     }
 }

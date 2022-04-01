@@ -42,7 +42,7 @@ namespace MCP2221IO
 
         public DeviceStatus Status => ExecuteCommand<StatusSetParametersResponse>(new StatusSetParametersCommand()).DeviceStatus;
 
-        public ChipSettings ChipSettings => throw new ArgumentNullException();
+        public ChipSettings ChipSettings => ExecuteCommand<ChipSettingsResponse>(new ReadChipSettingsCommand()).ChipSettings;
 
         //public int Speed { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         //public CommParameters CommParameters { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }

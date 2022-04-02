@@ -41,11 +41,18 @@ namespace MCP2221IO
             _usbDevice = usbDevice ?? throw new ArgumentNullException(nameof(usbDevice));
         }
 
+        // <inheritdoc/>
         public DeviceStatus Status => ExecuteCommand<StatusSetParametersResponse>(new StatusSetParametersCommand()).DeviceStatus;
-
+        // <inheritdoc/>
         public ChipSettings ChipSettings => ExecuteCommand<ChipSettingsResponse>(new ReadChipSettingsCommand()).ChipSettings;
-
+        // <inheritdoc/>
         public GpioPorts GpioPorts => ExecuteCommand<GpioPortsResponse>(new ReadGpioPortsCommand()).GpioPorts;
+        // <inheritdoc/>
+        public string UsbManufacturerDescriptor => ExecuteCommand<UsbManufacturerDescriptorResponse>(new ReadUsbManufacturerDescriptorCommand()).Value;
+        // <inheritdoc/>
+        public string UsbProductDescriptor => ExecuteCommand<UsbProductDescriptorResponse>(new ReadUsbProductDescriptorCommand()).Value;
+        // <inheritdoc/>
+        public string UsbSerialNumberDescriptor => ExecuteCommand<UsbSerialNumberDescriptorResponse>(new ReadUsbSerialNumberDescriptorCommand()).Value;
 
         //public int Speed { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         //public CommParameters CommParameters { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }

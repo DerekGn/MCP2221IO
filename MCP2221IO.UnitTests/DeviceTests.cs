@@ -30,6 +30,7 @@ using MCP2221IO.Usb;
 using Moq;
 using System;
 using System.IO;
+using System.Text;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -149,6 +150,84 @@ namespace MCP2221IO.UnitTests
             ports.Gpio3Settings.Should().NotBeNull();
 
             _output.WriteLine(ports.ToString());
+        }
+
+        [Fact]
+        public void TestUsbManufacturerDescriptorOk()
+        {
+            // Arrange
+            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()))
+                .Callback<Stream, Stream>
+                (
+                    (a, b) =>
+                    {
+                        WriteString(b, "MANUFACTURER");
+                    }
+                );
+
+            // Act
+            string descriptor = _device.UsbManufacturerDescriptor;
+
+            // Assert
+            descriptor.Should().NotBeNull();
+
+            _output.WriteLine(descriptor);
+        }
+
+        [Fact]
+        public void TestUsbProductDescriptorOk()
+        {
+            // Arrange
+            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()))
+                .Callback<Stream, Stream>
+                (
+                    (a, b) =>
+                    {
+                        WriteString(b, "PRODUCT");
+                    }
+                );
+
+            // Act
+            string descriptor = _device.UsbProductDescriptor;
+
+            // Assert
+            descriptor.Should().NotBeNull();
+
+            _output.WriteLine(descriptor);
+        }
+
+        [Fact]
+        public void TestUsbSerialNumberDescriptorOk()
+        {
+            // Arrange
+            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()))
+                .Callback<Stream, Stream>
+                (
+                    (a, b) =>
+                    {
+                        WriteString(b, "SERIAL NUMBER");
+                    }
+                );
+
+            // Act
+            string descriptor = _device.UsbSerialNumberDescriptor;
+
+            // Assert
+            descriptor.Should().NotBeNull();
+
+            _output.WriteLine(descriptor);
+        }
+
+        private void WriteString(Stream stream, string value)
+        {
+            stream.Write(new byte[64], 0, 64);
+            stream.Position = 0;
+            stream.WriteByte((byte)CommandCodes.ReadFlashData);
+            stream.WriteByte(0);
+            stream.WriteByte((byte)((value.Length + 1) * 2));
+            stream.WriteByte(3);
+            var bytes = Encoding.Unicode.GetBytes(value);
+            stream.Write(bytes, 0, bytes.Length);
         }
 
         private void WriteGpioPorts(Stream stream)

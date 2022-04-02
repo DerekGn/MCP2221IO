@@ -68,7 +68,6 @@ namespace MCP2221IO.Responses
             {
                 throw new CommandExecutionFailedException($"Unexpected command execution status Expected: [0x00] Actual [{executionResult:x}]");
             }
-
         }
     }
 }

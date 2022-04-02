@@ -22,31 +22,32 @@
 * SOFTWARE.
 */
 
+using MCP2221IO.Commands;
 using System.IO;
+using System.Text;
 
-namespace MCP2221IO.Commands
+namespace MCP2221IO.Responses
 {
-    /// <summary>
-    /// Read the flash data section of the MCP2221 device
-    /// </summary>
-    internal abstract class ReadFlashDataCommand : BaseCommand
+    internal abstract class BaseDescriptorResponse : BaseResponse
     {
-        protected ReadFlashDataCommand(ReadFlashSubCode subCode) : base(CommandCodes.ReadFlashData)
+        protected BaseDescriptorResponse() : base(CommandCodes.ReadFlashData)
         {
-            SubCode = subCode;
         }
 
-        /// <summary>
-        /// The <see cref="ReadFlashSubCode"/>
-        /// </summary>
-        public ReadFlashSubCode SubCode { get; }
+        public string Value { get; private set; }
 
-        // <inheritdoc/>
-        public override void Serialise(Stream stream)
+        public override void Deserialise(Stream stream)
         {
-            base.Serialise(stream);
-            stream.WriteByte((byte)CommandCode);
-            stream.WriteByte((byte)SubCode);
+            base.Deserialise(stream);
+
+            int bufferSize = stream.ReadByte();
+            byte[] buffer= new byte[bufferSize];
+
+            stream.ReadByte();
+
+            stream.Read(buffer, 0, bufferSize);
+
+            Value = Encoding.Unicode.GetString(buffer);
         }
     }
 }

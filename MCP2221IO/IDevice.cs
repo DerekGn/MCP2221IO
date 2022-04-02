@@ -47,6 +47,21 @@ namespace MCP2221IO
         /// </summary>
         GpioPorts GpioPorts { get; }
 
+        /// <summary>
+        /// The USB manufacturer descriptor value
+        /// </summary>
+        string UsbManufacturerDescriptor { get; }
+
+        /// <summary>
+        /// The USB product descriptor value
+        /// </summary>
+        string UsbProductDescriptor { get; }
+
+        /// <summary>
+        /// The USB serial number value
+        /// </summary>
+        string UsbSerialNumberDescriptor { get; }
+
         ///// <summary>
         ///// Get or Set the communication speed for I2C/SMBus operations.
         ///// Accepted values are between <see cref="I2CMinSpeed"/> and <see cref="I2CMinSpeed"/>
@@ -69,7 +84,7 @@ namespace MCP2221IO
 
         ////GpSettings GpSettings { get; set; }
 
-        //string Manufacturer { get; set; }
+
 
         //string Product { get; set; }
 

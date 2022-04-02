@@ -33,7 +33,7 @@ namespace MCP2221IO
 {
     public class Device : IDevice
     {
-        private long _factorySerialNumber;
+        private string _factorySerialNumber;
         private IUsbDevice _usbDevice;
 
         public Device(IUsbDevice usbDevice)
@@ -48,11 +48,24 @@ namespace MCP2221IO
         // <inheritdoc/>
         public GpioPorts GpioPorts => ExecuteCommand<GpioPortsResponse>(new ReadGpioPortsCommand()).GpioPorts;
         // <inheritdoc/>
-        public string UsbManufacturerDescriptor => ExecuteCommand<UsbManufacturerDescriptorResponse>(new ReadUsbManufacturerDescriptorCommand()).Value;
+        public string UsbManufacturerDescriptor
+        { 
+            get => ExecuteCommand<UsbManufacturerDescriptorResponse>(new ReadUsbManufacturerDescriptorCommand()).Value;
+            set => ExecuteCommand<WriteFlashDataResponse>(new WriteUsbManufacturerDescriptorCommand(value));
+        }
         // <inheritdoc/>
-        public string UsbProductDescriptor => ExecuteCommand<UsbProductDescriptorResponse>(new ReadUsbProductDescriptorCommand()).Value;
+        public string UsbProductDescriptor
+        { 
+            get => ExecuteCommand<UsbProductDescriptorResponse>(new ReadUsbProductDescriptorCommand()).Value;
+            set => ExecuteCommand<WriteFlashDataResponse>(new WriteUsbProductDescriptorCommand(value));
+        }
         // <inheritdoc/>
-        public string UsbSerialNumberDescriptor => ExecuteCommand<UsbSerialNumberDescriptorResponse>(new ReadUsbSerialNumberDescriptorCommand()).Value;
+        public string UsbSerialNumberDescriptor
+        {
+            get => ExecuteCommand<UsbSerialNumberDescriptorResponse>(new ReadUsbSerialNumberDescriptorCommand()).Value;
+            set => ExecuteCommand<WriteFlashDataResponse>(new WriteUsbSerialNumberCommand(value));
+        }
+        public string FactorySerialNumber => GetFactorySerialNumber();
 
         //public int Speed { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         //public CommParameters CommParameters { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
@@ -120,6 +133,17 @@ namespace MCP2221IO
             return result;
         }
 
+        private string GetFactorySerialNumber()
+        {
+            if (String.IsNullOrWhiteSpace(_factorySerialNumber))
+            {
+                var response = ExecuteCommand<FactorySerialNumberResponse>(new ReadFactorySerialNumberCommand());
+
+                _factorySerialNumber = response.SerialNumber;
+            }
+
+            return _factorySerialNumber;
+        }
         #region Dispose
         private bool disposedValue;
 

@@ -22,40 +22,46 @@
 * SOFTWARE.
 */
 
-using MCP2221IO.Responses.Exceptions;
-using System;
 using System.IO;
+using System.Text;
 
 namespace MCP2221IO.Commands
 {
     /// <summary>
-    /// A base command
+    /// Write flash data string
     /// </summary>
-    internal abstract class BaseCommand : ICommand
+    internal class WriteFlashDataStringCommand : WriteFlashDataCommand
     {
-        protected BaseCommand(CommandCodes commandCode)
+        /// <summary>
+        /// Create a new instance of a <see cref="WriteFlashDataStringCommand"/>
+        /// </summary>
+        /// <param name="value">The value to write</param>
+        /// <param name="subCode">The <see cref="WriteFlashSubCode"/></param>
+        public WriteFlashDataStringCommand(string value, WriteFlashSubCode subCode) : base(subCode)
         {
-            CommandCode = commandCode;
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                throw new System.ArgumentException($"'{nameof(value)}' cannot be null or whitespace.", nameof(value));
+            }
+
+            Value = value;
         }
 
-        // <inheritdoc/>
-        public CommandCodes CommandCode { get; }
+        /// <summary>
+        /// The value to write
+        /// </summary>
+        public string Value { get; }
 
         // <inheritdoc/>
-        public virtual void Serialise(Stream stream)
+        public override void Serialise(Stream stream)
         {
-            if (stream == null)
-            {
-                throw new ArgumentNullException(nameof(stream));
-            }
+            base.Serialise(stream);
 
-            if (stream.Length != 64)
-            {
-                throw new InvalidStreamLengthException($"Unexpected stream length Expected: [0x40] Actual [{stream.Length}]");
-            }
+            stream.WriteByte((byte)((Value.Length * 2) + 2));
 
-            stream.Position = 0;
-            stream.WriteByte((byte)CommandCode);
+            var bytes = Encoding.Unicode.GetBytes(Value);
+
+            stream.Write(bytes, 0, bytes.Length);
         }
     }
 }

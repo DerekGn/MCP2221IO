@@ -50,75 +50,23 @@ namespace MCP2221IO
         /// <summary>
         /// The USB manufacturer descriptor value
         /// </summary>
-        string UsbManufacturerDescriptor { get; }
+        string UsbManufacturerDescriptor { get; set; }
 
         /// <summary>
         /// The USB product descriptor value
         /// </summary>
-        string UsbProductDescriptor { get; }
+        string UsbProductDescriptor { get; set; }
 
         /// <summary>
         /// The USB serial number value
         /// </summary>
-        string UsbSerialNumberDescriptor { get; }
+        string UsbSerialNumberDescriptor { get; set; }
 
-        ///// <summary>
-        ///// Get or Set the communication speed for I2C/SMBus operations.
-        ///// Accepted values are between <see cref="I2CMinSpeed"/> and <see cref="I2CMinSpeed"/>
-        ///// </summary>
-        ///// <remarks>
-        ///// NOTE: The speed may fail to be set if an I2C/SMBus operation is already in progress or in a
-        ///// timeout situation.The <see cref="I2CCancelCurrentTransfer"/> function can be used to free the bus
-        ///// before retrying to set the speed.
-        ///// </remarks>
-        //int Speed { get; set; }
-
-        ///// <summary>
-        ///// Gets or Set the time the MCP2221 will wait after sending the "read" command before trying to
-        ///// read back the data from the I2C/SMBus slave and the maximum number of retries if data
-        ///// couldn't be read back.
-        ///// </summary>
-        //CommParameters CommParameters { get; set; }
-
-        ////ChipSettings ChipSettings { get; set; }
-
-        ////GpSettings GpSettings { get; set; }
+        /// <summary>
+        /// The factory serial number as a hex string
+        /// </summary>
+        string FactorySerialNumber { get; }
 
 
-
-        //string Product { get; set; }
-
-        //string SerialNumber { get; set; }
-
-        //long FactorySerialNumber { get; }
-
-
-
-        ////UsbPowerAttributes UsbPowerAttributes { get; set; }
-
-        ////void Unlock(long code);
-
-        ////void Reset();
-
-        ///// <summary>
-        ///// Cancel the current I2C/SMBus transfer
-        ///// </summary>
-        //void I2CCancelCurrentTransfer();
-
-        /////// <summary>
-        /////// Read I2C data from a slave
-        /////// </summary>
-        /////// <param name="bytesToRead">The number of bytes to read from the slave. Valid range is between 1 and 65535</param>
-        /////// <param name="slaveAddress">7bit or 8bit I2C slave address, depending on the value of the <paramref name="use7BitAddress"/> flag. 
-        /////// For 8 bit addresses, the R/W LSB of the address is set to 1 inside the function.</param>
-        /////// <param name="use7BitAddress">If true 7 bit address will be used for the slave.</param>
-        /////// <returns>A list of bytes read from the addressed slave</returns>
-        /////// <remarks>
-        /////// if the "Mcp2221_SetSpeed" function has not been called for the provided handle, the default
-        /////// speed of 100kbps will be configured and used.Otherwise, the speed will not be reconfigured.
-        /////// </remarks>
-        ////IList<byte> I2CRead(uint bytesToRead, byte slaveAddress, bool use7BitAddress);
-
-        ////void I2cWrite(IList<byte> bytes, byte slaveAddress, bool use7BitAddress);
     }
 }

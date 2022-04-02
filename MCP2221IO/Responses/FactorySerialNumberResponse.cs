@@ -23,6 +23,7 @@
 */
 
 using MCP2221IO.Commands;
+using System;
 using System.IO;
 
 namespace MCP2221IO.Responses
@@ -33,10 +34,20 @@ namespace MCP2221IO.Responses
         {
         }
 
-        public long FactorySerialNumber { get; set; }
+        public string SerialNumber { get; set; }
 
         public override void Deserialise(Stream stream)
         {
+            base.Deserialise(stream);
+
+            int temp = stream.ReadByte();
+            stream.ReadByte();
+
+            byte[] buffer = new byte[temp];
+
+            stream.Read(buffer, 0, buffer.Length);
+
+            SerialNumber = BitConverter.ToString(buffer).Replace("-", "");
         }
     }
 }

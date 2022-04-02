@@ -27,6 +27,9 @@ using System.IO;
 
 namespace MCP2221IO.Responses
 {
+    /// <summary>
+    /// The chip settings response
+    /// </summary>
     internal class ChipSettingsResponse : BaseResponse
     {
         public ChipSettingsResponse() : base(CommandCodes.ReadFlashData)

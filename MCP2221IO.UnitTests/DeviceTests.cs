@@ -153,7 +153,7 @@ namespace MCP2221IO.UnitTests
         }
 
         [Fact]
-        public void TestUsbManufacturerDescriptorOk()
+        public void TestGetUsbManufacturerDescriptorOk()
         {
             // Arrange
             _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()))
@@ -173,9 +173,32 @@ namespace MCP2221IO.UnitTests
 
             _output.WriteLine(descriptor);
         }
+        
+        [Fact]
+        public void TestSetUsbManufacturerDescriptorOk()
+        {
+            // Arrange
+            Stream writeStream = null;
+
+            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()))
+                .Callback<Stream, Stream>
+                (
+                    (a, b) =>
+                    {
+                        WriteFlashWriteResponse(b, 0);
+                        writeStream = a;
+                    }
+                );
+
+            // Act
+            _device.UsbManufacturerDescriptor = "UPDATED";
+
+            // Assert
+            writeStream.Should().NotBeNull();
+        }
 
         [Fact]
-        public void TestUsbProductDescriptorOk()
+        public void TestGetUsbProductDescriptorOk()
         {
             // Arrange
             _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()))
@@ -197,7 +220,30 @@ namespace MCP2221IO.UnitTests
         }
 
         [Fact]
-        public void TestUsbSerialNumberDescriptorOk()
+        public void TestSetUsbProductDescriptorOk()
+        {
+            // Arrange
+            Stream writeStream = null;
+
+            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()))
+                .Callback<Stream, Stream>
+                (
+                    (a, b) =>
+                    {
+                        WriteFlashWriteResponse(b, 0);
+                        writeStream = a;
+                    }
+                );
+
+            // Act
+            _device.UsbProductDescriptor = "UPDATED";
+
+            // Assert
+            writeStream.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void TestGetUsbSerialNumberDescriptorOk()
         {
             // Arrange
             _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()))
@@ -216,6 +262,77 @@ namespace MCP2221IO.UnitTests
             descriptor.Should().NotBeNull();
 
             _output.WriteLine(descriptor);
+        }
+
+        [Fact]
+        public void TestSetUsbSerialNumberDescriptorOk()
+        {
+            // Arrange
+            Stream writeStream = null;
+
+            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()))
+                .Callback<Stream, Stream>
+                (
+                    (a, b) =>
+                    {
+                        WriteFlashWriteResponse(b, 0);
+                        writeStream = a;
+                    }
+                );
+
+            // Act
+            _device.UsbSerialNumberDescriptor = "UPDATED";
+
+            // Assert
+            writeStream.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void TestGetFactorySerialNumberOk()
+        {
+            // Arrange
+            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()))
+                .Callback<Stream, Stream>
+                (
+                    (a, b) =>
+                    {
+                        WriteSerialNumber(b);
+                    }
+                );
+
+            // Act
+            string serialNumber = _device.FactorySerialNumber;
+
+            // Assert
+            serialNumber.Should().NotBeNull();
+
+            _output.WriteLine(serialNumber);
+        }
+
+        private void WriteFlashWriteResponse(Stream stream, int status)
+        {
+            stream.Write(new byte[64], 0, 64);
+            stream.Position = 0;
+            stream.WriteByte((byte)CommandCodes.WriteFlashData);
+            stream.WriteByte((byte)status);
+        }
+
+        private void WriteSerialNumber(Stream stream)
+        {
+            stream.Write(new byte[64], 0, 64);
+            stream.Position = 0;
+            stream.WriteByte((byte)CommandCodes.ReadFlashData);
+            stream.WriteByte(0);
+            stream.WriteByte(8);
+            stream.WriteByte(0);
+            stream.WriteByte(0x55);
+            stream.WriteByte(0xAA);
+            stream.WriteByte(0xFE);
+            stream.WriteByte(0xED);
+            stream.WriteByte(0xDE);
+            stream.WriteByte(0xAD);
+            stream.WriteByte(0xBE);
+            stream.WriteByte(0xEF);
         }
 
         private void WriteString(Stream stream, string value)

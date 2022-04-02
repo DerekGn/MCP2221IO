@@ -22,40 +22,35 @@
 * SOFTWARE.
 */
 
-using MCP2221IO.Responses.Exceptions;
-using System;
-using System.IO;
-
-namespace MCP2221IO.Commands
+namespace MCP2221IO
 {
     /// <summary>
-    /// A base command
+    /// The specific flash section to write
     /// </summary>
-    internal abstract class BaseCommand : ICommand
+    public enum WriteFlashSubCode
     {
-        protected BaseCommand(CommandCodes commandCode)
-        {
-            CommandCode = commandCode;
-        }
-
-        // <inheritdoc/>
-        public CommandCodes CommandCode { get; }
-
-        // <inheritdoc/>
-        public virtual void Serialise(Stream stream)
-        {
-            if (stream == null)
-            {
-                throw new ArgumentNullException(nameof(stream));
-            }
-
-            if (stream.Length != 64)
-            {
-                throw new InvalidStreamLengthException($"Unexpected stream length Expected: [0x40] Actual [{stream.Length}]");
-            }
-
-            stream.Position = 0;
-            stream.WriteByte((byte)CommandCode);
-        }
+        /// <summary>
+        /// Write Chip Settings – it will write the MCP2221 flash settings
+        /// </summary>
+        WriteChipSettings = 0x00,
+        /// <summary>
+        /// Write GP Settings – it will write the MCP2221 flash GP settings
+        /// </summary>
+        WriteGpSettings = 0x01,
+        /// <summary>
+        /// Write USB Manufacturer Descriptor String – writes the USB Manufacturer 
+        /// String Descriptor used during the USB enumeration
+        /// </summary>
+        WriteManufacturerDescriptor = 0x02,
+        /// <summary>
+        /// Write USB Product Descriptor String– writes the USB Product String 
+        /// Descriptor used during the USB enumeration
+        /// </summary>
+        WriteUSBProductDescriptor = 0x03,
+        /// <summary>
+        ///  Write USB Serial Number Descriptor String – writes the USB Serial 
+        ///  Number String Descriptor that is used during USB enumeration.
+        /// </summary>
+        WriteUSBSerialNumberDescriptor = 0x04
     }
 }

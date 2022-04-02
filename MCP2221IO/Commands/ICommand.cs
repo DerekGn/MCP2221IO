@@ -26,6 +26,9 @@ using System.IO;
 
 namespace MCP2221IO.Commands
 {
+    /// <summary>
+    /// The <see cref="ICommand"/> interface
+    /// </summary>
     internal interface ICommand
     {
         /// <summary>

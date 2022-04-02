@@ -32,8 +32,14 @@ namespace MCP2221IO.Gpio
     /// </summary>
     public abstract class GpioSettings
     {
+        /// <summary>
+        /// The current output value on the Gpio port
+        /// </summary>
         public bool OutputValue { get; set; }
 
+        /// <summary>
+        /// The Gpio port direction
+        /// </summary>
         public GpioDirection Direction { get; set; }
 
         public override string ToString()
@@ -46,6 +52,7 @@ namespace MCP2221IO.Gpio
             return stringBuilder.ToString();
         }
 
+        // <inheritdoc/>
         public virtual void Deserialise(Stream stream)
         {
             int temp = stream.ReadByte();

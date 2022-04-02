@@ -28,6 +28,11 @@ namespace MCP2221IO.Extensions
 {
     internal static class StreamExtensions
     {
+        /// <summary>
+        /// Read an <see cref="UInt16"/> from the <see cref="Stream"/>
+        /// </summary>
+        /// <param name="stream">The <see cref="Stream"/> to read from</param>
+        /// <returns>The <see cref="ushort"/> value</returns>
         public static ushort ReadUShort(this Stream stream)
         {
             ushort value = (byte)stream.ReadByte();

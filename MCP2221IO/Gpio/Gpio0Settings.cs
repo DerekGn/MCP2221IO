@@ -44,6 +44,7 @@ namespace MCP2221IO.Gpio
             return stringBuilder.ToString();
         }
 
+        // <inheritdoc/>
         public override void Deserialise(Stream stream)
         {
             base.Deserialise(stream);

@@ -24,13 +24,31 @@
 
 namespace MCP2221IO.Commands
 {
+    /// <summary>
+    /// HID command codes
+    /// </summary>
     internal enum CommandCodes
     {
         StatusSetParameters = 0x10,
+        /// <summary>
+        /// Read flash data
+        /// </summary>
         ReadFlashData = 0xB0,
+        /// <summary>
+        /// Write flash data
+        /// </summary>
         WriteFlashData = 0xB1,
+        /// <summary>
+        /// Reset the device
+        /// </summary>
         Reset = 0x70,
+        /// <summary>
+        /// Get Sram data
+        /// </summary>
         SetSram = 0x60,
+        /// <summary>
+        /// SetSram data
+        /// </summary>
         GetSram = 0x61
     }
 }

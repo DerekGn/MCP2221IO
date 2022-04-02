@@ -24,6 +24,9 @@
 
 namespace MCP2221IO.Commands
 {
+    /// <summary>
+    /// Read the USB manufacturer descriptor
+    /// </summary>
     internal class ReadUsbManufacturerDescriptorCommand : ReadFlashDataCommand
     {
         public ReadUsbManufacturerDescriptorCommand() : base(ReadFlashSubCode.ReadManufacturerDescriptor)

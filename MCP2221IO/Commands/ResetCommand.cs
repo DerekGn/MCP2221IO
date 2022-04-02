@@ -36,7 +36,6 @@ namespace MCP2221IO.Commands
     {
         public ResetCommand() : base(CommandCodes.Reset)
         {
-
         }
 
         // <inheritdoc/>

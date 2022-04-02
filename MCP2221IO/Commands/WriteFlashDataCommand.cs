@@ -22,40 +22,31 @@
 * SOFTWARE.
 */
 
-using MCP2221IO.Responses.Exceptions;
-using System;
 using System.IO;
 
 namespace MCP2221IO.Commands
 {
     /// <summary>
-    /// A base command
+    /// Write flash data
     /// </summary>
-    internal abstract class BaseCommand : ICommand
+    internal abstract class WriteFlashDataCommand : BaseCommand
     {
-        protected BaseCommand(CommandCodes commandCode)
+        protected WriteFlashDataCommand(WriteFlashSubCode subCode) : base(CommandCodes.ReadFlashData)
         {
-            CommandCode = commandCode;
+            SubCode = subCode;
         }
 
-        // <inheritdoc/>
-        public CommandCodes CommandCode { get; }
+        /// <summary>
+        /// The <see cref="WriteFlashSubCode"/> for the write operation
+        /// </summary>
+        public WriteFlashSubCode SubCode { get; }
 
         // <inheritdoc/>
-        public virtual void Serialise(Stream stream)
+        public override void Serialise(Stream stream)
         {
-            if (stream == null)
-            {
-                throw new ArgumentNullException(nameof(stream));
-            }
-
-            if (stream.Length != 64)
-            {
-                throw new InvalidStreamLengthException($"Unexpected stream length Expected: [0x40] Actual [{stream.Length}]");
-            }
-
-            stream.Position = 0;
+            base.Serialise(stream);
             stream.WriteByte((byte)CommandCode);
+            stream.WriteByte((byte)SubCode);
         }
     }
 }

@@ -22,6 +22,7 @@
 * SOFTWARE.
 */
 
+using MCP2221IO.Extensions;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -145,15 +146,12 @@ namespace MCP2221IO
             stream.Position += 3;
 
             I2CStateMachineState = (byte)stream.ReadByte();
-            I2CTransferLength = (byte)stream.ReadByte();
-            I2CTransferLength += (ushort)(stream.ReadByte() << 8);
-            I2CTransferredLength = (byte)stream.ReadByte();
-            I2CTransferredLength += (ushort)(stream.ReadByte() << 8);
+            I2CTransferLength = stream.ReadUShort();
+            I2CTransferredLength = stream.ReadUShort();
             I2CBufferCounter = (byte)stream.ReadByte();
             I2CClockDivisor = (byte)stream.ReadByte();
             I2CTimeout = (byte)stream.ReadByte();
-            I2CAddress = (byte)stream.ReadByte();
-            I2CAddress += (ushort)(stream.ReadByte() << 8);
+            I2CAddress = stream.ReadUShort();
 
             stream.Position += 4;
 
@@ -176,10 +174,7 @@ namespace MCP2221IO
 
             for (int i = 0; i < 3; i++)
             {
-                ushort value = (byte)stream.ReadByte();
-                value += (ushort)(stream.ReadByte() << 8);
-
-                adc.Add(value);
+                adc.Add(stream.ReadUShort());
             }
 
             Adc = adc.AsReadOnly();

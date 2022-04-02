@@ -22,6 +22,7 @@
 * SOFTWARE.
 */
 
+using MCP2221IO.Extensions;
 using System.IO;
 using System.Text;
 
@@ -149,11 +150,8 @@ namespace MCP2221IO
             AdcRefVoltage = (AdcRefVoltage)((temp & 0x18) >> 3);
             AdcRefOption = (AdcRefOption)((temp & 0x4) >> 2);
 
-            Vid = (byte)stream.ReadByte();
-            Vid += (ushort)(stream.ReadByte() << 8);
-
-            Pid = (byte)stream.ReadByte();
-            Pid += (ushort)(stream.ReadByte() << 8);
+            Vid = stream.ReadUShort();
+            Pid = stream.ReadUShort();
 
             temp = stream.ReadByte();
 

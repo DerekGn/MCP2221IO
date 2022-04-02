@@ -22,9 +22,31 @@
 * SOFTWARE.
 */
 
-namespace MCP2221IO
+using MCP2221IO.Commands;
+using MCP2221IO.Gpio;
+using System.IO;
+
+namespace MCP2221IO.Responses
 {
-    public enum GpSettings
+    /// <summary>
+    /// The gpio ports response type
+    /// </summary>
+    internal class GpioPortsResponse : BaseResponse
     {
+        public GpioPortsResponse() : base(CommandCodes.ReadFlashData)
+        {
+        }
+
+        public GpioPorts GpioPorts { get; private set; }
+
+        // <inheritdoc/>
+        public override void Deserialise(Stream stream)
+        {
+            base.Deserialise(stream);
+
+            GpioPorts = new GpioPorts();
+
+            GpioPorts.Deserialise(stream);
+        }
     }
 }

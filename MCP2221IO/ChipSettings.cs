@@ -107,21 +107,21 @@ namespace MCP2221IO
         {
             StringBuilder stringBuilder = new StringBuilder();
 
-            stringBuilder.Append($"CdcSerialNumberEnable: {CdcSerialNumberEnable}\r\n");
-            stringBuilder.Append($"ChipSecurity: {ChipSecurity}\r\n");
-            stringBuilder.Append($"ClockDivider: {ClockDivider}\r\n");
-            stringBuilder.Append($"DacRefVoltage: {DacRefVoltage}\r\n");
-            stringBuilder.Append($"DacRefOption: {DacRefOption}\r\n");
-            stringBuilder.Append($"DacOutput: 0x{DacOutput:X}\r\n");
-            stringBuilder.Append($"InterruptNegativeEdge: {InterruptNegativeEdge}\r\n");
-            stringBuilder.Append($"InterruptPositiveEdge: {InterruptPositiveEdge}\r\n");
-            stringBuilder.Append($"AdcRefVoltage: {AdcRefVoltage}\r\n");
-            stringBuilder.Append($"AdcRefOption: {AdcRefOption}\r\n");
-            stringBuilder.Append($"Vid: 0x{Vid:X}\r\n");
-            stringBuilder.Append($"Pid: 0x{Pid:X}\r\n");
-            stringBuilder.Append($"SelfPowered: {SelfPowered}\r\n");
-            stringBuilder.Append($"RemoteWake: {RemoteWake}\r\n");
-            stringBuilder.Append($"PowerRequestMa: 0x{PowerRequestMa:X}\r\n");
+            stringBuilder.AppendLine($"CdcSerialNumberEnable: {CdcSerialNumberEnable}");
+            stringBuilder.AppendLine($"ChipSecurity: {ChipSecurity}");
+            stringBuilder.AppendLine($"ClockDivider: {ClockDivider}");
+            stringBuilder.AppendLine($"DacRefVoltage: {DacRefVoltage}");
+            stringBuilder.AppendLine($"DacRefOption: {DacRefOption}`");
+            stringBuilder.AppendLine($"DacOutput: 0x{DacOutput:X}`");
+            stringBuilder.AppendLine($"InterruptNegativeEdge: {InterruptNegativeEdge}");
+            stringBuilder.AppendLine($"InterruptPositiveEdge: {InterruptPositiveEdge}");
+            stringBuilder.AppendLine($"AdcRefVoltage: {AdcRefVoltage}");
+            stringBuilder.AppendLine($"AdcRefOption: {AdcRefOption}");
+            stringBuilder.AppendLine($"Vid: 0x{Vid:X}");
+            stringBuilder.AppendLine($"Pid: 0x{Pid:X}");
+            stringBuilder.AppendLine($"SelfPowered: {SelfPowered}");
+            stringBuilder.AppendLine($"RemoteWake: {RemoteWake}");
+            stringBuilder.AppendLine($"PowerRequestMa: 0x{PowerRequestMa:X}");
 
             return stringBuilder.ToString();
         }

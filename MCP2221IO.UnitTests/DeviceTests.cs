@@ -24,6 +24,7 @@
 
 using FluentAssertions;
 using MCP2221IO.Commands;
+using MCP2221IO.Gpio;
 using MCP2221IO.Responses.Exceptions;
 using MCP2221IO.Usb;
 using Moq;
@@ -122,6 +123,44 @@ namespace MCP2221IO.UnitTests
             chipSettings.Should().NotBeNull();
 
             _output.WriteLine(chipSettings.ToString());
+        }
+
+        [Fact]
+        public void TestGpioPortsOk()
+        {
+            // Arrange
+            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()))
+                .Callback<Stream, Stream>
+                (
+                    (a, b) =>
+                    {
+                        WriteGpioPorts(b);
+                    }
+                );
+
+            // Act
+            GpioPorts ports = _device.GpioPorts;
+
+            // Assert
+            ports.Should().NotBeNull();
+            ports.Gpio0Settings.Should().NotBeNull();
+            ports.Gpio1Settings.Should().NotBeNull();
+            ports.Gpio2Settings.Should().NotBeNull();
+            ports.Gpio3Settings.Should().NotBeNull();
+
+            _output.WriteLine(ports.ToString());
+        }
+
+        private void WriteGpioPorts(Stream stream)
+        {
+            stream.Write(new byte[64], 0, 64);
+            stream.Position = 0;
+            stream.WriteByte((byte)CommandCodes.ReadFlashData);
+            stream.Write(new byte[2], 0, 2);
+            stream.WriteByte(0x18); // GIO0
+            stream.WriteByte(0x19); // GIO1
+            stream.WriteByte(0x1A); // GIO2
+            stream.WriteByte(0x1B); // GIO3
         }
 
         private void WriteTestChipSettingsResponse(Stream stream)

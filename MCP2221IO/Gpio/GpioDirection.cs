@@ -22,32 +22,20 @@
 * SOFTWARE.
 */
 
-using MCP2221IO.Commands;
-using System.IO;
-
-namespace MCP2221IO.Responses
+namespace MCP2221IO.Gpio
 {
     /// <summary>
-    /// The set status response
+    /// GPIO direction (input/output) – works only when GP3 is set for GPIO operation
     /// </summary>
-    internal class StatusSetParametersResponse : BaseResponse
+    public enum GpioDirection
     {
-        public StatusSetParametersResponse() : base(CommandCodes.StatusSetParameters)
-        {
-        }
-
         /// <summary>
-        /// The <see cref="DeviceStatus"/>
+        /// GPIO Output mode.
         /// </summary>
-        public DeviceStatus DeviceStatus { get; private set; }
-
-        public override void Deserialise(Stream stream)
-        {
-            base.Deserialise(stream);
-
-            DeviceStatus = new DeviceStatus();
-
-            DeviceStatus.Deserialise(stream);
-        }
+        GpioOutput = 0,
+        /// <summary>
+        /// GPIO Input mode.
+        /// </summary>
+        GpioInput = 1
     }
 }

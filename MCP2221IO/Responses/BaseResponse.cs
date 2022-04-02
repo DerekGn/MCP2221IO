@@ -29,6 +29,9 @@ using System.IO;
 
 namespace MCP2221IO.Responses
 {
+    /// <summary>
+    /// A base <see cref="IResponse"/> type
+    /// </summary>
     internal abstract class BaseResponse : IResponse
     {
         protected BaseResponse(CommandCodes commandCode)
@@ -36,8 +39,10 @@ namespace MCP2221IO.Responses
             CommandCode = commandCode;
         }
 
+        // <inheritdoc/>
         public CommandCodes CommandCode { get; }
 
+        // <inheritdoc/>
         public virtual void Deserialise(Stream stream)
         {
             if(stream == null)

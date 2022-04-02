@@ -22,32 +22,36 @@
 * SOFTWARE.
 */
 
-using MCP2221IO.Commands;
 using System.IO;
+using System.Text;
 
-namespace MCP2221IO.Responses
+namespace MCP2221IO.Gpio
 {
     /// <summary>
-    /// The set status response
+    /// The devices Gpio settings
     /// </summary>
-    internal class StatusSetParametersResponse : BaseResponse
+    public abstract class GpioSettings
     {
-        public StatusSetParametersResponse() : base(CommandCodes.StatusSetParameters)
+        public bool OutputValue { get; set; }
+
+        public GpioDirection Direction { get; set; }
+
+        public override string ToString()
         {
+            StringBuilder stringBuilder = new StringBuilder();
+
+            stringBuilder.AppendLine($"\tOutputValue:\t{OutputValue}");
+            stringBuilder.AppendLine($"\tDirection:\t\t{Direction}");
+
+            return stringBuilder.ToString();
         }
 
-        /// <summary>
-        /// The <see cref="DeviceStatus"/>
-        /// </summary>
-        public DeviceStatus DeviceStatus { get; private set; }
-
-        public override void Deserialise(Stream stream)
+        public virtual void Deserialise(Stream stream)
         {
-            base.Deserialise(stream);
+            int temp = stream.ReadByte();
 
-            DeviceStatus = new DeviceStatus();
-
-            DeviceStatus.Deserialise(stream);
+            OutputValue = (temp & 0x10) == 0x10;
+            Direction = (GpioDirection)((temp & 0x80) >> 3);
         }
     }
 }

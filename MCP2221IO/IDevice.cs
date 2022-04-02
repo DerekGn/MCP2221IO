@@ -22,6 +22,7 @@
 * SOFTWARE.
 */
 
+using MCP2221IO.Gpio;
 using System;
 
 namespace MCP2221IO
@@ -40,6 +41,11 @@ namespace MCP2221IO
         /// Get the device <see cref="ChipSettings"/>
         /// </summary>
         ChipSettings ChipSettings { get; }
+
+        /// <summary>
+        /// Get the Gpio settings
+        /// </summary>
+        GpioPorts GpioPorts { get; }
 
         ///// <summary>
         ///// Get or Set the communication speed for I2C/SMBus operations.

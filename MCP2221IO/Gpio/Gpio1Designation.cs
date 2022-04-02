@@ -22,32 +22,33 @@
 * SOFTWARE.
 */
 
-using MCP2221IO.Commands;
-using System.IO;
-
-namespace MCP2221IO.Responses
+namespace MCP2221IO.Gpio
 {
     /// <summary>
-    /// The set status response
+    ///  Gpio1 designation 
     /// </summary>
-    internal class StatusSetParametersResponse : BaseResponse
+    public enum Gpio1Designation
     {
-        public StatusSetParametersResponse() : base(CommandCodes.StatusSetParameters)
-        {
-        }
-
         /// <summary>
-        /// The <see cref="DeviceStatus"/>
+        /// GPIO operation.
         /// </summary>
-        public DeviceStatus DeviceStatus { get; private set; }
+        GpioOperation = 0,
+        /// <summary>
+        /// Dedicated function operation (clock output).
+        /// </summary>
+        DedicatedFunction = 1,
+        /// <summary>
+        /// Alternate Function 0 (ADC1).
+        /// </summary>
+        AlternateFunction0 = 2,
+        /// <summary>
+        /// Alternate Function 1 (LED_UTx).
+        /// </summary>
+        AlternateFunction1 = 3,
+        /// <summary>
+        /// Alternate Function 2 (Interrupt detection).
+        /// </summary>
+        AlternateFunction2 = 4
 
-        public override void Deserialise(Stream stream)
-        {
-            base.Deserialise(stream);
-
-            DeviceStatus = new DeviceStatus();
-
-            DeviceStatus.Deserialise(stream);
-        }
     }
 }

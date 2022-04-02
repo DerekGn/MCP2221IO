@@ -23,6 +23,7 @@
 */
 
 using MCP2221IO.Commands;
+using MCP2221IO.Gpio;
 using MCP2221IO.Responses;
 using MCP2221IO.Usb;
 using System;
@@ -43,6 +44,8 @@ namespace MCP2221IO
         public DeviceStatus Status => ExecuteCommand<StatusSetParametersResponse>(new StatusSetParametersCommand()).DeviceStatus;
 
         public ChipSettings ChipSettings => ExecuteCommand<ChipSettingsResponse>(new ReadChipSettingsCommand()).ChipSettings;
+
+        public GpioPorts GpioPorts => ExecuteCommand<GpioPortsResponse>(new ReadGpioPortsCommand()).GpioPorts;
 
         //public int Speed { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
         //public CommParameters CommParameters { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }

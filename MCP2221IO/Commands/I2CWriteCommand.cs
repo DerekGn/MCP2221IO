@@ -22,49 +22,32 @@
 * SOFTWARE.
 */
 
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+
 namespace MCP2221IO.Commands
 {
-    /// <summary>
-    /// HID command codes
-    /// </summary>
-    public enum CommandCodes
+    internal class I2CWriteDataCommand : BaseCommand
     {
-        StatusSetParameters = 0x10,
-        /// <summary>
-        /// Read flash data
-        /// </summary>
-        ReadFlashData = 0xB0,
-        /// <summary>
-        /// Write flash data
-        /// </summary>
-        WriteFlashData = 0xB1,
-        /// <summary>
-        /// Send the flash unlock code
-        /// </summary>
-        SendFlashAccessPassword = 0xB2,
-        /// <summary>
-        /// Reset the device
-        /// </summary>
-        Reset = 0x70,
-        /// <summary>
-        /// Get SRAM data
-        /// </summary>
-        SetSram = 0x60,
-        /// <summary>
-        /// Set SRAM data
-        /// </summary>
-        GetSram = 0x61,
-        /// <summary>
-        /// Write I2CData to the device
-        /// </summary>
-        WriteI2CData = 0x90,
-        /// <summary>
-        /// Write I2CData to the device with repeat start
-        /// </summary>
-        WriteI2CDataRepeatStart = 0x92,
-        /// <summary>
-        /// Write I2CData to the device with no stop
-        /// </summary>
-        WriteI2CDataNoStop = 0x94,
+        public I2CWriteDataCommand(CommandCodes commandCode, byte address, IList<byte> data) : base(commandCode)
+        {
+            Address = address;
+            Data = data;
+        }
+
+        public byte Address { get; }
+        public IList<byte> Data { get; }
+
+        public override void Serialise(Stream stream)
+        {
+            base.Serialise(stream);
+
+            stream.WriteByte((byte)(Data.Count & 0x00FF));
+            stream.WriteByte((byte)((Data.Count & 0xFF00)>>8));
+            stream.WriteByte(Address);
+
+            stream.Write(Data.ToArray(), 0, Data.Count);
+        }
     }
 }

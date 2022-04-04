@@ -29,10 +29,12 @@ using MCP2221IO.Responses.Exceptions;
 using MCP2221IO.Usb;
 using Moq;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Xunit;
 using Xunit.Abstractions;
+using Xunit.Sdk;
 
 namespace MCP2221IO.UnitTests
 {
@@ -307,6 +309,77 @@ namespace MCP2221IO.UnitTests
             serialNumber.Should().NotBeNull();
 
             _output.WriteLine(serialNumber);
+        }
+
+        [Fact]
+        public void TestUnlockFlash()
+        {
+            // Arrange
+            Stream writeStream = null;
+
+            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()))
+                .Callback<Stream, Stream>
+                (
+                    (a, b) =>
+                    {
+                        WriteFlashUnlockResponse(b);
+                        writeStream = a;
+                    }
+                );
+
+            // Act
+            Action act = () => { _device.UnlockFlash(0xAA55AA55DEADBEEF); };
+
+            // Assert
+            act.Should().NotThrow();
+        }
+
+        [Theory]
+        [InlineData(CommandCodes.WriteI2CData)]
+        [InlineData(CommandCodes.WriteI2CDataNoStop)]
+        [InlineData(CommandCodes.WriteI2CDataRepeatStart)]
+        public void TestI2CWriteDataTests(CommandCodes commandCode)
+        {
+            // Arrange
+            Stream writeStream = null;
+
+            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()))
+                .Callback<Stream, Stream>
+                (
+                    (a, b) =>
+                    {
+                        WriteI2CWriteReponse(b, commandCode);
+                        writeStream = a;
+                    }
+                );
+
+            var buffer = new List<byte>() { };
+
+            for (int i = 0; i < 1000; i++)
+            {
+                buffer.Add(0xFF);
+            }
+
+            // Act
+            _device.I2CWriteData(0xFF, buffer);
+
+            // Assert
+            writeStream.Should().NotBeNull();
+        }
+
+        private void WriteI2CWriteReponse(Stream stream, CommandCodes commandCode)
+        {
+            stream.Write(new byte[64], 0, 64);
+            stream.Position = 0;
+            stream.WriteByte((byte)commandCode);
+        }
+
+        private void WriteFlashUnlockResponse(Stream stream)
+        {
+            stream.Write(new byte[64], 0, 64);
+            stream.Position = 0;
+            stream.WriteByte((byte)CommandCodes.SendFlashAccessPassword);
+            stream.WriteByte(0);
         }
 
         private void WriteFlashWriteResponse(Stream stream, int status)

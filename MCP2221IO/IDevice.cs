@@ -24,6 +24,7 @@
 
 using MCP2221IO.Gpio;
 using System;
+using System.Collections.Generic;
 
 namespace MCP2221IO
 {
@@ -67,6 +68,49 @@ namespace MCP2221IO
         /// </summary>
         string FactorySerialNumber { get; }
 
+        /// <summary>
+        /// Unlock the flash
+        /// </summary>
+        /// <param name="password">The 8 byte password</param>
+        void UnlockFlash(ulong password);
 
+        /// <summary>
+        /// Write data to an I2C client device 
+        /// </summary>
+        /// <param name="address">The address of the client device</param>
+        /// <param name="data">The data to write to the device</param>
+        void I2CWriteData(byte address, IList<byte> data);
+
+        /// <summary>
+        /// Write data to an I2C client device with repeated start
+        /// </summary>
+        /// <param name="address">The address of the client device</param>
+        /// <param name="data">The data to write to the device</param>
+        void I2CWriteDataRepeatStart(byte address, IList<byte> data);
+
+        /// <summary>
+        /// Write data to an I2C client device with no stop
+        /// </summary>
+        /// <param name="address">The address of the client device</param>
+        /// <param name="data">The data to write to the device</param>
+        void I2CWriteDataNoStop(byte address, IList<byte> data);
+
+        /// <summary>
+        /// Read data from an I2C client device
+        /// </summary>
+        /// <param name="address">The address of the client device</param>
+        /// <param name="length">The number of bytes to read</param>
+        /// <returns>The bytes read from the client device</returns>
+        IList<byte> I2CReadData(byte address, ushort length);
+
+        /// <summary>
+        /// Read data from an I2C client device with repeated start
+        /// </summary>
+        /// <param name="address">The address of the client device</param>
+        /// <param name="length">The number of bytes to read</param>
+        /// <returns>The bytes read from the client device</returns>
+        IList<byte> I2CReadDataRepeatedStart(byte address, ushort length);
+
+        //void UpdateGpio(GpioPort gpioPort, )
     }
 }

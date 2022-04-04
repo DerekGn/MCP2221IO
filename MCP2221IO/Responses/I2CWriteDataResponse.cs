@@ -22,49 +22,21 @@
 * SOFTWARE.
 */
 
-namespace MCP2221IO.Commands
+using MCP2221IO.Commands;
+
+namespace MCP2221IO.Responses
 {
     /// <summary>
-    /// HID command codes
+    /// I2C Write Data
     /// </summary>
-    public enum CommandCodes
+    internal class I2CWriteDataResponse : BaseResponse
     {
-        StatusSetParameters = 0x10,
-        /// <summary>
-        /// Read flash data
-        /// </summary>
-        ReadFlashData = 0xB0,
-        /// <summary>
-        /// Write flash data
-        /// </summary>
-        WriteFlashData = 0xB1,
-        /// <summary>
-        /// Send the flash unlock code
-        /// </summary>
-        SendFlashAccessPassword = 0xB2,
-        /// <summary>
-        /// Reset the device
-        /// </summary>
-        Reset = 0x70,
-        /// <summary>
-        /// Get SRAM data
-        /// </summary>
-        SetSram = 0x60,
-        /// <summary>
-        /// Set SRAM data
-        /// </summary>
-        GetSram = 0x61,
-        /// <summary>
-        /// Write I2CData to the device
-        /// </summary>
-        WriteI2CData = 0x90,
-        /// <summary>
-        /// Write I2CData to the device with repeat start
-        /// </summary>
-        WriteI2CDataRepeatStart = 0x92,
-        /// <summary>
-        /// Write I2CData to the device with no stop
-        /// </summary>
-        WriteI2CDataNoStop = 0x94,
+        public I2CWriteDataResponse() : base(CommandCodes.WriteI2CData)
+        {
+        }
+
+        protected I2CWriteDataResponse(CommandCodes commandCode) : base(commandCode)
+        {
+        }
     }
 }

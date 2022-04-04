@@ -22,49 +22,34 @@
 * SOFTWARE.
 */
 
+using System;
+using System.IO;
+
 namespace MCP2221IO.Commands
 {
     /// <summary>
-    /// HID command codes
+    /// Unlock the flash
     /// </summary>
-    public enum CommandCodes
+    internal class UnlockFlashCommand : BaseCommand
     {
-        StatusSetParameters = 0x10,
+        public UnlockFlashCommand(ulong password) : base(CommandCodes.SendFlashAccessPassword)
+        {
+            Password = password;
+        }
+
         /// <summary>
-        /// Read flash data
+        /// The unlock password
         /// </summary>
-        ReadFlashData = 0xB0,
-        /// <summary>
-        /// Write flash data
-        /// </summary>
-        WriteFlashData = 0xB1,
-        /// <summary>
-        /// Send the flash unlock code
-        /// </summary>
-        SendFlashAccessPassword = 0xB2,
-        /// <summary>
-        /// Reset the device
-        /// </summary>
-        Reset = 0x70,
-        /// <summary>
-        /// Get SRAM data
-        /// </summary>
-        SetSram = 0x60,
-        /// <summary>
-        /// Set SRAM data
-        /// </summary>
-        GetSram = 0x61,
-        /// <summary>
-        /// Write I2CData to the device
-        /// </summary>
-        WriteI2CData = 0x90,
-        /// <summary>
-        /// Write I2CData to the device with repeat start
-        /// </summary>
-        WriteI2CDataRepeatStart = 0x92,
-        /// <summary>
-        /// Write I2CData to the device with no stop
-        /// </summary>
-        WriteI2CDataNoStop = 0x94,
+        public ulong Password { get; }
+
+        // <inheritdoc/>
+        public override void Serialise(Stream stream)
+        {
+            base.Serialise(stream);
+
+            var bytes = BitConverter.GetBytes(Password);
+
+            stream.Write(bytes, 0, bytes.Length);
+        }
     }
 }

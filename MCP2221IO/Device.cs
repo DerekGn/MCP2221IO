@@ -27,12 +27,16 @@ using MCP2221IO.Gpio;
 using MCP2221IO.Responses;
 using MCP2221IO.Usb;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace MCP2221IO
 {
     public class Device : IDevice
     {
+        private const int MaxBlockSize = 60;
+
         private string _factorySerialNumber;
         private IUsbDevice _usbDevice;
 
@@ -65,48 +69,51 @@ namespace MCP2221IO
             get => ExecuteCommand<UsbSerialNumberDescriptorResponse>(new ReadUsbSerialNumberDescriptorCommand()).Value;
             set => ExecuteCommand<WriteFlashDataResponse>(new WriteUsbSerialNumberCommand(value));
         }
+        // <inheritdoc/>
         public string FactorySerialNumber => GetFactorySerialNumber();
+        // <inheritdoc/>
+        public void UnlockFlash(ulong password)
+        {
+            ExecuteCommand<UnlockFlashResponse>(new UnlockFlashCommand(password));
+        }
+        // <inheritdoc/>
+        public void I2CWriteData(byte address, IList<byte> data)
+        {
+            I2CWriteData<I2CWriteDataResponse>(CommandCodes.WriteI2CData, address, data);
+        }
 
-        //public int Speed { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        //public CommParameters CommParameters { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        // <inheritdoc/>
+        public void I2CWriteDataRepeatStart(byte address, IList<byte> data)
+        {
+            I2CWriteData<I2CWriteDataRepeatStartResponse>(CommandCodes.WriteI2CDataRepeatStart, address, data);
+        }
+        // <inheritdoc/>
+        public void I2CWriteDataNoStop(byte address, IList<byte> data)
+        {
+            I2CWriteData<I2CWriteDataNoStopResponse>(CommandCodes.WriteI2CDataNoStop, address, data);
+        }
+        // <inheritdoc/>
+        public IList<byte> I2CReadData(byte address, ushort length)
+        {
+            throw new NotImplementedException();
+        }
+        // <inheritdoc/>
+        public IList<byte> I2CReadDataRepeatedStart(byte address, ushort length)
+        {
+            throw new NotImplementedException();
+        }
 
-        //public ChipSettings ChipSettings { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        //public GpSettings GpSettings { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        //public string Manufacturer { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        //public string Product { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-        //public string SerialNumber { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        private void I2CWriteData<T>(CommandCodes commandCode, byte address, IList<byte> data) where T : BaseResponse
+        {
+            int blockCount = (data.Count + MaxBlockSize - 1) / MaxBlockSize;
 
-        //public long FactorySerialNumber
-        //{
-        //    get
-        //    {
-        //        if (_factorySerialNumber == 0)
-        //        {
-        //            var response = ExecuteCommand<FactorySerialNumberResponse>(new ReadFlashDataCommand(ReadFlashSubCode.ReadChipFactorySerialNumber));
+            for (int i = 0; i < blockCount; i++)
+            {
+                int blockSize = Math.Min(MaxBlockSize, data.Count - i);
 
-        //            _factorySerialNumber = response.FactorySerialNumber;
-        //        }
-
-        //        return _factorySerialNumber;
-        //    }
-        //}
-
-        //public UsbPowerAttributes UsbPowerAttributes { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-        //public void Unlock(long code)
-        //{
-        //    throw new System.NotImplementedException();
-        //}
-
-        //public void Reset()
-        //{
-        //    ExecuteCommand(new ResetCommand());
-        //}
-
-        //public void I2CCancelCurrentTransfer()
-        //{
-        //    throw new NotImplementedException();
-        //}
+                ExecuteCommand<T>(new I2CWriteDataCommand(commandCode, address, data.Skip(MaxBlockSize * i).Take(blockSize).ToList()));
+            }
+        }
 
         private void ExecuteCommand(ICommand command)
         {
@@ -175,7 +182,6 @@ namespace MCP2221IO
             Dispose(disposing: true);
             System.GC.SuppressFinalize(this);
         }
-
         #endregion
     }
 }

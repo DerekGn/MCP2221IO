@@ -22,17 +22,37 @@
 * SOFTWARE.
 */
 
-using MCP2221IO.Commands;
+using MCP2221IO.Extensions;
+using System.IO;
 
-namespace MCP2221IO.Responses
+namespace MCP2221IO.Commands
 {
     /// <summary>
-    /// I2C Write Data Repeat Start
+    /// Read I2C data command
     /// </summary>
-    internal class I2CWriteDataRepeatStartResponse : I2CWriteDataResponse
+    internal class I2CReadDataCommand : BaseCommand
     {
-        public I2CWriteDataRepeatStartResponse() : base(CommandCodes.WriteI2CDataRepeatedStart)
+        public I2CReadDataCommand(CommandCodes commandCode, byte address, ushort length) : base(commandCode)
         {
+            Address = address;
+            Length = length;
+        }
+
+        /// <summary>
+        /// The address of the I2C device to read
+        /// </summary>
+        public byte Address { get; }
+        /// <summary>
+        /// The length of data to read
+        /// </summary>
+        public ushort Length { get; }
+
+        public override void Serialise(Stream stream)
+        {
+            base.Serialise(stream);
+
+            stream.WriteUShort(Length);
+            stream.WriteUShort(Address);
         }
     }
 }

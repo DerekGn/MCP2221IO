@@ -40,5 +40,15 @@ namespace MCP2221IO.Extensions
 
             return value;
         }
+        /// <summary>
+        /// Write a <see cref="UInt16"/> value to the <see cref="Stream"/>
+        /// </summary>
+        /// <param name="stream">The stream to write</param>
+        /// <param name="value">The value to write</param>
+        public static void WriteUShort(this Stream stream, ushort value)
+        {
+            stream.WriteByte((byte)(value & 0x00FF));
+            stream.WriteByte((byte)((value & 0xFF00) >> 8));
+        }
     }
 }

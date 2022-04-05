@@ -22,12 +22,16 @@
 * SOFTWARE.
 */
 
+using MCP2221IO.Extensions;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
 namespace MCP2221IO.Commands
 {
+    /// <summary>
+    /// Write I2C data to a device
+    /// </summary>
     internal class I2CWriteDataCommand : BaseCommand
     {
         public I2CWriteDataCommand(CommandCodes commandCode, byte address, IList<byte> data) : base(commandCode)
@@ -36,17 +40,20 @@ namespace MCP2221IO.Commands
             Data = data;
         }
 
+        /// <summary>
+        /// The I2C device address
+        /// </summary>
         public byte Address { get; }
+        /// <summary>
+        /// The data to write to the device
+        /// </summary>
         public IList<byte> Data { get; }
 
         public override void Serialise(Stream stream)
         {
             base.Serialise(stream);
-
-            stream.WriteByte((byte)(Data.Count & 0x00FF));
-            stream.WriteByte((byte)((Data.Count & 0xFF00)>>8));
+            stream.WriteUShort((ushort)Data.Count);
             stream.WriteByte(Address);
-
             stream.Write(Data.ToArray(), 0, Data.Count);
         }
     }

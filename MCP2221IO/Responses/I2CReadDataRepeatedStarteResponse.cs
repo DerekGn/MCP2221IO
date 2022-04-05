@@ -27,11 +27,11 @@ using MCP2221IO.Commands;
 namespace MCP2221IO.Responses
 {
     /// <summary>
-    /// I2C Write Data Repeat Start
+    /// I2C read data with repeated start response
     /// </summary>
-    internal class I2CWriteDataRepeatStartResponse : I2CWriteDataResponse
+    internal class I2CReadDataRepeatedStarteResponse : I2CReadDataResponse
     {
-        public I2CWriteDataRepeatStartResponse() : base(CommandCodes.WriteI2CDataRepeatedStart)
+        public I2CReadDataRepeatedStarteResponse() : base(CommandCodes.ReadI2CDataRepeatedStart)
         {
         }
     }

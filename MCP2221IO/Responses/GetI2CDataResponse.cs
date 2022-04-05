@@ -22,17 +22,42 @@
 * SOFTWARE.
 */
 
-using MCP2221IO.Commands;
+using MCP2221IO.Responses.Exceptions;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace MCP2221IO.Responses
 {
     /// <summary>
-    /// I2C Write Data Repeat Start
+    /// Get I2C data from the device
     /// </summary>
-    internal class I2CWriteDataRepeatStartResponse : I2CWriteDataResponse
+    internal class GetI2CDataResponse : BaseResponse
     {
-        public I2CWriteDataRepeatStartResponse() : base(CommandCodes.WriteI2CDataRepeatedStart)
+        public GetI2CDataResponse() : base(Commands.CommandCodes.GetI2CData)
         {
+        }
+
+        public IList<byte> Data { get; private set; }
+
+        public override void Deserialise(Stream stream)
+        {
+            base.Deserialise(stream);
+
+            int temp = stream.ReadByte();
+
+            if(temp ==  0x7F)
+            {
+                throw new CommandExecutionFailedException("I2C data read failed");
+            }
+            else
+            {
+                byte[] buffer = new byte[temp];
+
+                stream.Read(buffer, 0, temp);
+
+                Data = buffer.ToList();
+            }
         }
     }
 }

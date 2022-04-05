@@ -396,7 +396,7 @@ namespace MCP2221IO.UnitTests
                 (
                     (a, b) =>
                     {
-                        WriteI2CWriteReponse(b, CommandCodes.WriteI2CDataRepeatStart);
+                        WriteI2CWriteReponse(b, CommandCodes.WriteI2CDataRepeatedStart);
                     }
                 );
 
@@ -412,6 +412,89 @@ namespace MCP2221IO.UnitTests
 
             // Assert
             _mockUsbDevice.Verify(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()), Times.Exactly(17));
+        }
+
+        [Fact]
+        public void TestI2CRead()
+        {
+            const int DataLength = 130;
+            bool startWritten = false;
+            int blockCount = 0;
+
+            // Arrange
+            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()))
+                .Callback<Stream, Stream>
+                (
+                    (a, b) =>
+                    {
+                        if (!startWritten)
+                        {
+                            WriteI2CReadReponse(b, CommandCodes.ReadI2CData);
+                            startWritten = true;
+                        }
+                        else
+                        {
+                            WriteGetI2CDataResponse(b, CommandCodes.GetI2CData, Math.Min(Device.MaxBlockSize, Math.Abs(DataLength - (blockCount++ * Device.MaxBlockSize))));
+                        }
+                    }
+                );
+
+            // Act
+            var buffer = _device.I2CReadData(0xFF, DataLength);
+
+            // Assert
+            _mockUsbDevice.Verify(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()), Times.Exactly(4));
+            buffer.Should().NotBeNullOrEmpty();
+        }
+
+        [Fact]
+        public void TestI2CReadRepeatedStart()
+        {
+            const int DataLength = 130;
+            bool startWritten = false;
+            int blockCount = 0;
+
+            // Arrange
+            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()))
+                .Callback<Stream, Stream>
+                (
+                    (a, b) =>
+                    {
+                        if (!startWritten)
+                        {
+                            WriteI2CReadReponse(b, CommandCodes.ReadI2CDataRepeatedStart);
+                            startWritten = true;
+                        }
+                        else
+                        {
+                            WriteGetI2CDataResponse(b, CommandCodes.GetI2CData, Math.Min(Device.MaxBlockSize, Math.Abs(DataLength - (blockCount++ * Device.MaxBlockSize))));
+                        }
+                    }
+                );
+
+            // Act
+            var buffer = _device.I2CReadDataRepeatedStart(0xFF, DataLength);
+
+            // Assert
+            _mockUsbDevice.Verify(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()), Times.Exactly(4));
+            buffer.Should().NotBeNullOrEmpty();
+        }
+
+        private void WriteGetI2CDataResponse(Stream stream, CommandCodes commandCode, int length)
+        {
+            stream.Write(new byte[64], 0, 64);
+            stream.Position = 0;
+            stream.WriteByte((byte)commandCode);
+            stream.WriteByte(0);
+            stream.WriteByte((byte)length);
+            stream.Write(new byte[length], 0, length);
+        }
+
+        private void WriteI2CReadReponse(Stream stream, CommandCodes commandCode)
+        {
+            stream.Write(new byte[64], 0, 64);
+            stream.Position = 0;
+            stream.WriteByte((byte)commandCode);
         }
 
         private void WriteI2CWriteReponse(Stream stream, CommandCodes commandCode)

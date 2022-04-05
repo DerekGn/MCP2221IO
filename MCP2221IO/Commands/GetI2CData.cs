@@ -22,16 +22,14 @@
 * SOFTWARE.
 */
 
-using MCP2221IO.Commands;
-
-namespace MCP2221IO.Responses
+namespace MCP2221IO.Commands
 {
     /// <summary>
-    /// I2C Write Data Repeat Start
+    /// Get I2C data from the device command
     /// </summary>
-    internal class I2CWriteDataRepeatStartResponse : I2CWriteDataResponse
+    internal class GetI2CDataCommand : BaseCommand
     {
-        public I2CWriteDataRepeatStartResponse() : base(CommandCodes.WriteI2CDataRepeatedStart)
+        public GetI2CDataCommand() : base(CommandCodes.GetI2CData)
         {
         }
     }

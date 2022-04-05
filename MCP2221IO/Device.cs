@@ -35,7 +35,7 @@ namespace MCP2221IO
 {
     public class Device : IDevice
     {
-        private const int MaxBlockSize = 60;
+        internal const int MaxBlockSize = 60;
 
         private string _factorySerialNumber;
         private IUsbDevice _usbDevice;
@@ -85,7 +85,7 @@ namespace MCP2221IO
         // <inheritdoc/>
         public void I2CWriteDataRepeatStart(byte address, IList<byte> data)
         {
-            I2CWriteData<I2CWriteDataRepeatStartResponse>(CommandCodes.WriteI2CDataRepeatStart, address, data);
+            I2CWriteData<I2CWriteDataRepeatStartResponse>(CommandCodes.WriteI2CDataRepeatedStart, address, data);
         }
         // <inheritdoc/>
         public void I2CWriteDataNoStop(byte address, IList<byte> data)
@@ -95,12 +95,29 @@ namespace MCP2221IO
         // <inheritdoc/>
         public IList<byte> I2CReadData(byte address, ushort length)
         {
-            throw new NotImplementedException();
+            return I2CReadData<I2CReadDataResponse>(CommandCodes.ReadI2CData, address, length);
         }
+
         // <inheritdoc/>
         public IList<byte> I2CReadDataRepeatedStart(byte address, ushort length)
         {
-            throw new NotImplementedException();
+            return I2CReadData<I2CReadDataRepeatedStarteResponse>(CommandCodes.ReadI2CDataRepeatedStart, address, length);
+        }
+
+        private IList<byte> I2CReadData<T>(CommandCodes commandCode, byte address, ushort length) where T : IResponse, new() 
+        {
+            List<byte> result = new List<byte>();
+
+            int blockCount = (length + MaxBlockSize - 1) / MaxBlockSize;
+
+            ExecuteCommand<T>(new I2CReadDataCommand(commandCode, address, length));
+
+            for (int i = 0; i < blockCount; i++)
+            {
+                result.AddRange(ExecuteCommand<GetI2CDataResponse>(new GetI2CDataCommand()).Data);
+            }
+
+            return result;
         }
 
         private void I2CWriteData<T>(CommandCodes commandCode, byte address, IList<byte> data) where T : IResponse, new()
@@ -109,7 +126,7 @@ namespace MCP2221IO
 
             for (int i = 0; i < blockCount; i++)
             {
-                int blockSize = Math.Min(MaxBlockSize, data.Count - i);
+                int blockSize = Math.Min(MaxBlockSize, Math.Abs(data.Count - (i * MaxBlockSize)));
 
                 ExecuteCommand<T>(new I2CWriteDataCommand(commandCode, address, data.Skip(MaxBlockSize * i).Take(blockSize).ToList()));
             }

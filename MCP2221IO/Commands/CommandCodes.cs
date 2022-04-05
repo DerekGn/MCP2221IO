@@ -31,6 +31,10 @@ namespace MCP2221IO.Commands
     {
         StatusSetParameters = 0x10,
         /// <summary>
+        /// Get I2C Data
+        /// </summary>
+        GetI2CData = 0x40,
+        /// <summary>
         /// Read flash data
         /// </summary>
         ReadFlashData = 0xB0,
@@ -55,13 +59,21 @@ namespace MCP2221IO.Commands
         /// </summary>
         GetSram = 0x61,
         /// <summary>
+        /// Read I2C data from the device
+        /// </summary>
+        ReadI2CData = 0x91,
+        /// <summary>
         /// Write I2CData to the device
         /// </summary>
         WriteI2CData = 0x90,
         /// <summary>
         /// Write I2CData to the device with repeat start
         /// </summary>
-        WriteI2CDataRepeatStart = 0x92,
+        WriteI2CDataRepeatedStart = 0x92,
+        /// <summary>
+        /// Read I2CData to the device with repeat start
+        /// </summary>
+        ReadI2CDataRepeatedStart = 0x93,
         /// <summary>
         /// Write I2CData to the device with no stop
         /// </summary>

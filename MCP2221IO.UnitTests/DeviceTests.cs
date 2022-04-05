@@ -34,7 +34,6 @@ using System.IO;
 using System.Text;
 using Xunit;
 using Xunit.Abstractions;
-using Xunit.Sdk;
 
 namespace MCP2221IO.UnitTests
 {
@@ -334,22 +333,16 @@ namespace MCP2221IO.UnitTests
             act.Should().NotThrow();
         }
 
-        [Theory]
-        [InlineData(CommandCodes.WriteI2CData)]
-        [InlineData(CommandCodes.WriteI2CDataNoStop)]
-        [InlineData(CommandCodes.WriteI2CDataRepeatStart)]
-        public void TestI2CWriteDataTests(CommandCodes commandCode)
+        [Fact]
+        public void TestI2CWriteDataTest()
         {
             // Arrange
-            Stream writeStream = null;
-
             _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()))
                 .Callback<Stream, Stream>
                 (
                     (a, b) =>
                     {
-                        WriteI2CWriteReponse(b, commandCode);
-                        writeStream = a;
+                        WriteI2CWriteReponse(b, CommandCodes.WriteI2CData);
                     }
                 );
 
@@ -364,7 +357,61 @@ namespace MCP2221IO.UnitTests
             _device.I2CWriteData(0xFF, buffer);
 
             // Assert
-            writeStream.Should().NotBeNull();
+            _mockUsbDevice.Verify(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()), Times.Exactly(17));
+        }
+
+        [Fact]
+        public void TestI2CWriteDataNoStopTest()
+        {
+            // Arrange
+            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()))
+                .Callback<Stream, Stream>
+                (
+                    (a, b) =>
+                    {
+                        WriteI2CWriteReponse(b, CommandCodes.WriteI2CDataNoStop);
+                    }
+                );
+
+            var buffer = new List<byte>() { };
+
+            for (int i = 0; i < 1000; i++)
+            {
+                buffer.Add(0xFF);
+            }
+
+            // Act
+            _device.I2CWriteDataNoStop(0xFF, buffer);
+
+            // Assert
+            _mockUsbDevice.Verify(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()),Times.Exactly(17));
+        }
+
+        [Fact]
+        public void TestI2CWriteDataTestRepartStart()
+        {
+            // Arrange
+            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()))
+                .Callback<Stream, Stream>
+                (
+                    (a, b) =>
+                    {
+                        WriteI2CWriteReponse(b, CommandCodes.WriteI2CDataRepeatStart);
+                    }
+                );
+
+            var buffer = new List<byte>() { };
+
+            for (int i = 0; i < 1000; i++)
+            {
+                buffer.Add(0xFF);
+            }
+
+            // Act
+            _device.I2CWriteDataRepeatStart(0xFF, buffer);
+
+            // Assert
+            _mockUsbDevice.Verify(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()), Times.Exactly(17));
         }
 
         private void WriteI2CWriteReponse(Stream stream, CommandCodes commandCode)

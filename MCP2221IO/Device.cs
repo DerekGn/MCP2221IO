@@ -103,7 +103,7 @@ namespace MCP2221IO
             throw new NotImplementedException();
         }
 
-        private void I2CWriteData<T>(CommandCodes commandCode, byte address, IList<byte> data) where T : BaseResponse
+        private void I2CWriteData<T>(CommandCodes commandCode, byte address, IList<byte> data) where T : IResponse, new()
         {
             int blockCount = (data.Count + MaxBlockSize - 1) / MaxBlockSize;
 

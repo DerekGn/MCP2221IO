@@ -22,43 +22,15 @@
 * SOFTWARE.
 */
 
-using System.IO;
-using System.Text;
-
-namespace MCP2221IO.Gpio
+namespace MCP2221IO.Commands
 {
     /// <summary>
-    /// The devices Gpio settings
+    /// Read <see cref="GpSettings"/> from device flash
     /// </summary>
-    public abstract class GpioSettings
+    internal class ReadGpSettingsCommand : ReadFlashDataCommand
     {
-        /// <summary>
-        /// The current output value on the Gpio port
-        /// </summary>
-        public bool OutputValue { get; set; }
-
-        /// <summary>
-        /// The Gpio port direction
-        /// </summary>
-        public GpioDirection Direction { get; set; }
-
-        public override string ToString()
+        public ReadGpSettingsCommand() : base(ReadFlashSubCode.ReadGpSettings)
         {
-            StringBuilder stringBuilder = new StringBuilder();
-
-            stringBuilder.AppendLine($"{nameof(OutputValue)}:\r\n({OutputValue}");
-            stringBuilder.AppendLine($"{nameof(Direction)}:\r\n({Direction}");
-
-            return stringBuilder.ToString();
-        }
-
-        // <inheritdoc/>
-        public virtual void Deserialise(Stream stream)
-        {
-            int temp = stream.ReadByte();
-
-            OutputValue = (temp & 0x10) == 0x10;
-            Direction = (GpioDirection)((temp & 0x80) >> 3);
         }
     }
 }

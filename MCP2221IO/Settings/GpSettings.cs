@@ -25,40 +25,44 @@
 using System.IO;
 using System.Text;
 
-namespace MCP2221IO.Gpio
+namespace MCP2221IO.Settings
 {
     /// <summary>
-    /// The devices Gpio settings
+    /// The GP settings read from flash
     /// </summary>
-    public abstract class GpioSettings
+    public class GpSettings
     {
-        /// <summary>
-        /// The current output value on the Gpio port
-        /// </summary>
-        public bool OutputValue { get; set; }
+        public Gp0PowerUpSettings Gp0PowerUpSettings { get; private set; }
 
-        /// <summary>
-        /// The Gpio port direction
-        /// </summary>
-        public GpioDirection Direction { get; set; }
+        public Gp1PowerUpSettings Gp1PowerUpSettings { get; private set; }
+
+        public Gp2PowerUpSettings Gp2PowerUpSettings { get; private set; }
+
+        public Gp3PowerUpSettings Gp3PowerUpSettings { get; private set; }
 
         public override string ToString()
         {
             StringBuilder stringBuilder = new StringBuilder();
 
-            stringBuilder.AppendLine($"{nameof(OutputValue)}:\r\n({OutputValue}");
-            stringBuilder.AppendLine($"{nameof(Direction)}:\r\n({Direction}");
+            stringBuilder.AppendLine($"{nameof(Gp0PowerUpSettings)}:\r\n{Gp0PowerUpSettings}");
+            stringBuilder.AppendLine($"{nameof(Gp1PowerUpSettings)}:\r\n{Gp1PowerUpSettings}");
+            stringBuilder.AppendLine($"{nameof(Gp2PowerUpSettings)}:\r\n{Gp2PowerUpSettings}");
+            stringBuilder.AppendLine($"{nameof(Gp3PowerUpSettings)}:\r\n{Gp3PowerUpSettings}");
 
             return stringBuilder.ToString();
         }
 
-        // <inheritdoc/>
-        public virtual void Deserialise(Stream stream)
+        internal void Deserialise(Stream stream)
         {
-            int temp = stream.ReadByte();
+            Gp0PowerUpSettings = new Gp0PowerUpSettings();
+            Gp1PowerUpSettings = new Gp1PowerUpSettings();
+            Gp2PowerUpSettings = new Gp2PowerUpSettings();
+            Gp3PowerUpSettings = new Gp3PowerUpSettings();
 
-            OutputValue = (temp & 0x10) == 0x10;
-            Direction = (GpioDirection)((temp & 0x80) >> 3);
+            Gp0PowerUpSettings.Deserialise(stream);
+            Gp1PowerUpSettings.Deserialise(stream);
+            Gp2PowerUpSettings.Deserialise(stream);
+            Gp3PowerUpSettings.Deserialise(stream);
         }
     }
 }

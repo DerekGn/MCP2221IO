@@ -48,8 +48,13 @@ namespace MCP2221IO
 
         // <inheritdoc/>
         public ChipSettings ChipSettings { get; private set; }
+
+        // <inheritdoc/>
+        public GpSettings GpSettings { get; private set; }
+
         // <inheritdoc/>
         public SramSettings SramSettings { get; private set; }
+
         // <inheritdoc/>
         public DeviceStatus Status => ExecuteCommand<StatusSetParametersResponse>(new StatusSetParametersCommand()).DeviceStatus;
         //// <inheritdoc/>
@@ -111,6 +116,12 @@ namespace MCP2221IO
         public void ReadChipSettings()
         {
             ChipSettings = ExecuteCommand<ReadChipSettingsResponse>(new ReadChipSettingsCommand()).ChipSettings;
+        }
+
+        // <inheritdoc/>
+        public void ReadGpSettings()
+        {
+            GpSettings = ExecuteCommand<ReadGpSettingsResponse>(new ReadGpSettingsCommand()).GpSettings;
         }
 
         // <inheritdoc/>

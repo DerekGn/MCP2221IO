@@ -39,7 +39,7 @@ namespace MCP2221IO.Gpio
             StringBuilder stringBuilder = new StringBuilder();
 
             stringBuilder.Append(base.ToString());
-            stringBuilder.Append($"\tDesignation:\t{Designation}");
+            stringBuilder.Append($"\t{nameof(Designation)}:\t{Designation}");
 
             return stringBuilder.ToString();
         }

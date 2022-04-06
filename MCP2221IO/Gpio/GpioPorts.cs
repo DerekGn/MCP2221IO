@@ -54,10 +54,10 @@ namespace MCP2221IO.Gpio
         {
             StringBuilder stringBuilder = new StringBuilder();
 
-            stringBuilder.AppendLine($"Gpio0Settings:\r\n{Gpio0Settings}");
-            stringBuilder.AppendLine($"Gpio1Settings:\r\n{Gpio1Settings}");
-            stringBuilder.AppendLine($"Gpio2Settings:\r\n{Gpio2Settings}");
-            stringBuilder.AppendLine($"Gpio3Settings:\r\n{Gpio3Settings}");
+            stringBuilder.AppendLine($"{nameof(Gpio0Settings)}:\r\n{Gpio0Settings}");
+            stringBuilder.AppendLine($"{nameof(Gpio0Settings)}:\r\n{Gpio1Settings}");
+            stringBuilder.AppendLine($"{nameof(Gpio0Settings)}:\r\n{Gpio2Settings}");
+            stringBuilder.AppendLine($"{nameof(Gpio0Settings)}:\r\n{Gpio3Settings}");
 
             return stringBuilder.ToString();
         }

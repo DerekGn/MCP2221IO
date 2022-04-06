@@ -22,15 +22,17 @@
 * SOFTWARE.
 */
 
+using MCP2221IO.Gpio;
 using System.IO;
 using System.Text;
 
-namespace MCP2221IO.Gpio
+namespace MCP2221IO.Settings
 {
     /// <summary>
-    /// The devices Gpio settings
+    /// A base Gp power up settings type
     /// </summary>
-    public abstract class GpioSettings
+    /// <typeparam name="T"></typeparam>
+    public abstract class BaseGpPowerUpSettings<T> where T : System.Enum
     {
         /// <summary>
         /// The current output value on the Gpio port
@@ -42,12 +44,18 @@ namespace MCP2221IO.Gpio
         /// </summary>
         public GpioDirection Direction { get; set; }
 
+        /// <summary>
+        /// The current Gp settings port designation
+        /// </summary>
+        public T Designation { get; set; }
+
         public override string ToString()
         {
             StringBuilder stringBuilder = new StringBuilder();
 
-            stringBuilder.AppendLine($"{nameof(OutputValue)}:\r\n({OutputValue}");
-            stringBuilder.AppendLine($"{nameof(Direction)}:\r\n({Direction}");
+            stringBuilder.AppendLine($"{nameof(OutputValue)}: {OutputValue}");
+            stringBuilder.AppendLine($"{nameof(Direction)}: {Direction}");
+            stringBuilder.AppendLine($"{nameof(Designation)}: {Designation}");
 
             return stringBuilder.ToString();
         }
@@ -59,6 +67,8 @@ namespace MCP2221IO.Gpio
 
             OutputValue = (temp & 0x10) == 0x10;
             Direction = (GpioDirection)((temp & 0x80) >> 3);
+            Designation = (T)(object)(temp & 0x07);
         }
     }
 }
+

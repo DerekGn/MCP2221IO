@@ -22,43 +22,36 @@
 * SOFTWARE.
 */
 
+using MCP2221IO.Commands;
+using MCP2221IO.Settings;
 using System.IO;
-using System.Text;
 
-namespace MCP2221IO.Gpio
+namespace MCP2221IO.Responses
 {
     /// <summary>
-    /// The devices Gpio settings
+    /// Read the <see cref="GpSettings"/> response
     /// </summary>
-    public abstract class GpioSettings
+    internal class ReadGpSettingsResponse : BaseResponse
     {
-        /// <summary>
-        /// The current output value on the Gpio port
-        /// </summary>
-        public bool OutputValue { get; set; }
-
-        /// <summary>
-        /// The Gpio port direction
-        /// </summary>
-        public GpioDirection Direction { get; set; }
-
-        public override string ToString()
+        public ReadGpSettingsResponse() : base(CommandCodes.ReadFlashData)
         {
-            StringBuilder stringBuilder = new StringBuilder();
-
-            stringBuilder.AppendLine($"{nameof(OutputValue)}:\r\n({OutputValue}");
-            stringBuilder.AppendLine($"{nameof(Direction)}:\r\n({Direction}");
-
-            return stringBuilder.ToString();
         }
 
-        // <inheritdoc/>
-        public virtual void Deserialise(Stream stream)
-        {
-            int temp = stream.ReadByte();
+        /// <summary>
+        /// The <see cref="GpSettings"/>
+        /// </summary>
+        public GpSettings GpSettings { get; set; }
 
-            OutputValue = (temp & 0x10) == 0x10;
-            Direction = (GpioDirection)((temp & 0x80) >> 3);
+        public override void Deserialise(Stream stream)
+        {
+            base.Deserialise(stream);
+
+            stream.ReadByte();
+            stream.ReadByte();
+
+            GpSettings = new GpSettings();
+
+            GpSettings.Deserialise(stream);
         }
     }
 }

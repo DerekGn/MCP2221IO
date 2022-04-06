@@ -74,6 +74,28 @@ namespace MCP2221IO.UnitTests
         }
 
         [Fact]
+        public void TestReadGpSettings()
+        {
+            // Arrange
+            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()))
+                .Callback<Stream, Stream>
+                (
+                    (a, b) =>
+                    {
+                        WriteGpSettingsResponse(b);
+                    }
+                );
+
+            // Act
+            _device.ReadGpSettings();
+
+            // Assert
+            _device.GpSettings.Should().NotBeNull();
+
+            _output.WriteLine(_device.GpSettings.ToString());
+        }
+
+        [Fact]
         public void TestWriteChipSettings()
         {
             // Arrange
@@ -523,6 +545,20 @@ namespace MCP2221IO.UnitTests
             // Assert
             _mockUsbDevice.Verify(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()), Times.Exactly(4));
             buffer.Should().NotBeNullOrEmpty();
+        }
+
+        private void WriteGpSettingsResponse(Stream stream)
+        {
+            stream.Write(new byte[64], 0, 64);
+            stream.Position = 0;
+            stream.WriteByte((byte)CommandCodes.ReadFlashData);
+            stream.WriteByte(0); // Command OK
+            stream.WriteByte(0); // sram structure length
+            stream.WriteByte(0); // do not care
+            stream.WriteByte(0x18); // GIO0
+            stream.WriteByte(0x19); // GIO1
+            stream.WriteByte(0x1A); // GIO2
+            stream.WriteByte(0x1B); // GIO3
         }
 
         private void WriteReadSramSettingsResponse(Stream stream)

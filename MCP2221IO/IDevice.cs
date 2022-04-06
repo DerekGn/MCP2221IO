@@ -40,6 +40,11 @@ namespace MCP2221IO
         ChipSettings ChipSettings { get; }
 
         /// <summary>
+        /// The Flash <see cref="GpSettings"/>
+        /// </summary>
+        GpSettings GpSettings { get; }
+
+        /// <summary>
         /// The <see cref="Device"/> <see cref="SramSettings"/>
         /// </summary>
         SramSettings SramSettings { get; }
@@ -126,6 +131,11 @@ namespace MCP2221IO
         /// Read the <see cref="ChipSettings"/> from the device
         /// </summary>
         void ReadChipSettings();
+
+        /// <summary>
+        /// Read the <see cref="GpSettings"/> from the device
+        /// </summary>
+        void ReadGpSettings();
 
         /// <summary>
         /// Write the <see cref="ChipSettings"/> to the device

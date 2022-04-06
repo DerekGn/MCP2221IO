@@ -115,24 +115,24 @@ namespace MCP2221IO
         {
             StringBuilder stringBuilder = new StringBuilder();
 
-            stringBuilder.AppendLine($"CancelTransferState: {CancelTransferState}");
-            stringBuilder.AppendLine($"SpeedStatus: {SpeedStatus}");
-            stringBuilder.AppendLine($"I2CLastDivisor: 0x{I2CLastDivisor:X}");
-            stringBuilder.AppendLine($"I2CStateMachineState: 0x{I2CStateMachineState:X}");
-            stringBuilder.AppendLine($"I2CTransferLength: 0x{I2CTransferLength:X}");
-            stringBuilder.AppendLine($"I2CTransferredLength: 0x{I2CTransferredLength:X}");
-            stringBuilder.AppendLine($"I2CBufferCounter: 0x{I2CBufferCounter:X}");
-            stringBuilder.AppendLine($"I2CClockDivisor: 0x{I2CClockDivisor:X}");
-            stringBuilder.AppendLine($"I2CTimeout: 0x{I2CTimeout:X}");
-            stringBuilder.AppendLine($"I2CAddress: 0x{I2CAddress:X}");
-            stringBuilder.AppendLine($"SclLineState: {SclLineState}");
-            stringBuilder.AppendLine($"SdaLineState: {SdaLineState}");
-            stringBuilder.AppendLine($"EdgeDetectionState: {EdgeDetectionState}");
-            stringBuilder.AppendLine($"I2CReadPending: 0x{I2CReadPending:X}");
-            stringBuilder.AppendLine($"HardwareRevision: {HardwareRevision}");
-            stringBuilder.AppendLine($"FirmwareRevision: {FirmwareRevision}");
+            stringBuilder.AppendLine($"{nameof(CancelTransferState)}: {CancelTransferState}");
+            stringBuilder.AppendLine($"{nameof(SpeedStatus)}: {SpeedStatus}");
+            stringBuilder.AppendLine($"{nameof(I2CLastDivisor)}: 0x{I2CLastDivisor:X}");
+            stringBuilder.AppendLine($"{nameof(I2CStateMachineState)}: 0x{I2CStateMachineState:X}");
+            stringBuilder.AppendLine($"{nameof(I2CTransferLength)}: 0x{I2CTransferLength:X}");
+            stringBuilder.AppendLine($"{nameof(I2CTransferredLength)}: 0x{I2CTransferredLength:X}");
+            stringBuilder.AppendLine($"{nameof(I2CBufferCounter)}: 0x{I2CBufferCounter:X}");
+            stringBuilder.AppendLine($"{nameof(I2CClockDivisor)}: 0x{I2CClockDivisor:X}");
+            stringBuilder.AppendLine($"{nameof(I2CTimeout)}: 0x{I2CTimeout:X}");
+            stringBuilder.AppendLine($"{nameof(I2CAddress)}: 0x{I2CAddress:X}");
+            stringBuilder.AppendLine($"{nameof(SclLineState)}: {SclLineState}");
+            stringBuilder.AppendLine($"{nameof(SdaLineState)}: {SdaLineState}");
+            stringBuilder.AppendLine($"{nameof(EdgeDetectionState)}: {EdgeDetectionState}");
+            stringBuilder.AppendLine($"{nameof(I2CReadPending)}: 0x{I2CReadPending:X}");
+            stringBuilder.AppendLine($"{nameof(HardwareRevision)}: {HardwareRevision}");
+            stringBuilder.AppendLine($"{nameof(FirmwareRevision)}: {FirmwareRevision}");
 
-            stringBuilder.AppendLine($"ADC:\t[0x{Adc[0]:X}]\t[0x{Adc[1]:X}]\t[0x{Adc[2]:X}]");
+            stringBuilder.AppendLine($"{nameof(Adc)}:\t[0x{Adc[0]:X}]\t[0x{Adc[1]:X}]\t[0x{Adc[2]:X}]");
 
             return stringBuilder.ToString();
         }

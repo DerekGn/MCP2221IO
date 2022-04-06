@@ -22,43 +22,12 @@
 * SOFTWARE.
 */
 
-using System.IO;
-using System.Text;
-
-namespace MCP2221IO.Gpio
+namespace MCP2221IO.Settings
 {
     /// <summary>
-    /// The devices Gpio settings
+    /// The GPO power up settings
     /// </summary>
-    public abstract class GpioSettings
+    public class Gp0PowerUpSettings : BaseGpPowerUpSettings<Gpio0Designation>
     {
-        /// <summary>
-        /// The current output value on the Gpio port
-        /// </summary>
-        public bool OutputValue { get; set; }
-
-        /// <summary>
-        /// The Gpio port direction
-        /// </summary>
-        public GpioDirection Direction { get; set; }
-
-        public override string ToString()
-        {
-            StringBuilder stringBuilder = new StringBuilder();
-
-            stringBuilder.AppendLine($"{nameof(OutputValue)}:\r\n({OutputValue}");
-            stringBuilder.AppendLine($"{nameof(Direction)}:\r\n({Direction}");
-
-            return stringBuilder.ToString();
-        }
-
-        // <inheritdoc/>
-        public virtual void Deserialise(Stream stream)
-        {
-            int temp = stream.ReadByte();
-
-            OutputValue = (temp & 0x10) == 0x10;
-            Direction = (GpioDirection)((temp & 0x80) >> 3);
-        }
     }
 }

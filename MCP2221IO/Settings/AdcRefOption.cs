@@ -22,20 +22,20 @@
 * SOFTWARE.
 */
 
-namespace MCP2221IO
+namespace MCP2221IO.Settings
 {
     /// <summary>
-    /// USB Self-Powered Attribute
+    /// ADC Reference Output Selection
     /// </summary>
-    public enum UsbSelfPowered
+    public enum AdcRefOption
     {
         /// <summary>
-        /// Chip will enumerate on the USB bus as being self-powered
+        /// ADC reference output is ADC VRM voltage selection (factory default)
         /// </summary>
-        SelfPowered = 1,
+        Vdd = 1,
         /// <summary>
-        /// Chip will enumerate on the USB bus as being USB-bus powered (factory default)
+        /// ADC reference output is VDD
         /// </summary>
-        BusPowered = 0
+        Vrm = 0
     }
 }

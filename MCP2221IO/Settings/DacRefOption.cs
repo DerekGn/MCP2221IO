@@ -22,53 +22,20 @@
 * SOFTWARE.
 */
 
-using MCP2221IO.Gpio;
-using System.IO;
-using System.Text;
-
 namespace MCP2221IO.Settings
 {
     /// <summary>
-    /// A Gpio setting type
+    /// DAC Reference Output Selection
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public class GpSetting<T> where T : System.Enum
+    public enum DacRefOption
     {
         /// <summary>
-        /// The current output value on the Gpio port
+        /// DAC reference output is DAC VRM voltage selection
         /// </summary>
-        public bool OutputValue { get; set; }
-
+        Vrm = 1,
         /// <summary>
-        /// The Gpio port direction
+        /// DAC reference output is VDD (factory default)
         /// </summary>
-        public GpioDirection Direction { get; set; }
-
-        /// <summary>
-        /// The current Gp settings port designation
-        /// </summary>
-        public T Designation { get; set; }
-
-        public override string ToString()
-        {
-            StringBuilder stringBuilder = new StringBuilder();
-
-            stringBuilder.Append($"{nameof(OutputValue)}: [{OutputValue}] ");
-            stringBuilder.Append($"{nameof(Direction)}: [{Direction}] ");
-            stringBuilder.Append($"{nameof(Designation)}: [{Designation}]");
-
-            return stringBuilder.ToString();
-        }
-
-        // <inheritdoc/>
-        public virtual void Deserialise(Stream stream)
-        {
-            int temp = stream.ReadByte();
-
-            OutputValue = (temp & 0x10) == 0x10;
-            Direction = (GpioDirection)((temp & 0x80) >> 3);
-            Designation = (T)(object)(temp & 0x07);
-        }
+        VDD = 0
     }
 }
-

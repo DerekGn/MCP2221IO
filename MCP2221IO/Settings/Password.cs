@@ -22,28 +22,37 @@
 * SOFTWARE.
 */
 
-namespace MCP2221IO
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace MCP2221IO.Settings
 {
-    /// <summary>
-    /// DAC Internal Voltage Reference (DAC VRM) Selection
-    /// </summary>
-    public enum DacRefVoltage
+    public class Password
     {
-        /// <summary>
-        /// Reference voltage is 4.096V (only if VDD is above this voltage)
-        /// </summary>
-        Vrm4096V = 0b11,
-        /// <summary>
-        /// Reference voltage is 2.048V
-        /// </summary>
-        Vrm2048V = 0b10,
-        /// <summary>
-        /// Reference voltage is 1.024V
-        /// </summary>
-        Vrm1024V = 0b01,
-        /// <summary>
-        /// Reference voltage is off (this is useful for the case in which the DAC uses other reference than VRM DAC; e.g., VDD )
-        /// </summary>
-        VrmOff = 0
+        public Password(IList<byte> bytes)
+        {
+            if (bytes is null)
+            {
+                throw new ArgumentNullException(nameof(bytes));
+            }
+
+            if(bytes.Count > 8)
+            {
+                throw new ArgumentOutOfRangeException(nameof(bytes), "Must be 8 bytes long");
+            }
+
+            Bytes = bytes.ToList().AsReadOnly();
+            Value = BitConverter.ToString(bytes.ToArray()).Replace("-", "");
+        }
+
+        public string Value { get; }
+
+        public IReadOnlyList<byte> Bytes { get; }
+
+        public override string ToString()
+        {
+            return Value;
+        }
     }
 }

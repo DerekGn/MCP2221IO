@@ -22,28 +22,20 @@
 * SOFTWARE.
 */
 
-namespace MCP2221IO
+namespace MCP2221IO.Settings
 {
     /// <summary>
-    /// ADC Internal Voltage Reference (ADC VRM) Selection
+    /// USB Remote Wake-Up Capability
     /// </summary>
-    public enum AdcRefVoltage
+    public enum UsbRemoteWake
     {
         /// <summary>
-        /// Reference voltage is 4.096V (only if VDD is above this voltage)
+        /// Chip will enumerate on the USB bus as being able to wake-up the USB hos
         /// </summary>
-        Vrm4096V = 0b11,
+        Enabled = 1,
         /// <summary>
-        /// Reference voltage is 2.048V
+        /// Chip will enumerate as not being capable of remote wake-up of the USB host (factory default)
         /// </summary>
-        Vrm2048V = 0b10,
-        /// <summary>
-        /// Reference voltage is 1.024V
-        /// </summary>
-        Vrm1024V = 0b01,
-        /// <summary>
-        /// Reference voltage is off
-        /// </summary>
-        VrmOff = 0
+        Disabled = 0
     }
 }

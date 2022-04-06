@@ -22,44 +22,20 @@
 * SOFTWARE.
 */
 
-namespace MCP2221IO
+namespace MCP2221IO.Settings
 {
     /// <summary>
-    /// Clock-Out Divider Output
+    /// USB Self-Powered Attribute
     /// </summary>
-    public enum ClockOutDivider
+    public enum UsbSelfPowered
     {
         /// <summary>
-        /// 375 kHz clock output
+        /// Chip will enumerate on the USB bus as being self-powered
         /// </summary>
-        Clock375kHz = 0b111,
+        SelfPowered = 1,
         /// <summary>
-        /// 750 kHz clock output
+        /// Chip will enumerate on the USB bus as being USB-bus powered (factory default)
         /// </summary>
-        Clock750kHz = 0b110,
-        /// <summary>
-        /// 1.5 MHz clock output
-        /// </summary>
-        Clock1_5MHz = 0b101,
-        /// <summary>
-        /// 3 MHz clock output
-        /// </summary>
-        Clock3MHz = 0b100,
-        /// <summary>
-        /// 6 MHz clock output
-        /// </summary>
-        Clock6MHz = 0b011,
-        /// <summary>
-        /// 12 MHz clock output (factory default)
-        /// </summary>
-        Clock12MHz = 0b010,
-        /// <summary>
-        /// 24 MHz clock output
-        /// </summary>
-        Clock24Mhz = 0b001,
-        /// <summary>
-        /// Reserved
-        /// </summary>
-        Reserved = 0
+        BusPowered = 0
     }
 }

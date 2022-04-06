@@ -22,20 +22,16 @@
 * SOFTWARE.
 */
 
-namespace MCP2221IO
+namespace MCP2221IO.Settings
 {
     /// <summary>
-    /// DAC Reference Output Selection
+    /// Chip Settings Protection Level bits
     /// </summary>
-    public enum DacRefOption
+    public enum ChipSecurity
     {
-        /// <summary>
-        /// DAC reference output is DAC VRM voltage selection
-        /// </summary>
-        Vrm = 1,
-        /// <summary>
-        /// DAC reference output is VDD (factory default)
-        /// </summary>
-        VDD = 0
+        PermanentlyLockedA = 0b11,
+        PermanentlyLockedB = 0b10,
+        PasswordProtection = 0b01,
+        Unprotected = 0b00
     }
 }

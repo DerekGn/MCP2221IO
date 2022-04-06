@@ -57,8 +57,7 @@ namespace MCP2221IO
 
         // <inheritdoc/>
         public DeviceStatus Status => ExecuteCommand<StatusSetParametersResponse>(new StatusSetParametersCommand()).DeviceStatus;
-        //// <inheritdoc/>
-        //public ChipSettings ChipSettings => ExecuteCommand<ChipSettingsResponse>(new ReadChipSettingsCommand()).ChipSettings;
+
         // <inheritdoc/>
         public GpioPorts GpioPorts => ExecuteCommand<GpioPortsResponse>(new ReadGpioPortsCommand()).GpioPorts;
         // <inheritdoc/>
@@ -125,15 +124,15 @@ namespace MCP2221IO
         }
 
         // <inheritdoc/>
-        public void WriteChipSettings()
-        {
-            throw new NotImplementedException();
-        }
-
-        // <inheritdoc/>
         public void ReadSramSettings()
         {
             SramSettings = ExecuteCommand<ReadSramSettingsResponse>(new ReadSramSettingsCommand()).SramSettings;
+        }
+
+        // <inheritdoc/>
+        public void WriteChipSettings(Password password)
+        {
+            ExecuteCommand<WriteFlashDataResponse>(new WriteChipSettingsCommand(ChipSettings));
         }
 
         // <inheritdoc/>

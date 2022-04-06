@@ -138,14 +138,15 @@ namespace MCP2221IO
         void ReadGpSettings();
 
         /// <summary>
-        /// Write the <see cref="ChipSettings"/> to the device
-        /// </summary>
-        void WriteChipSettings();
-
-        /// <summary>
         /// Read the <see cref="SramSettings"/> from the device
         /// </summary>
         void ReadSramSettings();
+
+        /// <summary>
+        /// Write the <see cref="ChipSettings"/> to the device
+        /// </summary>
+        /// <param name="password">The password to update in flash</param>
+        void WriteChipSettings(Password password);
 
         /// <summary>
         /// Write the <see cref="SramSettings"/> to the device

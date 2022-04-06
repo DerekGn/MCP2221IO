@@ -24,53 +24,42 @@
 
 namespace MCP2221IO.Settings
 {
-    public abstract class BaseSettings
+    /// <summary>
+    /// Clock-Out Divider Output
+    /// </summary>
+    public enum ClockOutDivider
     {
         /// <summary>
-        /// The current clock out divider value
+        /// 375 kHz clock output
         /// </summary>
-        public ClockOutDivider ClockDivider { get; set; }
-        
+        Clock375kHz = 0b111,
         /// <summary>
-        /// DAC Reference voltage option
+        /// 750 kHz clock output
         /// </summary>
-        public DacRefVoltage DacRefVoltage { get; set; }
-        
+        Clock750kHz = 0b110,
         /// <summary>
-        /// DAC reference option
+        /// 1.5 MHz clock output
         /// </summary>
-        public DacRefOption DacRefOption { get; set; }
-        
+        Clock1_5MHz = 0b101,
         /// <summary>
-        /// Power up DAC Output Value
+        /// 3 MHz clock output
         /// </summary>
-        public byte DacOutput { get; set; }
-        
+        Clock3MHz = 0b100,
         /// <summary>
-        /// ADC Reference voltage option
+        /// 6 MHz clock output
         /// </summary>
-        public AdcRefVoltage AdcRefVoltage { get; set; }
-        
+        Clock6MHz = 0b011,
         /// <summary>
-        /// ADC reference option
+        /// 12 MHz clock output (factory default)
         /// </summary>
-        public AdcRefOption AdcRefOption { get; set; }
-        
+        Clock12MHz = 0b010,
         /// <summary>
-        /// If set, the interrupt detection flag will be set when a
-        /// negative edge occurs.
+        /// 24 MHz clock output
         /// </summary>
-        public bool InterruptNegativeEdge { get; set; }
-        
+        Clock24Mhz = 0b001,
         /// <summary>
-        /// If set, the interrupt detection flag will be set when a
-        /// positive edge occurs.
+        /// Reserved
         /// </summary>
-        public bool InterruptPositiveEdge { get; set; }
-        
-        /// <summary>
-        /// The requested mA value during the USB enumeration
-        /// </summary>
-        public int PowerRequestMa { get; protected set; }
+        Reserved = 0
     }
 }

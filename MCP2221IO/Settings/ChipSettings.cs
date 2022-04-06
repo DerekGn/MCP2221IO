@@ -38,6 +38,10 @@ namespace MCP2221IO.Settings
         /// </summary>
         public bool CdcSerialNumberEnable { get; set; }
         /// <summary>
+        /// The chip security settings
+        /// </summary>
+        public ChipSecurity ChipSecurity { get; set; }
+        /// <summary>
         /// The Usb vendor id
         /// </summary>
         public ushort Vid { get; set; }
@@ -53,7 +57,8 @@ namespace MCP2221IO.Settings
         /// USB Remote Wake-Up Capability
         /// </summary>
         public UsbRemoteWake RemoteWake { get; set; }
-
+        
+        public string Password { get; set; }
         public override string ToString()
         {
             StringBuilder stringBuilder = new StringBuilder();

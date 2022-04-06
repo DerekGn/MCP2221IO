@@ -22,20 +22,28 @@
 * SOFTWARE.
 */
 
-namespace MCP2221IO
+namespace MCP2221IO.Settings
 {
     /// <summary>
-    /// USB Remote Wake-Up Capability
+    /// DAC Internal Voltage Reference (DAC VRM) Selection
     /// </summary>
-    public enum UsbRemoteWake
+    public enum DacRefVoltage
     {
         /// <summary>
-        /// Chip will enumerate on the USB bus as being able to wake-up the USB hos
+        /// Reference voltage is 4.096V (only if VDD is above this voltage)
         /// </summary>
-        Enabled = 1,
+        Vrm4096V = 0b11,
         /// <summary>
-        /// Chip will enumerate as not being capable of remote wake-up of the USB host (factory default)
+        /// Reference voltage is 2.048V
         /// </summary>
-        Disabled = 0
+        Vrm2048V = 0b10,
+        /// <summary>
+        /// Reference voltage is 1.024V
+        /// </summary>
+        Vrm1024V = 0b01,
+        /// <summary>
+        /// Reference voltage is off (this is useful for the case in which the DAC uses other reference than VRM DAC; e.g., VDD )
+        /// </summary>
+        VrmOff = 0
     }
 }

@@ -22,53 +22,28 @@
 * SOFTWARE.
 */
 
-using MCP2221IO.Gpio;
-using System.IO;
-using System.Text;
-
 namespace MCP2221IO.Settings
 {
     /// <summary>
-    /// A Gpio setting type
+    /// ADC Internal Voltage Reference (ADC VRM) Selection
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public class GpSetting<T> where T : System.Enum
+    public enum AdcRefVoltage
     {
         /// <summary>
-        /// The current output value on the Gpio port
+        /// Reference voltage is 4.096V (only if VDD is above this voltage)
         /// </summary>
-        public bool OutputValue { get; set; }
-
+        Vrm4096V = 0b11,
         /// <summary>
-        /// The Gpio port direction
+        /// Reference voltage is 2.048V
         /// </summary>
-        public GpioDirection Direction { get; set; }
-
+        Vrm2048V = 0b10,
         /// <summary>
-        /// The current Gp settings port designation
+        /// Reference voltage is 1.024V
         /// </summary>
-        public T Designation { get; set; }
-
-        public override string ToString()
-        {
-            StringBuilder stringBuilder = new StringBuilder();
-
-            stringBuilder.Append($"{nameof(OutputValue)}: [{OutputValue}] ");
-            stringBuilder.Append($"{nameof(Direction)}: [{Direction}] ");
-            stringBuilder.Append($"{nameof(Designation)}: [{Designation}]");
-
-            return stringBuilder.ToString();
-        }
-
-        // <inheritdoc/>
-        public virtual void Deserialise(Stream stream)
-        {
-            int temp = stream.ReadByte();
-
-            OutputValue = (temp & 0x10) == 0x10;
-            Direction = (GpioDirection)((temp & 0x80) >> 3);
-            Designation = (T)(object)(temp & 0x07);
-        }
+        Vrm1024V = 0b01,
+        /// <summary>
+        /// Reference voltage is off
+        /// </summary>
+        VrmOff = 0
     }
 }
-

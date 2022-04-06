@@ -22,16 +22,35 @@
 * SOFTWARE.
 */
 
-namespace MCP2221IO
+using FluentAssertions;
+using MCP2221IO.Settings;
+using System.Collections.Generic;
+using Xunit;
+using Xunit.Abstractions;
+
+namespace MCP2221IO.UnitTests
 {
-    /// <summary>
-    /// Chip Settings Protection Level bits
-    /// </summary>
-    public enum ChipSecurity
+    public class PasswordTests
     {
-        Reserved = 0b11,
-        Permanentlylocked = 0b10,
-        PasswordProtection = 0b01,
-        Unprotected = 0b00
+        private readonly ITestOutputHelper _output;
+
+        public PasswordTests(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
+        [Fact]
+        public void TestOk()
+        {
+            // Arrange
+            List<byte> bytes = new List<byte>() { 0xAA, 0x55, 0xAA, 0x55, 0xAA, 0x55, 0xAA, 0x55 };
+
+            // Act
+            Password password = new Password(bytes);
+
+            // Assert
+            password.Value.Should().Be("AA55AA55AA55AA55");
+            password.Bytes.Should().Contain(bytes);
+        }
     }
 }

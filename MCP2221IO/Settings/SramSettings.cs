@@ -23,6 +23,7 @@
 */
 
 using MCP2221IO.Extensions;
+using MCP2221IO.Gpio;
 using System;
 using System.IO;
 using System.Text;
@@ -35,47 +36,56 @@ namespace MCP2221IO.Settings
         /// Enables USB serial number usage during the USB enumeration of the CDC interface.
         /// </summary>
         public bool CdcSerialNumberEnable { get; protected set; }
+
+        /// <summary>
+        /// The chip security settings
+        /// </summary>
+        public SramChipSecurity ChipSecurity { get; set; }
+
         /// <summary>
         /// The Usb vendor id
         /// </summary>
         public ushort Vid { get; protected set; }
+
         /// <summary>
         /// The Usb product id
         /// </summary>
         public ushort Pid { get; protected set; }
+
         /// <summary>
         /// USB Self-Powered Attribute
         /// </summary>
         public UsbSelfPowered SelfPowered { get; protected set; }
+
         /// <summary>
         /// USB Remote Wake-Up Capability
         /// </summary>
         public UsbRemoteWake RemoteWake { get; protected set; }
+
         /// <summary>
         /// The current password expressed as an 8 byte hex number
         /// </summary>
-        public string Password { get; protected set; }
+        public Password Password { get; protected set; }
 
         /// <summary>
-        /// 
+        /// The GP0 settings
         /// </summary>
         public GpSetting<Gpio0Designation> Gp0Settings { get; protected set; }
 
         /// <summary>
-        /// 
+        /// The GP1 settings
         /// </summary>
-        public Gp1Settings Gp1Settings { get; protected set; }
+        public GpSetting<Gpio1Designation> Gp1Settings { get; protected set; }
 
         /// <summary>
-        /// 
+        /// The GP2 settings
         /// </summary>
-        public Gp2Settings Gp2Settings { get; protected set; }
+        public GpSetting<Gpio2Designation> Gp2Settings { get; protected set; }
 
         /// <summary>
-        /// 
+        /// The GP3 settings
         /// </summary>
-        public Gp3Settings Gp3Settings { get; protected set; }
-
+        public GpSetting<Gpio3Designation> Gp3Settings { get; protected set; }
 
         public override string ToString()
         {
@@ -97,6 +107,10 @@ namespace MCP2221IO.Settings
             stringBuilder.AppendLine($"{nameof(RemoteWake)}: {RemoteWake}");
             stringBuilder.AppendLine($"{nameof(PowerRequestMa)}: 0x{PowerRequestMa:X}");
             stringBuilder.AppendLine($"{nameof(Password)}: [{Password}]");
+            stringBuilder.AppendLine($"{nameof(Gp0Settings)}: {Gp0Settings}");
+            stringBuilder.AppendLine($"{nameof(Gp1Settings)}: {Gp1Settings}");
+            stringBuilder.AppendLine($"{nameof(Gp2Settings)}: {Gp2Settings}");
+            stringBuilder.AppendLine($"{nameof(Gp3Settings)}: {Gp3Settings}");
 
             return stringBuilder.ToString();
         }
@@ -109,7 +123,7 @@ namespace MCP2221IO.Settings
             int temp = stream.ReadByte();
 
             CdcSerialNumberEnable = (temp & 0x80) == 0x80;
-            ChipSecurity = (ChipSecurity)(temp & 0b11);
+            ChipSecurity = (SramChipSecurity)(temp & 0b11);
             ClockDivider = (ClockOutDivider)(stream.ReadByte() & 0x0F);
 
             temp = stream.ReadByte();
@@ -138,7 +152,17 @@ namespace MCP2221IO.Settings
 
             stream.Read(buffer);
 
-            Password = BitConverter.ToString(buffer).Replace("-", "");
+            Password = new Password(buffer);
+
+            Gp0Settings = new GpSetting<Gpio0Designation>();
+            Gp1Settings = new GpSetting<Gpio1Designation>();
+            Gp2Settings = new GpSetting<Gpio2Designation>();
+            Gp3Settings = new GpSetting<Gpio3Designation>();
+
+            Gp0Settings.Deserialise(stream);
+            Gp1Settings.Deserialise(stream);
+            Gp2Settings.Deserialise(stream);
+            Gp3Settings.Deserialise(stream);
         }
     }
 }

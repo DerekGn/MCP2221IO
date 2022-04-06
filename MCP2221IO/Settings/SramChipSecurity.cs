@@ -25,17 +25,12 @@
 namespace MCP2221IO
 {
     /// <summary>
-    /// ADC Reference Output Selection
+    /// Sram Chip Settings Protection Level bits
     /// </summary>
-    public enum AdcRefOption
+    public enum SramChipSecurity
     {
-        /// <summary>
-        /// ADC reference output is ADC VRM voltage selection (factory default)
-        /// </summary>
-        Vdd = 1,
-        /// <summary>
-        /// ADC reference output is VDD
-        /// </summary>
-        Vrm = 0
+        PermanentlyLocked = 0b10,
+        PasswordProtection = 0b01,
+        Unprotected = 0b00
     }
 }

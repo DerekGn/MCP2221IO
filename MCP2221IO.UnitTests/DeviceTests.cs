@@ -99,9 +99,17 @@ namespace MCP2221IO.UnitTests
         public void TestWriteChipSettings()
         {
             // Arrange
+            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()))
+                .Callback<Stream, Stream>
+                (
+                    (a, b) =>
+                    {
+                        WriteFlashWriteResponse(b, 0);
+                    }
+                );
 
             // Act
-            _device.WriteChipSettings();
+            _device.WriteChipSettings(new Password(new List<byte>()));
 
             // Assert
         }
@@ -587,6 +595,10 @@ namespace MCP2221IO.UnitTests
             stream.WriteByte(0xAA); // password
             stream.WriteByte(0x55); // password
             stream.WriteByte(0xAA); // password
+            stream.WriteByte(0x18); // GIO0
+            stream.WriteByte(0x19); // GIO1
+            stream.WriteByte(0x1A); // GIO2
+            stream.WriteByte(0x1B); // GIO3
         }
 
         private void WriteGetI2CDataResponse(Stream stream, CommandCodes commandCode, int length)

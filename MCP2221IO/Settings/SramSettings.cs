@@ -22,32 +22,37 @@
 * SOFTWARE.
 */
 
-using MCP2221IO.Commands;
 using System;
 using System.IO;
+using System.Text;
 
-namespace MCP2221IO.Responses
+namespace MCP2221IO.Settings
 {
-    internal class FactorySerialNumberResponse : BaseResponse
+    public class SramSettings : BaseSettings
     {
-        public FactorySerialNumberResponse() : base(CommandCodes.ReadFlashData)
+        /// <summary>
+        /// The current password expressed as an 8 byte hex number
+        /// </summary>
+        public string Password { get; protected set; }
+
+        public override string ToString()
         {
+            StringBuilder stringBuilder = new StringBuilder();
+
+            stringBuilder.Append(base.ToString());
+            stringBuilder.AppendLine($"Password: [{Password}]");
+            return stringBuilder.ToString();
         }
 
-        public string SerialNumber { get; set; }
-
-        public override void Deserialise(Stream stream)
+        internal override void Deserialise(Stream stream)
         {
             base.Deserialise(stream);
 
-            int temp = stream.ReadByte();
-            stream.ReadByte();
-
-            byte[] buffer = new byte[temp];
+            byte[] buffer = new byte[8];
 
             stream.Read(buffer);
 
-            SerialNumber = BitConverter.ToString(buffer).Replace("-", "");
+            Password = BitConverter.ToString(buffer).Replace("-", "");
         }
     }
 }

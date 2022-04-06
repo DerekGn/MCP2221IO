@@ -23,28 +23,26 @@
 */
 
 using MCP2221IO.Commands;
+using MCP2221IO.Settings;
 using System.IO;
 
 namespace MCP2221IO.Responses
 {
-    /// <summary>
-    /// The chip settings response
-    /// </summary>
-    internal class ChipSettingsResponse : BaseResponse
+    internal class ReadSramSettingsResponse : BaseResponse
     {
-        public ChipSettingsResponse() : base(CommandCodes.ReadFlashData)
+        public ReadSramSettingsResponse() : base(CommandCodes.GetSram)
         {
         }
 
-        public ChipSettings ChipSettings { get; private set; }
+        public SramSettings SramSettings { get; private set; }
 
         public override void Deserialise(Stream stream)
         {
             base.Deserialise(stream);
 
-            ChipSettings = new ChipSettings();
+            SramSettings = new SramSettings();
 
-            ChipSettings.Deserialise(stream);
+            SramSettings.Deserialise(stream);
         }
     }
 }

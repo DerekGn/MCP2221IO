@@ -26,6 +26,7 @@ using FluentAssertions;
 using MCP2221IO.Commands;
 using MCP2221IO.Gpio;
 using MCP2221IO.Responses.Exceptions;
+using MCP2221IO.Settings;
 using MCP2221IO.Usb;
 using Moq;
 using System;
@@ -48,6 +49,72 @@ namespace MCP2221IO.UnitTests
             _mockUsbDevice = new Mock<IUsbDevice>();
             _device = new Device(_mockUsbDevice.Object);
             _output = output;
+        }
+
+        [Fact]
+        public void TestReadChipSettings()
+        {
+            // Arrange
+            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()))
+                .Callback<Stream, Stream>
+                (
+                    (a, b) =>
+                    {
+                        WriteChipSettingsResponse(b);
+                    }
+                );
+
+            // Act
+            _device.ReadChipSettings();
+
+            // Assert
+            _device.ChipSettings.Should().NotBeNull();
+
+            _output.WriteLine(_device.ChipSettings.ToString());
+        }
+
+        [Fact]
+        public void TestWriteChipSettings()
+        {
+            // Arrange
+
+            // Act
+            _device.WriteChipSettings();
+
+            // Assert
+        }
+
+        [Fact]
+        public void TestReadSramSettings()
+        {
+            // Arrange
+            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()))
+                .Callback<Stream, Stream>
+                (
+                    (a, b) =>
+                    {
+                        WriteReadSramSettingsResponse(b);
+                    }
+                );
+
+            // Act
+            _device.ReadSramSettings();
+
+            // Assert
+            _device.SramSettings.Should().NotBeNull();
+
+            _output.WriteLine(_device.SramSettings.ToString());
+        }
+
+        [Fact]
+        public void TestWriteSramSettings()
+        {
+            // Arrange
+
+            // Act
+            _device.WriteSramSettings();
+
+            // Assert
         }
 
         [Fact]
@@ -106,28 +173,6 @@ namespace MCP2221IO.UnitTests
         }
 
         [Fact]
-        public void TestChipSettingsOk()
-        {
-            // Arrange
-            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()))
-                .Callback<Stream, Stream>
-                (
-                    (a, b) =>
-                    {
-                        WriteTestChipSettingsResponse(b);
-                    }
-                );
-
-            // Act
-            ChipSettings chipSettings = _device.ChipSettings;
-
-            // Assert
-            chipSettings.Should().NotBeNull();
-
-            _output.WriteLine(chipSettings.ToString());
-        }
-
-        [Fact]
         public void TestGpioPortsOk()
         {
             // Arrange
@@ -136,7 +181,7 @@ namespace MCP2221IO.UnitTests
                 (
                     (a, b) =>
                     {
-                        WriteGpioPorts(b);
+                        WriteGpioPortsResponse(b);
                     }
                 );
 
@@ -162,7 +207,7 @@ namespace MCP2221IO.UnitTests
                 (
                     (a, b) =>
                     {
-                        WriteString(b, "MANUFACTURER");
+                        WriteStringResponse(b, "MANUFACTURER");
                     }
                 );
 
@@ -174,7 +219,7 @@ namespace MCP2221IO.UnitTests
 
             _output.WriteLine(descriptor);
         }
-        
+
         [Fact]
         public void TestSetUsbManufacturerDescriptorOk()
         {
@@ -207,7 +252,7 @@ namespace MCP2221IO.UnitTests
                 (
                     (a, b) =>
                     {
-                        WriteString(b, "PRODUCT");
+                        WriteStringResponse(b, "PRODUCT");
                     }
                 );
 
@@ -252,7 +297,7 @@ namespace MCP2221IO.UnitTests
                 (
                     (a, b) =>
                     {
-                        WriteString(b, "SERIAL NUMBER");
+                        WriteStringResponse(b, "SERIAL NUMBER");
                     }
                 );
 
@@ -297,7 +342,7 @@ namespace MCP2221IO.UnitTests
                 (
                     (a, b) =>
                     {
-                        WriteSerialNumber(b);
+                        WriteSerialNumberResponse(b);
                     }
                 );
 
@@ -342,7 +387,7 @@ namespace MCP2221IO.UnitTests
                 (
                     (a, b) =>
                     {
-                        WriteI2CWriteReponse(b, CommandCodes.WriteI2CData);
+                        WriteReponse(b, CommandCodes.WriteI2CData);
                     }
                 );
 
@@ -369,7 +414,7 @@ namespace MCP2221IO.UnitTests
                 (
                     (a, b) =>
                     {
-                        WriteI2CWriteReponse(b, CommandCodes.WriteI2CDataNoStop);
+                        WriteReponse(b, CommandCodes.WriteI2CDataNoStop);
                     }
                 );
 
@@ -384,7 +429,7 @@ namespace MCP2221IO.UnitTests
             _device.I2CWriteDataNoStop(0xFF, buffer);
 
             // Assert
-            _mockUsbDevice.Verify(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()),Times.Exactly(17));
+            _mockUsbDevice.Verify(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()), Times.Exactly(17));
         }
 
         [Fact]
@@ -396,7 +441,7 @@ namespace MCP2221IO.UnitTests
                 (
                     (a, b) =>
                     {
-                        WriteI2CWriteReponse(b, CommandCodes.WriteI2CDataRepeatedStart);
+                        WriteReponse(b, CommandCodes.WriteI2CDataRepeatedStart);
                     }
                 );
 
@@ -429,7 +474,7 @@ namespace MCP2221IO.UnitTests
                     {
                         if (!startWritten)
                         {
-                            WriteI2CReadReponse(b, CommandCodes.ReadI2CData);
+                            WriteReponse(b, CommandCodes.ReadI2CData);
                             startWritten = true;
                         }
                         else
@@ -462,7 +507,7 @@ namespace MCP2221IO.UnitTests
                     {
                         if (!startWritten)
                         {
-                            WriteI2CReadReponse(b, CommandCodes.ReadI2CDataRepeatedStart);
+                            WriteReponse(b, CommandCodes.ReadI2CDataRepeatedStart);
                             startWritten = true;
                         }
                         else
@@ -480,6 +525,34 @@ namespace MCP2221IO.UnitTests
             buffer.Should().NotBeNullOrEmpty();
         }
 
+        private void WriteReadSramSettingsResponse(Stream stream)
+        {
+            stream.Write(new byte[64], 0, 64);
+            stream.Position = 0;
+            stream.WriteByte((byte) CommandCodes.GetSram);
+            stream.WriteByte(0); // Command OK
+            stream.WriteByte(0); // sram structure length
+            stream.WriteByte(0); // gp structure length care
+            stream.WriteByte(0xF1); // CDC enabled
+            stream.WriteByte(0x02); // clock divider
+            stream.WriteByte(0xFF); // DAC
+            stream.WriteByte(0xFF); // int and adc
+            stream.WriteByte(0xED); // VID
+            stream.WriteByte(0xFE); // VID
+            stream.WriteByte(0xAD); // PID
+            stream.WriteByte(0xDE); // PID
+            stream.WriteByte(0x60); // Usb
+            stream.WriteByte(0x32); // usb power
+            stream.WriteByte(0x55); // password
+            stream.WriteByte(0xAA); // password
+            stream.WriteByte(0x55); // password
+            stream.WriteByte(0xAA); // password
+            stream.WriteByte(0x55); // password
+            stream.WriteByte(0xAA); // password
+            stream.WriteByte(0x55); // password
+            stream.WriteByte(0xAA); // password
+        }
+
         private void WriteGetI2CDataResponse(Stream stream, CommandCodes commandCode, int length)
         {
             stream.Write(new byte[64], 0, 64);
@@ -490,14 +563,7 @@ namespace MCP2221IO.UnitTests
             stream.Write(new byte[length], 0, length);
         }
 
-        private void WriteI2CReadReponse(Stream stream, CommandCodes commandCode)
-        {
-            stream.Write(new byte[64], 0, 64);
-            stream.Position = 0;
-            stream.WriteByte((byte)commandCode);
-        }
-
-        private void WriteI2CWriteReponse(Stream stream, CommandCodes commandCode)
+        private void WriteReponse(Stream stream, CommandCodes commandCode)
         {
             stream.Write(new byte[64], 0, 64);
             stream.Position = 0;
@@ -520,7 +586,7 @@ namespace MCP2221IO.UnitTests
             stream.WriteByte((byte)status);
         }
 
-        private void WriteSerialNumber(Stream stream)
+        private void WriteSerialNumberResponse(Stream stream)
         {
             stream.Write(new byte[64], 0, 64);
             stream.Position = 0;
@@ -538,7 +604,7 @@ namespace MCP2221IO.UnitTests
             stream.WriteByte(0xEF);
         }
 
-        private void WriteString(Stream stream, string value)
+        private void WriteStringResponse(Stream stream, string value)
         {
             stream.Write(new byte[64], 0, 64);
             stream.Position = 0;
@@ -550,7 +616,7 @@ namespace MCP2221IO.UnitTests
             stream.Write(bytes, 0, bytes.Length);
         }
 
-        private void WriteGpioPorts(Stream stream)
+        private void WriteGpioPortsResponse(Stream stream)
         {
             stream.Write(new byte[64], 0, 64);
             stream.Position = 0;
@@ -562,13 +628,14 @@ namespace MCP2221IO.UnitTests
             stream.WriteByte(0x1B); // GIO3
         }
 
-        private void WriteTestChipSettingsResponse(Stream stream)
+        private void WriteChipSettingsResponse(Stream stream)
         {
             stream.Write(new byte[64], 0, 64);
             stream.Position = 0;
             stream.WriteByte((byte)CommandCodes.ReadFlashData);
-            stream.WriteByte(0);
-            stream.WriteByte(0);
+            stream.WriteByte(0); // Command OK
+            stream.WriteByte(0); // structure length
+            stream.WriteByte(0); // dont care
             stream.WriteByte(0xF1); // CDC enabled
             stream.WriteByte(0x02); // clock divider
             stream.WriteByte(0xFF); // DAC
@@ -610,7 +677,7 @@ namespace MCP2221IO.UnitTests
             stream.WriteByte(0x02);
 
             stream.Write(new byte[19], 0, 19);
-            
+
             stream.WriteByte((byte)'A');
             stream.WriteByte((byte)'6');
             stream.WriteByte((byte)'1');

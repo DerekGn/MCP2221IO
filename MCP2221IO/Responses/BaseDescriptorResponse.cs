@@ -45,7 +45,7 @@ namespace MCP2221IO.Responses
 
             stream.ReadByte();
 
-            stream.Read(buffer, 0, bufferSize);
+            stream.Read(buffer);
 
             Value = Encoding.Unicode.GetString(buffer);
         }

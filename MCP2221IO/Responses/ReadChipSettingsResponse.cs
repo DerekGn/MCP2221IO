@@ -23,31 +23,29 @@
 */
 
 using MCP2221IO.Commands;
-using System;
+using MCP2221IO.Settings;
 using System.IO;
 
 namespace MCP2221IO.Responses
 {
-    internal class FactorySerialNumberResponse : BaseResponse
+    /// <summary>
+    /// The chip settings read response
+    /// </summary>
+    internal class ReadChipSettingsResponse : BaseResponse
     {
-        public FactorySerialNumberResponse() : base(CommandCodes.ReadFlashData)
+        public ReadChipSettingsResponse() : base(CommandCodes.ReadFlashData)
         {
         }
 
-        public string SerialNumber { get; set; }
+        public ChipSettings ChipSettings { get; private set; }
 
         public override void Deserialise(Stream stream)
         {
             base.Deserialise(stream);
 
-            int temp = stream.ReadByte();
-            stream.ReadByte();
+            ChipSettings = new ChipSettings();
 
-            byte[] buffer = new byte[temp];
-
-            stream.Read(buffer);
-
-            SerialNumber = BitConverter.ToString(buffer).Replace("-", "");
+            ChipSettings.Deserialise(stream);
         }
     }
 }

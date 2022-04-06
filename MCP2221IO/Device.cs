@@ -25,6 +25,7 @@
 using MCP2221IO.Commands;
 using MCP2221IO.Gpio;
 using MCP2221IO.Responses;
+using MCP2221IO.Settings;
 using MCP2221IO.Usb;
 using System;
 using System.Collections.Generic;
@@ -46,9 +47,13 @@ namespace MCP2221IO
         }
 
         // <inheritdoc/>
-        public DeviceStatus Status => ExecuteCommand<StatusSetParametersResponse>(new StatusSetParametersCommand()).DeviceStatus;
+        public ChipSettings ChipSettings { get; private set; }
         // <inheritdoc/>
-        public ChipSettings ChipSettings => ExecuteCommand<ChipSettingsResponse>(new ReadChipSettingsCommand()).ChipSettings;
+        public SramSettings SramSettings { get; private set; }
+        // <inheritdoc/>
+        public DeviceStatus Status => ExecuteCommand<StatusSetParametersResponse>(new StatusSetParametersCommand()).DeviceStatus;
+        //// <inheritdoc/>
+        //public ChipSettings ChipSettings => ExecuteCommand<ChipSettingsResponse>(new ReadChipSettingsCommand()).ChipSettings;
         // <inheritdoc/>
         public GpioPorts GpioPorts => ExecuteCommand<GpioPortsResponse>(new ReadGpioPortsCommand()).GpioPorts;
         // <inheritdoc/>
@@ -81,7 +86,6 @@ namespace MCP2221IO
         {
             I2CWriteData<I2CWriteDataResponse>(CommandCodes.WriteI2CData, address, data);
         }
-
         // <inheritdoc/>
         public void I2CWriteDataRepeatStart(byte address, IList<byte> data)
         {
@@ -97,11 +101,40 @@ namespace MCP2221IO
         {
             return I2CReadData<I2CReadDataResponse>(CommandCodes.ReadI2CData, address, length);
         }
-
         // <inheritdoc/>
         public IList<byte> I2CReadDataRepeatedStart(byte address, ushort length)
         {
             return I2CReadData<I2CReadDataRepeatedStarteResponse>(CommandCodes.ReadI2CDataRepeatedStart, address, length);
+        }
+
+        // <inheritdoc/>
+        public void ReadChipSettings()
+        {
+            ChipSettings = ExecuteCommand<ReadChipSettingsResponse>(new ReadChipSettingsCommand()).ChipSettings;
+        }
+
+        // <inheritdoc/>
+        public void WriteChipSettings()
+        {
+            throw new NotImplementedException();
+        }
+
+        // <inheritdoc/>
+        public void ReadSramSettings()
+        {
+            SramSettings = ExecuteCommand<ReadSramSettingsResponse>(new ReadSramSettingsCommand()).SramSettings;
+        }
+
+        // <inheritdoc/>
+        public void WriteSramSettings()
+        {
+            throw new NotImplementedException();
+        }
+
+        // <inheritdoc/>
+        public void Reset()
+        {
+            ExecuteCommand(new ResetCommand());
         }
 
         private IList<byte> I2CReadData<T>(CommandCodes commandCode, byte address, ushort length) where T : IResponse, new() 
@@ -168,6 +201,7 @@ namespace MCP2221IO
 
             return _factorySerialNumber;
         }
+
         #region Dispose
         private bool disposedValue;
 

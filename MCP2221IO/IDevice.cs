@@ -23,6 +23,7 @@
 */
 
 using MCP2221IO.Gpio;
+using MCP2221IO.Settings;
 using System;
 using System.Collections.Generic;
 
@@ -34,14 +35,19 @@ namespace MCP2221IO
         const int I2CMinSpeed = 46875;
 
         /// <summary>
-        /// Get the device <see cref="DeviceStatus"/>
-        /// </summary>
-        DeviceStatus Status { get; }
-
-        /// <summary>
         /// Get the device <see cref="ChipSettings"/>
         /// </summary>
         ChipSettings ChipSettings { get; }
+
+        /// <summary>
+        /// The <see cref="Device"/> <see cref="SramSettings"/>
+        /// </summary>
+        SramSettings SramSettings { get; }
+
+        /// <summary>
+        /// Get the device <see cref="DeviceStatus"/>
+        /// </summary>
+        DeviceStatus Status { get; }
 
         /// <summary>
         /// Get the Gpio settings
@@ -111,6 +117,29 @@ namespace MCP2221IO
         /// <returns>The bytes read from the client device</returns>
         IList<byte> I2CReadDataRepeatedStart(byte address, ushort length);
 
-        //void UpdateGpio(GpioPort gpioPort, )
+        /// <summary>
+        /// Reset the device
+        /// </summary>
+        void Reset();
+
+        /// <summary>
+        /// Read the <see cref="ChipSettings"/> from the device
+        /// </summary>
+        void ReadChipSettings();
+
+        /// <summary>
+        /// Write the <see cref="ChipSettings"/> to the device
+        /// </summary>
+        void WriteChipSettings();
+
+        /// <summary>
+        /// Read the <see cref="SramSettings"/> from the device
+        /// </summary>
+        void ReadSramSettings();
+
+        /// <summary>
+        /// Write the <see cref="SramSettings"/> to the device
+        /// </summary>
+        void WriteSramSettings();
     }
 }

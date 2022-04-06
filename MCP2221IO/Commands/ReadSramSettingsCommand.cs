@@ -22,32 +22,15 @@
 * SOFTWARE.
 */
 
-using MCP2221IO.Commands;
-using System;
-using System.IO;
-
-namespace MCP2221IO.Responses
+namespace MCP2221IO.Commands
 {
-    internal class FactorySerialNumberResponse : BaseResponse
+    /// <summary>
+    /// Read the <see cref="SramSettings"/> from the device
+    /// </summary>
+    internal class ReadSramSettingsCommand : BaseCommand
     {
-        public FactorySerialNumberResponse() : base(CommandCodes.ReadFlashData)
+        public ReadSramSettingsCommand() : base(CommandCodes.GetSram)
         {
-        }
-
-        public string SerialNumber { get; set; }
-
-        public override void Deserialise(Stream stream)
-        {
-            base.Deserialise(stream);
-
-            int temp = stream.ReadByte();
-            stream.ReadByte();
-
-            byte[] buffer = new byte[temp];
-
-            stream.Read(buffer);
-
-            SerialNumber = BitConverter.ToString(buffer).Replace("-", "");
         }
     }
 }

@@ -26,83 +26,76 @@ using MCP2221IO.Extensions;
 using System.IO;
 using System.Text;
 
-namespace MCP2221IO
+namespace MCP2221IO.Settings
 {
-    public class ChipSettings
+    public abstract class BaseSettings
     {
         /// <summary>
         /// Enables USB serial number usage during the USB enumeration of the CDC interface.
         /// </summary>
-        public bool CdcSerialNumberEnable { get; private set; }
-
-        public ChipSecurity ChipSecurity { get; private set; }
-
+        public bool CdcSerialNumberEnable { get; protected set; }
+        /// <summary>
+        /// The chip security settings
+        /// </summary>
+        public ChipSecurity ChipSecurity { get; protected set; }
         /// <summary>
         /// The current clock out divider value
         /// </summary>
-        public ClockOutDivider ClockDivider { get; private set; }
-
+        public ClockOutDivider ClockDivider { get; protected set; }
         /// <summary>
         /// DAC Reference voltage option
         /// </summary>
-        public DacRefVoltage DacRefVoltage { get; private set; }
-
+        public DacRefVoltage DacRefVoltage { get; protected set; }
         /// <summary>
         /// DAC reference option
         /// </summary>
-        public DacRefOption DacRefOption { get; private set; }
-
+        public DacRefOption DacRefOption { get; protected set; }
         /// <summary>
-        /// Initial DAC Output Value
+        /// Power up DAC Output Value
         /// </summary>
-        public byte DacOutput { get; private set; }
-
+        public byte DacOutput { get; protected set; }
+        /// <summary>
+        /// ADC Reference voltage option
+        /// </summary>
+        public AdcRefVoltage AdcRefVoltage { get; protected set; }
+        /// <summary>
+        /// ADC reference option
+        /// </summary>
+        public AdcRefOption AdcRefOption { get; protected set; }
         /// <summary>
         /// If set, the interrupt detection flag will be set when a
         /// negative edge occurs.
         /// </summary>
-        public bool InterruptNegativeEdge { get; private set; }
-
+        public bool InterruptNegativeEdge { get; protected set; }
         /// <summary>
         /// If set, the interrupt detection flag will be set when a
         /// positive edge occurs.
         /// </summary>
-        public bool InterruptPositiveEdge { get; private set; }
-
-        /// <summary>
-        /// ADC Reference voltage option
-        /// </summary>
-        public AdcRefVoltage AdcRefVoltage { get; private set; }
-
-        /// <summary>
-        /// ADC reference option
-        /// </summary>
-        public AdcRefOption AdcRefOption { get; private set; }
-
+        public bool InterruptPositiveEdge { get; protected set; }
         /// <summary>
         /// The Usb vendor id
         /// </summary>
-        public ushort Vid { get; private set; }
+        public ushort Vid { get; protected set; }
 
         /// <summary>
         /// The Usb product id
         /// </summary>
-        public ushort Pid { get; private set; }
+        public ushort Pid { get; protected set; }
 
         /// <summary>
         /// USB Self-Powered Attribute
         /// </summary>
-        public UsbSelfPowered SelfPowered { get; private set; }
+        public UsbSelfPowered SelfPowered { get; protected set; }
 
         /// <summary>
         /// USB Remote Wake-Up Capability
         /// </summary>
-        public UsbRemoteWake RemoteWake { get; private set; }
+        public UsbRemoteWake RemoteWake { get; protected set; }
 
         /// <summary>
         /// The requested mA value during the USB enumeration
         /// </summary>
-        public int PowerRequestMa { get; private set; }
+        public int PowerRequestMa { get; protected set; }
 
         public override string ToString()
         {
@@ -112,8 +105,8 @@ namespace MCP2221IO
             stringBuilder.AppendLine($"ChipSecurity: {ChipSecurity}");
             stringBuilder.AppendLine($"ClockDivider: {ClockDivider}");
             stringBuilder.AppendLine($"DacRefVoltage: {DacRefVoltage}");
-            stringBuilder.AppendLine($"DacRefOption: {DacRefOption}`");
-            stringBuilder.AppendLine($"DacOutput: 0x{DacOutput:X}`");
+            stringBuilder.AppendLine($"DacRefOption: {DacRefOption}");
+            stringBuilder.AppendLine($"DacOutput: 0x{DacOutput:X}");
             stringBuilder.AppendLine($"InterruptNegativeEdge: {InterruptNegativeEdge}");
             stringBuilder.AppendLine($"InterruptPositiveEdge: {InterruptPositiveEdge}");
             stringBuilder.AppendLine($"AdcRefVoltage: {AdcRefVoltage}");
@@ -123,19 +116,20 @@ namespace MCP2221IO
             stringBuilder.AppendLine($"SelfPowered: {SelfPowered}");
             stringBuilder.AppendLine($"RemoteWake: {RemoteWake}");
             stringBuilder.AppendLine($"PowerRequestMa: 0x{PowerRequestMa:X}");
-
+            
             return stringBuilder.ToString();
         }
 
-        internal void Deserialise(Stream stream)
+        internal virtual void Deserialise(Stream stream)
         {
+            stream.ReadByte();
             stream.ReadByte();
 
             int temp = stream.ReadByte();
 
             CdcSerialNumberEnable = (temp & 0x80) == 0x80;
             ChipSecurity = (ChipSecurity)(temp & 0b11);
-            ClockDivider = (ClockOutDivider) (stream.ReadByte() & 0x0F);
+            ClockDivider = (ClockOutDivider)(stream.ReadByte() & 0x0F);
 
             temp = stream.ReadByte();
 

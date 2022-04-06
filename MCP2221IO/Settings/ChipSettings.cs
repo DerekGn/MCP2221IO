@@ -22,32 +22,12 @@
 * SOFTWARE.
 */
 
-using MCP2221IO.Commands;
-using System;
-using System.IO;
-
-namespace MCP2221IO.Responses
+namespace MCP2221IO.Settings
 {
-    internal class FactorySerialNumberResponse : BaseResponse
+    /// <summary>
+    /// 
+    /// </summary>
+    public class ChipSettings : BaseSettings
     {
-        public FactorySerialNumberResponse() : base(CommandCodes.ReadFlashData)
-        {
-        }
-
-        public string SerialNumber { get; set; }
-
-        public override void Deserialise(Stream stream)
-        {
-            base.Deserialise(stream);
-
-            int temp = stream.ReadByte();
-            stream.ReadByte();
-
-            byte[] buffer = new byte[temp];
-
-            stream.Read(buffer);
-
-            SerialNumber = BitConverter.ToString(buffer).Replace("-", "");
-        }
     }
 }

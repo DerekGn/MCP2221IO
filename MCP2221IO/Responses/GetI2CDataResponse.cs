@@ -54,7 +54,7 @@ namespace MCP2221IO.Responses
             {
                 byte[] buffer = new byte[temp];
 
-                stream.Read(buffer, 0, temp);
+                stream.Read(buffer);
 
                 Data = buffer.ToList();
             }

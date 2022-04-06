@@ -29,10 +29,10 @@ using System.Text;
 namespace MCP2221IO.Settings
 {
     /// <summary>
-    /// A base Gp power up settings type
+    /// A Gpio setting type
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class BaseGpPowerUpSettings<T> where T : System.Enum
+    public class GpSetting<T> where T : System.Enum
     {
         /// <summary>
         /// The current output value on the Gpio port

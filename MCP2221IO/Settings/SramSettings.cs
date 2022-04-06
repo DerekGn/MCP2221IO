@@ -56,6 +56,27 @@ namespace MCP2221IO.Settings
         /// </summary>
         public string Password { get; protected set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public GpSetting<Gpio0Designation> Gp0Settings { get; protected set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Gp1Settings Gp1Settings { get; protected set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Gp2Settings Gp2Settings { get; protected set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Gp3Settings Gp3Settings { get; protected set; }
+
+
         public override string ToString()
         {
             StringBuilder stringBuilder = new StringBuilder();

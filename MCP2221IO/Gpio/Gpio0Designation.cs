@@ -22,7 +22,7 @@
 * SOFTWARE.
 */
 
-namespace MCP2221IO
+namespace MCP2221IO.Gpio
 {
     /// <summary>
     ///  Gpio0 designation 

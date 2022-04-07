@@ -22,19 +22,39 @@
 * SOFTWARE.
 */
 
-using System;
+using MCP2221IO.Commands;
+using MCP2221IO.Gpio;
+using System.IO;
 
-namespace MCP2221IO.Responses.Exceptions
+namespace MCP2221IO.Responses
 {
-
-    [System.Serializable]
-    public class InvalidStreamLengthException : Exception
+    internal class ReadGpioPortsResponse : BaseResponse
     {
-        public InvalidStreamLengthException() { }
-        public InvalidStreamLengthException(string message) : base(message) { }
-        public InvalidStreamLengthException(string message, Exception inner) : base(message, inner) { }
-        protected InvalidStreamLengthException(
-          System.Runtime.Serialization.SerializationInfo info,
-          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+        public ReadGpioPortsResponse() : base(CommandCodes.GetGpioValues)
+        {
+        }
+
+        public GpioPort GpioPort0 { get; private set; }
+
+        public GpioPort GpioPort1 { get; private set; }
+
+        public GpioPort GpioPort2 { get; private set; }
+
+        public GpioPort GpioPort3 { get; private set; }
+
+        public override void Deserialise(Stream stream)
+        {
+            base.Deserialise(stream);
+
+            GpioPort0 = new GpioPort();
+            GpioPort1 = new GpioPort();
+            GpioPort2 = new GpioPort();
+            GpioPort3 = new GpioPort();
+
+            GpioPort0.Deserialise(stream);
+            GpioPort1.Deserialise(stream);
+            GpioPort2.Deserialise(stream);
+            GpioPort3.Deserialise(stream);
+        }
     }
 }

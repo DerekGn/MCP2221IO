@@ -23,30 +23,13 @@
 */
 
 using MCP2221IO.Commands;
-using MCP2221IO.Gpio;
-using System.IO;
 
 namespace MCP2221IO.Responses
 {
-    /// <summary>
-    /// The gpio ports response type
-    /// </summary>
-    internal class GpioPortsResponse : BaseResponse
+    internal class WriteSramSettingsResponse : BaseResponse
     {
-        public GpioPortsResponse() : base(CommandCodes.ReadFlashData)
+        public WriteSramSettingsResponse() : base(CommandCodes.SetSram)
         {
-        }
-
-        public GpioPorts GpioPorts { get; private set; }
-
-        // <inheritdoc/>
-        public override void Deserialise(Stream stream)
-        {
-            base.Deserialise(stream);
-
-            GpioPorts = new GpioPorts();
-
-            GpioPorts.Deserialise(stream);
         }
     }
 }

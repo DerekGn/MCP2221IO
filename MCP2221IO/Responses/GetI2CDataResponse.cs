@@ -22,7 +22,7 @@
 * SOFTWARE.
 */
 
-using MCP2221IO.Responses.Exceptions;
+using MCP2221IO.Exceptions;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;

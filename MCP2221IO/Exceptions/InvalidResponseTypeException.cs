@@ -22,38 +22,18 @@
 * SOFTWARE.
 */
 
-using System.IO;
-using System.Text;
+using System;
 
-namespace MCP2221IO.Gpio
+namespace MCP2221IO.Exceptions
 {
-    /// <summary>
-    /// Gpio2 Settings
-    /// </summary>
-    public class Gpio2Settings : GpioSettings
+    [Serializable]
+    public class InvalidResponseTypeException : Exception
     {
-        public Gpio2Designation Designation { get; private set; }
-
-        public override string ToString()
-        {
-            StringBuilder stringBuilder = new StringBuilder();
-
-            stringBuilder.Append(base.ToString());
-            stringBuilder.Append($"\t{nameof(Designation)}:\t{Designation}");
-
-            return stringBuilder.ToString();
-        }
-
-        // <inheritdoc/>
-        public override void Deserialise(Stream stream)
-        {
-            base.Deserialise(stream);
-
-            stream.Position -= 1;
-
-            int temp = stream.ReadByte();
-
-            Designation = (Gpio2Designation)(temp & 0x07);
-        }
+        public InvalidResponseTypeException() { }
+        public InvalidResponseTypeException(string message) : base(message) { }
+        public InvalidResponseTypeException(string message, System.Exception inner) : base(message, inner) { }
+        protected InvalidResponseTypeException(
+          System.Runtime.Serialization.SerializationInfo info,
+          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
     }
 }

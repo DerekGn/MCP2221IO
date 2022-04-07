@@ -35,6 +35,10 @@ namespace MCP2221IO.Commands
         /// </summary>
         GetI2CData = 0x40,
         /// <summary>
+        /// Get the GPIO port values
+        /// </summary>
+        GetGpioValues = 0x51,
+        /// <summary>
         /// Read flash data
         /// </summary>
         ReadFlashData = 0xB0,

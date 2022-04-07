@@ -22,38 +22,18 @@
 * SOFTWARE.
 */
 
-using System.IO;
-using System.Text;
+using MCP2221IO.Settings;
+using System;
 
-namespace MCP2221IO.Gpio
+namespace MCP2221IO.Commands
 {
-    /// <summary>
-    /// Gpio1 Settings
-    /// </summary>
-    public class Gpio1Settings : GpioSettings
+    internal class WriteGpSettingsCommand : WriteFlashDataCommand
     {
-        public Gpio1Designation Designation { get; private set; }
-
-        public override string ToString()
+        public WriteGpSettingsCommand(GpSettings gpSettings) : base(WriteFlashSubCode.WriteGpSettings)
         {
-            StringBuilder stringBuilder = new StringBuilder();
-
-            stringBuilder.Append(base.ToString());
-            stringBuilder.Append($"\t{nameof(Designation)}:\t{Designation}");
-
-            return stringBuilder.ToString();
+            GpSettings = gpSettings ?? throw new ArgumentNullException(nameof(gpSettings));
         }
 
-        // <inheritdoc/>
-        public override void Deserialise(Stream stream)
-        {
-            base.Deserialise(stream);
-
-            stream.Position -= 1;
-
-            int temp = stream.ReadByte();
-
-            Designation = (Gpio1Designation)(temp & 0x07);
-        }
+        public GpSettings GpSettings { get; }
     }
 }

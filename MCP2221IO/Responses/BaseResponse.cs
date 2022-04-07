@@ -23,7 +23,7 @@
 */
 
 using MCP2221IO.Commands;
-using MCP2221IO.Responses.Exceptions;
+using MCP2221IO.Exceptions;
 using System;
 using System.IO;
 

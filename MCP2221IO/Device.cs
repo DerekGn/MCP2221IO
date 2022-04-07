@@ -23,6 +23,7 @@
 */
 
 using MCP2221IO.Commands;
+using MCP2221IO.Exceptions;
 using MCP2221IO.Gpio;
 using MCP2221IO.Responses;
 using MCP2221IO.Settings;
@@ -47,6 +48,9 @@ namespace MCP2221IO
         }
 
         // <inheritdoc/>
+        public DeviceStatus Status => ExecuteCommand<StatusSetParametersResponse>(new StatusSetParametersCommand()).DeviceStatus;
+
+        // <inheritdoc/>
         public ChipSettings ChipSettings { get; private set; }
 
         // <inheritdoc/>
@@ -55,56 +59,80 @@ namespace MCP2221IO
         // <inheritdoc/>
         public SramSettings SramSettings { get; private set; }
 
-        // <inheritdoc/>
-        public DeviceStatus Status => ExecuteCommand<StatusSetParametersResponse>(new StatusSetParametersCommand()).DeviceStatus;
+        /// <summary>
+        /// Gpio 0 port settings
+        /// </summary>
+        public GpioPort GpioPort0 { get; private set; }
 
-        // <inheritdoc/>
-        public GpioPorts GpioPorts => ExecuteCommand<GpioPortsResponse>(new ReadGpioPortsCommand()).GpioPorts;
+        /// <summary>
+        /// Gpio 1 port settings
+        /// </summary>
+        public GpioPort GpioPort1 { get; private set; }
+
+        /// <summary>
+        /// Gpio 2 port settings
+        /// </summary>
+        public GpioPort GpioPort2 { get; private set; }
+
+        /// <summary>
+        /// Gpio 3 port settings
+        /// </summary>
+        public GpioPort GpioPort3 { get; private set; }
+
         // <inheritdoc/>
         public string UsbManufacturerDescriptor
         { 
             get => ExecuteCommand<UsbManufacturerDescriptorResponse>(new ReadUsbManufacturerDescriptorCommand()).Value;
             set => ExecuteCommand<WriteFlashDataResponse>(new WriteUsbManufacturerDescriptorCommand(value));
         }
+        
         // <inheritdoc/>
         public string UsbProductDescriptor
         { 
             get => ExecuteCommand<UsbProductDescriptorResponse>(new ReadUsbProductDescriptorCommand()).Value;
             set => ExecuteCommand<WriteFlashDataResponse>(new WriteUsbProductDescriptorCommand(value));
         }
+        
         // <inheritdoc/>
         public string UsbSerialNumberDescriptor
         {
             get => ExecuteCommand<UsbSerialNumberDescriptorResponse>(new ReadUsbSerialNumberDescriptorCommand()).Value;
             set => ExecuteCommand<WriteFlashDataResponse>(new WriteUsbSerialNumberCommand(value));
         }
+        
         // <inheritdoc/>
         public string FactorySerialNumber => GetFactorySerialNumber();
+        
         // <inheritdoc/>
         public void UnlockFlash(ulong password)
         {
             ExecuteCommand<UnlockFlashResponse>(new UnlockFlashCommand(password));
         }
+        
         // <inheritdoc/>
         public void I2CWriteData(byte address, IList<byte> data)
         {
             I2CWriteData<I2CWriteDataResponse>(CommandCodes.WriteI2CData, address, data);
         }
+        
         // <inheritdoc/>
         public void I2CWriteDataRepeatStart(byte address, IList<byte> data)
         {
             I2CWriteData<I2CWriteDataRepeatStartResponse>(CommandCodes.WriteI2CDataRepeatedStart, address, data);
         }
+        
         // <inheritdoc/>
         public void I2CWriteDataNoStop(byte address, IList<byte> data)
         {
             I2CWriteData<I2CWriteDataNoStopResponse>(CommandCodes.WriteI2CDataNoStop, address, data);
         }
+        
         // <inheritdoc/>
         public IList<byte> I2CReadData(byte address, ushort length)
         {
             return I2CReadData<I2CReadDataResponse>(CommandCodes.ReadI2CData, address, length);
         }
+        
         // <inheritdoc/>
         public IList<byte> I2CReadDataRepeatedStart(byte address, ushort length)
         {
@@ -128,17 +156,54 @@ namespace MCP2221IO
         {
             SramSettings = ExecuteCommand<ReadSramSettingsResponse>(new ReadSramSettingsCommand()).SramSettings;
         }
+        
+        // <inheritdoc/>
+        public void ReadGpioPorts()
+        {
+            var response = ExecuteCommand<ReadGpioPortsResponse>(new ReadGpioPortsCommand());
+
+            GpioPort0 = response.GpioPort0;
+            GpioPort1 = response.GpioPort1;
+            GpioPort2 = response.GpioPort2;
+            GpioPort3 = response.GpioPort3;
+        }
 
         // <inheritdoc/>
         public void WriteChipSettings(Password password)
         {
+            if(ChipSettings == null)
+            {
+                throw new ReadRequiredException($"{nameof(ChipSettings)} must be read from the device");
+            }
+
             ExecuteCommand<WriteFlashDataResponse>(new WriteChipSettingsCommand(ChipSettings));
+        }
+
+        // <inheritdoc/>
+        public void WriteGpSettings()
+        {
+            if (ChipSettings == null)
+            {
+                throw new ReadRequiredException($"{nameof(GpSettings)} must be read from the device");
+            }
+
+            ExecuteCommand<WriteFlashDataResponse>(new WriteGpSettingsCommand(GpSettings));
         }
 
         // <inheritdoc/>
         public void WriteSramSettings()
         {
-            throw new NotImplementedException();
+            if (SramSettings == null)
+            {
+                throw new ReadRequiredException($"{nameof(SramSettings)} must be read from the device");
+            }
+
+            ExecuteCommand<WriteSramSettingsResponse>(new WriteSramSettingsCommand(SramSettings));
+        }
+
+        // <inheritdoc/>
+        public void WriteGpioPorts()
+        {
         }
 
         // <inheritdoc/>

@@ -24,7 +24,7 @@
 
 using System;
 
-namespace MCP2221IO.Responses.Exceptions
+namespace MCP2221IO.Exceptions
 {
 
     [Serializable]

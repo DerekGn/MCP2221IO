@@ -22,43 +22,19 @@
 * SOFTWARE.
 */
 
-using System.IO;
-using System.Text;
+using System;
 
-namespace MCP2221IO.Gpio
+namespace MCP2221IO.Exceptions
 {
-    /// <summary>
-    /// The devices Gpio settings
-    /// </summary>
-    public abstract class GpioSettings
+
+    [Serializable]
+    public class ReadRequiredException : Exception
     {
-        /// <summary>
-        /// The current output value on the Gpio port
-        /// </summary>
-        public bool OutputValue { get; set; }
-
-        /// <summary>
-        /// The Gpio port direction
-        /// </summary>
-        public GpioDirection Direction { get; set; }
-
-        public override string ToString()
-        {
-            StringBuilder stringBuilder = new StringBuilder();
-
-            stringBuilder.AppendLine($"{nameof(OutputValue)}:\r\n({OutputValue}");
-            stringBuilder.AppendLine($"{nameof(Direction)}:\r\n({Direction}");
-
-            return stringBuilder.ToString();
-        }
-
-        // <inheritdoc/>
-        public virtual void Deserialise(Stream stream)
-        {
-            int temp = stream.ReadByte();
-
-            OutputValue = (temp & 0x10) == 0x10;
-            Direction = (GpioDirection)((temp & 0x80) >> 3);
-        }
+        public ReadRequiredException() { }
+        public ReadRequiredException(string message) : base(message) { }
+        public ReadRequiredException(string message, Exception inner) : base(message, inner) { }
+        protected ReadRequiredException(
+          System.Runtime.Serialization.SerializationInfo info,
+          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
     }
 }

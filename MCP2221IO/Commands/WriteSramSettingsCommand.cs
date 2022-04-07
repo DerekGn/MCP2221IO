@@ -22,38 +22,18 @@
 * SOFTWARE.
 */
 
-using System.IO;
-using System.Text;
+using MCP2221IO.Settings;
+using System;
 
-namespace MCP2221IO.Gpio
+namespace MCP2221IO.Commands
 {
-    /// <summary>
-    /// Gpio3 Settings
-    /// </summary>
-    public class Gpio3Settings : GpioSettings
+    internal class WriteSramSettingsCommand : BaseCommand
     {
-        public Gpio3Designation Designation { get; private set; }
-
-        public override string ToString()
+        public WriteSramSettingsCommand(SramSettings sramSettings) : base(CommandCodes.SetSram)
         {
-            StringBuilder stringBuilder = new StringBuilder();
-
-            stringBuilder.Append(base.ToString());
-            stringBuilder.Append($"\t{nameof(Designation)}:\t{Designation}");
-
-            return stringBuilder.ToString();
+            SramSettings = sramSettings ?? throw new ArgumentNullException(nameof(sramSettings));
         }
 
-        // <inheritdoc/>
-        public override void Deserialise(Stream stream)
-        {
-            base.Deserialise(stream);
-
-            stream.Position -= 1;
-
-            int temp = stream.ReadByte();
-
-            Designation = (Gpio3Designation)(temp & 0x07);
-        }
+        public SramSettings SramSettings { get; }
     }
 }

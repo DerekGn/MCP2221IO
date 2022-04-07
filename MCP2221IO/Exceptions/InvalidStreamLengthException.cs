@@ -24,15 +24,16 @@
 
 using System;
 
-namespace MCP2221IO.Responses.Exceptions
+namespace MCP2221IO.Exceptions
 {
-    [Serializable]
-    public class InvalidResponseTypeException : Exception
+
+    [System.Serializable]
+    public class InvalidStreamLengthException : Exception
     {
-        public InvalidResponseTypeException() { }
-        public InvalidResponseTypeException(string message) : base(message) { }
-        public InvalidResponseTypeException(string message, System.Exception inner) : base(message, inner) { }
-        protected InvalidResponseTypeException(
+        public InvalidStreamLengthException() { }
+        public InvalidStreamLengthException(string message) : base(message) { }
+        public InvalidStreamLengthException(string message, Exception inner) : base(message, inner) { }
+        protected InvalidStreamLengthException(
           System.Runtime.Serialization.SerializationInfo info,
           System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
     }

@@ -25,7 +25,7 @@
 using FluentAssertions;
 using MCP2221IO.Commands;
 using MCP2221IO.Gpio;
-using MCP2221IO.Responses.Exceptions;
+using MCP2221IO.Exceptions;
 using MCP2221IO.Settings;
 using MCP2221IO.Usb;
 using Moq;
@@ -96,25 +96,6 @@ namespace MCP2221IO.UnitTests
         }
 
         [Fact]
-        public void TestWriteChipSettings()
-        {
-            // Arrange
-            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()))
-                .Callback<Stream, Stream>
-                (
-                    (a, b) =>
-                    {
-                        WriteFlashWriteResponse(b, 0);
-                    }
-                );
-
-            // Act
-            _device.WriteChipSettings(new Password(new List<byte>()));
-
-            // Assert
-        }
-
-        [Fact]
         public void TestReadSramSettings()
         {
             // Arrange
@@ -137,14 +118,88 @@ namespace MCP2221IO.UnitTests
         }
 
         [Fact]
+        public void TestReadGpioSettings()
+        {
+            // Arrange
+            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()))
+                .Callback<Stream, Stream>
+                (
+                    (a, b) =>
+                    {
+                        WriteReadGpioPortsResponse(b);
+                    }
+                );
+
+            // Act
+            _device.ReadGpioPorts();
+
+            // Assert
+            _output.WriteLine($"GpioPort0: {_device.GpioPort0}");
+            _output.WriteLine($"GpioPort1: {_device.GpioPort1}");
+            _output.WriteLine($"GpioPort2: {_device.GpioPort2}");
+            _output.WriteLine($"GpioPort3: {_device.GpioPort3}");
+        }
+
+        [Fact]
+        public void TestWriteChipSettings()
+        {
+            // Arrange
+            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()))
+                .Callback<Stream, Stream>
+                (
+                    (a, b) =>
+                    {
+                        WriteFlashWriteResponse(b, 0);
+                    }
+                );
+
+            // Act
+            _device.WriteChipSettings(new Password(new List<byte>()));
+
+            // Assert
+        }
+
+        [Fact]
+        public void TestWriteGpSettings()
+        {
+            // Arrange
+            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()))
+                .Callback<Stream, Stream>
+                (
+                    (a, b) =>
+                    {
+                        WriteFlashWriteResponse(b, 0);
+                    }
+                );
+
+            // Act
+            _device.WriteGpSettings();
+
+            // Assert
+        }
+
+        [Fact]
         public void TestWriteSramSettings()
         {
             // Arrange
+            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()))
+                .Callback<Stream, Stream>
+                (
+                    (a, b) =>
+                    {
+                        WriteFlashWriteResponse(b, 0);
+                    }
+                );
 
             // Act
             _device.WriteSramSettings();
 
             // Assert
+        }
+
+        [Fact]
+        public void WriteGpioPorts()
+        {
         }
 
         [Fact]
@@ -200,32 +255,6 @@ namespace MCP2221IO.UnitTests
             deviceStatus.Should().NotBeNull();
 
             _output.WriteLine(deviceStatus.ToString());
-        }
-
-        [Fact]
-        public void TestGpioPortsOk()
-        {
-            // Arrange
-            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()))
-                .Callback<Stream, Stream>
-                (
-                    (a, b) =>
-                    {
-                        WriteGpioPortsResponse(b);
-                    }
-                );
-
-            // Act
-            GpioPorts ports = _device.GpioPorts;
-
-            // Assert
-            ports.Should().NotBeNull();
-            ports.Gpio0Settings.Should().NotBeNull();
-            ports.Gpio1Settings.Should().NotBeNull();
-            ports.Gpio2Settings.Should().NotBeNull();
-            ports.Gpio3Settings.Should().NotBeNull();
-
-            _output.WriteLine(ports.ToString());
         }
 
         [Fact]
@@ -553,6 +582,22 @@ namespace MCP2221IO.UnitTests
             // Assert
             _mockUsbDevice.Verify(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()), Times.Exactly(4));
             buffer.Should().NotBeNullOrEmpty();
+        }
+
+        private void WriteReadGpioPortsResponse(Stream stream)
+        {
+            stream.Write(new byte[64], 0, 64);
+            stream.Position = 0;
+            stream.WriteByte((byte)CommandCodes.GetGpioValues);
+            stream.WriteByte(0); // Command OK
+            stream.WriteByte(0xEE); // GPIO0 Pin Value
+            stream.WriteByte(0xEF); // GPIO0 Direction Value
+            stream.WriteByte(0x00); // GPIO1 Pin Value
+            stream.WriteByte(0x00); // GPIO1 Direction Value
+            stream.WriteByte(0x01); // GPIO2 Pin Value
+            stream.WriteByte(0x01); // GPIO2 Direction Value
+            stream.WriteByte(0xEE); // GPIO3 Pin Value
+            stream.WriteByte(0xEF); // GPIO3 Direction Value
         }
 
         private void WriteGpSettingsResponse(Stream stream)

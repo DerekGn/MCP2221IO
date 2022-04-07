@@ -37,28 +37,32 @@ namespace MCP2221IO.Settings
         /// Enables USB serial number usage during the USB enumeration of the CDC interface.
         /// </summary>
         public bool CdcSerialNumberEnable { get; set; }
+
         /// <summary>
         /// The chip security settings
         /// </summary>
         public ChipSecurity ChipSecurity { get; set; }
+
         /// <summary>
         /// The Usb vendor id
         /// </summary>
         public ushort Vid { get; set; }
+
         /// <summary>
         /// The Usb product id
         /// </summary>
         public ushort Pid { get; set; }
+
         /// <summary>
         /// USB Self-Powered Attribute
         /// </summary>
         public UsbSelfPowered SelfPowered { get; set; }
+
         /// <summary>
         /// USB Remote Wake-Up Capability
         /// </summary>
         public UsbRemoteWake RemoteWake { get; set; }
-        
-        public string Password { get; set; }
+
         public override string ToString()
         {
             StringBuilder stringBuilder = new StringBuilder();

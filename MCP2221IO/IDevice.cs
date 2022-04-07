@@ -35,6 +35,11 @@ namespace MCP2221IO
         const int I2CMinSpeed = 46875;
 
         /// <summary>
+        /// Get the device <see cref="DeviceStatus"/>
+        /// </summary>
+        DeviceStatus Status { get; }
+
+        /// <summary>
         /// Get the device <see cref="ChipSettings"/>
         /// </summary>
         ChipSettings ChipSettings { get; }
@@ -50,14 +55,24 @@ namespace MCP2221IO
         SramSettings SramSettings { get; }
 
         /// <summary>
-        /// Get the device <see cref="DeviceStatus"/>
+        /// Gpio 0 port settings
         /// </summary>
-        DeviceStatus Status { get; }
+        GpioPort GpioPort0 { get; }
 
         /// <summary>
-        /// Get the Gpio settings
+        /// Gpio 1 port settings
         /// </summary>
-        GpioPorts GpioPorts { get; }
+        GpioPort GpioPort1 { get; }
+
+        /// <summary>
+        /// Gpio 2 port settings
+        /// </summary>
+        GpioPort GpioPort2 { get; }
+
+        /// <summary>
+        /// Gpio 3 port settings
+        /// </summary>
+        GpioPort GpioPort3 { get; }
 
         /// <summary>
         /// The USB manufacturer descriptor value
@@ -143,14 +158,29 @@ namespace MCP2221IO
         void ReadSramSettings();
 
         /// <summary>
+        /// 
+        /// </summary>
+        void ReadGpioPorts();
+
+        /// <summary>
         /// Write the <see cref="ChipSettings"/> to the device
         /// </summary>
         /// <param name="password">The password to update in flash</param>
         void WriteChipSettings(Password password);
 
         /// <summary>
+        /// Write the GP power up settings to flash
+        /// </summary>
+        void WriteGpSettings();
+
+        /// <summary>
         /// Write the <see cref="SramSettings"/> to the device
         /// </summary>
         void WriteSramSettings();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        void WriteGpioPorts();
     }
 }

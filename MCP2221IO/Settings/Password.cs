@@ -37,7 +37,7 @@ namespace MCP2221IO.Settings
                 throw new ArgumentNullException(nameof(bytes));
             }
 
-            if(bytes.Count > 8)
+            if (bytes.Count > 8)
             {
                 throw new ArgumentOutOfRangeException(nameof(bytes), "Must be 8 bytes long");
             }

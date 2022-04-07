@@ -36,12 +36,12 @@ namespace MCP2221IO.Responses
 
         public string Value { get; private set; }
 
-        public override void Deserialise(Stream stream)
+        public override void Deserialize(Stream stream)
         {
-            base.Deserialise(stream);
+            base.Deserialize(stream);
 
             int bufferSize = stream.ReadByte();
-            byte[] buffer= new byte[bufferSize];
+            byte[] buffer = new byte[bufferSize];
 
             stream.ReadByte();
 

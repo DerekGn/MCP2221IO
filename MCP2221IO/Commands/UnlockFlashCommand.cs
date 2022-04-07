@@ -43,9 +43,9 @@ namespace MCP2221IO.Commands
         public ulong Password { get; }
 
         // <inheritdoc/>
-        public override void Serialise(Stream stream)
+        public override void Serialize(Stream stream)
         {
-            base.Serialise(stream);
+            base.Serialize(stream);
 
             var bytes = BitConverter.GetBytes(Password);
 

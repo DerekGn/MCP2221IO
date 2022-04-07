@@ -161,10 +161,10 @@ namespace MCP2221IO.Settings
             Gp2Settings = new GpSetting<Gpio2Designation>();
             Gp3Settings = new GpSetting<Gpio3Designation>();
 
-            Gp0Settings.Deserialise(stream);
-            Gp1Settings.Deserialise(stream);
-            Gp2Settings.Deserialise(stream);
-            Gp3Settings.Deserialise(stream);
+            Gp0Settings.Deserialize(stream);
+            Gp1Settings.Deserialize(stream);
+            Gp2Settings.Deserialize(stream);
+            Gp3Settings.Deserialize(stream);
         }
     }
 }

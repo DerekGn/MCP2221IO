@@ -40,6 +40,6 @@ namespace MCP2221IO.Commands
         /// Serialise the command byes to a <see cref="Stream"/>
         /// </summary>
         /// <param name="stream">The stream to serialise the data too.</param>
-        void Serialise(Stream stream);
+        void Serialize(Stream stream);
     }
 }

@@ -87,7 +87,7 @@ namespace MCP2221IO.Settings
             return stringBuilder.ToString();
         }
 
-        internal void Deserialise(Stream stream)
+        internal void Deserialize(Stream stream)
         {
             stream.ReadByte();
             stream.ReadByte();

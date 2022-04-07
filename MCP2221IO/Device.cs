@@ -35,6 +35,9 @@ using System.Linq;
 
 namespace MCP2221IO
 {
+    /// <summary>
+    /// A MCP2221 device
+    /// </summary>
     public class Device : IDevice
     {
         internal const int MaxBlockSize = 60;
@@ -82,58 +85,58 @@ namespace MCP2221IO
 
         // <inheritdoc/>
         public string UsbManufacturerDescriptor
-        { 
+        {
             get => ExecuteCommand<UsbManufacturerDescriptorResponse>(new ReadUsbManufacturerDescriptorCommand()).Value;
             set => ExecuteCommand<WriteFlashDataResponse>(new WriteUsbManufacturerDescriptorCommand(value));
         }
-        
+
         // <inheritdoc/>
         public string UsbProductDescriptor
-        { 
+        {
             get => ExecuteCommand<UsbProductDescriptorResponse>(new ReadUsbProductDescriptorCommand()).Value;
             set => ExecuteCommand<WriteFlashDataResponse>(new WriteUsbProductDescriptorCommand(value));
         }
-        
+
         // <inheritdoc/>
         public string UsbSerialNumberDescriptor
         {
             get => ExecuteCommand<UsbSerialNumberDescriptorResponse>(new ReadUsbSerialNumberDescriptorCommand()).Value;
             set => ExecuteCommand<WriteFlashDataResponse>(new WriteUsbSerialNumberCommand(value));
         }
-        
+
         // <inheritdoc/>
         public string FactorySerialNumber => GetFactorySerialNumber();
-        
+
         // <inheritdoc/>
         public void UnlockFlash(ulong password)
         {
             ExecuteCommand<UnlockFlashResponse>(new UnlockFlashCommand(password));
         }
-        
+
         // <inheritdoc/>
         public void I2CWriteData(byte address, IList<byte> data)
         {
             I2CWriteData<I2CWriteDataResponse>(CommandCodes.WriteI2CData, address, data);
         }
-        
+
         // <inheritdoc/>
         public void I2CWriteDataRepeatStart(byte address, IList<byte> data)
         {
             I2CWriteData<I2CWriteDataRepeatStartResponse>(CommandCodes.WriteI2CDataRepeatedStart, address, data);
         }
-        
+
         // <inheritdoc/>
         public void I2CWriteDataNoStop(byte address, IList<byte> data)
         {
             I2CWriteData<I2CWriteDataNoStopResponse>(CommandCodes.WriteI2CDataNoStop, address, data);
         }
-        
+
         // <inheritdoc/>
         public IList<byte> I2CReadData(byte address, ushort length)
         {
             return I2CReadData<I2CReadDataResponse>(CommandCodes.ReadI2CData, address, length);
         }
-        
+
         // <inheritdoc/>
         public IList<byte> I2CReadDataRepeatedStart(byte address, ushort length)
         {
@@ -157,7 +160,7 @@ namespace MCP2221IO
         {
             SramSettings = ExecuteCommand<ReadSramSettingsResponse>(new ReadSramSettingsCommand()).SramSettings;
         }
-        
+
         // <inheritdoc/>
         public void ReadGpioPorts()
         {
@@ -174,7 +177,7 @@ namespace MCP2221IO
         // <inheritdoc/>
         public void WriteChipSettings(Password password)
         {
-            if(ChipSettings == null)
+            if (ChipSettings == null)
             {
                 throw new ReadRequiredException($"{nameof(ChipSettings)} must be read from the device");
             }
@@ -221,7 +224,7 @@ namespace MCP2221IO
             ExecuteCommand(new ResetCommand());
         }
 
-        private IList<byte> I2CReadData<T>(CommandCodes commandCode, byte address, ushort length) where T : IResponse, new() 
+        private IList<byte> I2CReadData<T>(CommandCodes commandCode, byte address, ushort length) where T : IResponse, new()
         {
             List<byte> result = new List<byte>();
 
@@ -253,7 +256,7 @@ namespace MCP2221IO
         {
             var memoryStream = new MemoryStream(new byte[64], true);
 
-            command.Serialise(memoryStream);
+            command.Serialize(memoryStream);
 
             _usbDevice.Write(memoryStream);
         }
@@ -263,13 +266,13 @@ namespace MCP2221IO
             var outStream = new MemoryStream(new byte[64], true);
             var inStream = new MemoryStream();
 
-            command.Serialise(outStream);
+            command.Serialize(outStream);
 
             _usbDevice.WriteRead(outStream, inStream);
 
             var result = new T();
 
-            result.Deserialise(inStream);
+            result.Deserialize(inStream);
 
             return result;
         }

@@ -53,17 +53,17 @@ namespace MCP2221IO.Settings
             return stringBuilder.ToString();
         }
 
-        internal void Deserialise(Stream stream)
+        internal void Deserialize(Stream stream)
         {
             Gp0PowerUpSetting = new GpSetting<Gpio0Designation>();
             Gp1PowerUpSetting = new GpSetting<Gpio1Designation>();
             Gp2PowerUpSetting = new GpSetting<Gpio2Designation>();
             Gp3PowerUpSetting = new GpSetting<Gpio3Designation>();
 
-            Gp0PowerUpSetting.Deserialise(stream);
-            Gp1PowerUpSetting.Deserialise(stream);
-            Gp2PowerUpSetting.Deserialise(stream);
-            Gp3PowerUpSetting.Deserialise(stream);
+            Gp0PowerUpSetting.Deserialize(stream);
+            Gp1PowerUpSetting.Deserialize(stream);
+            Gp2PowerUpSetting.Deserialize(stream);
+            Gp3PowerUpSetting.Deserialize(stream);
         }
     }
 }

@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.32002.261
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MCP2221IO", "MCP2221IO\MCP2221IO.csproj", "{807E5DEB-A3D9-45E3-811A-6B0DE943AEC5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MCP2221IO.UnitTests", "MCP2221IO.UnitTests\MCP2221IO.UnitTests.csproj", "{6815D645-2A0B-4758-980D-E13FAE51821F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MCP2221IO.UnitTests", "MCP2221IO.UnitTests\MCP2221IO.UnitTests.csproj", "{6815D645-2A0B-4758-980D-E13FAE51821F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MCP2221IOConsole", "MCP2221IOConsole\MCP2221IOConsole.csproj", "{9F4F2107-93D5-4886-B6C9-DE1235F59538}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{6815D645-2A0B-4758-980D-E13FAE51821F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6815D645-2A0B-4758-980D-E13FAE51821F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6815D645-2A0B-4758-980D-E13FAE51821F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F4F2107-93D5-4886-B6C9-DE1235F59538}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F4F2107-93D5-4886-B6C9-DE1235F59538}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F4F2107-93D5-4886-B6C9-DE1235F59538}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F4F2107-93D5-4886-B6C9-DE1235F59538}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

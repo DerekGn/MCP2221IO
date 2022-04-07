@@ -42,9 +42,9 @@ namespace MCP2221IO.Commands
 
         public Password Password { get; }
 
-        public override void Serialise(Stream stream)
+        public override void Serialize(Stream stream)
         {
-            base.Serialise(stream);
+            base.Serialize(stream);
 
             int update = ChipSettings.CdcSerialNumberEnable ? 0x80 : 0x0;
             update |= (int)ChipSettings.ChipSecurity;
@@ -63,8 +63,8 @@ namespace MCP2221IO.Commands
 
             update |= ChipSettings.InterruptNegativeEdge ? 1 : 0 << 6;
             update |= ChipSettings.InterruptPositiveEdge ? 1 : 0 << 5;
-            update |= (int) ChipSettings.AdcRefVoltage << 3;
-            update |= (int) ChipSettings.AdcRefOption << 2;
+            update |= (int)ChipSettings.AdcRefVoltage << 3;
+            update |= (int)ChipSettings.AdcRefOption << 2;
 
             stream.WriteByte((byte)update);
 

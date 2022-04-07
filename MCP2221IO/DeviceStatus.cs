@@ -137,7 +137,7 @@ namespace MCP2221IO
             return stringBuilder.ToString();
         }
 
-        internal void Deserialise(Stream stream)
+        internal void Deserialize(Stream stream)
         {
             CancelTransferState = (I2CCancelTransferState)stream.ReadByte();
             SpeedStatus = (I2CSpeedStatus)stream.ReadByte();

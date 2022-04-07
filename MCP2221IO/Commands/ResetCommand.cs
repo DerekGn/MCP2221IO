@@ -39,9 +39,9 @@ namespace MCP2221IO.Commands
         }
 
         // <inheritdoc/>
-        public override void Serialise(Stream stream)
+        public override void Serialize(Stream stream)
         {
-            base.Serialise(stream);
+            base.Serialize(stream);
             stream.WriteByte(0xAB);
             stream.WriteByte(0xCD);
             stream.WriteByte(0xEF);

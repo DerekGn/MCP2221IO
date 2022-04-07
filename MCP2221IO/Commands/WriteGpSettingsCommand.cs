@@ -28,6 +28,9 @@ using System.IO;
 
 namespace MCP2221IO.Commands
 {
+    /// <summary>
+    /// Write the <see cref="GpSettings"/> to the device
+    /// </summary>
     internal class WriteGpSettingsCommand : WriteFlashDataCommand
     {
         public WriteGpSettingsCommand(GpSettings gpSettings) : base(WriteFlashSubCode.WriteGpSettings)
@@ -37,23 +40,14 @@ namespace MCP2221IO.Commands
 
         public GpSettings GpSettings { get; }
 
-        public override void Serialise(Stream stream)
+        public override void Serialize(Stream stream)
         {
-            base.Serialise(stream);
+            base.Serialize(stream);
 
-            WritePort(stream, GpSettings.Gp0PowerUpSetting);
-            WritePort(stream, GpSettings.Gp1PowerUpSetting);
-            WritePort(stream, GpSettings.Gp2PowerUpSetting);
-            WritePort(stream, GpSettings.Gp3PowerUpSetting);
-        }
-
-        private void WritePort<T>(Stream stream, GpSetting<T> port) where T : System.Enum
-        {
-            int update = (port.OutputValue ? 0x40 : 0) << 4;
-            update |= port.IsInput ? 0x8 : 0x00;
-            update |= (int)(object)port.Designation & 0b111;
-
-            stream.WriteByte((byte)update);
+            GpSettings.Gp0PowerUpSetting.Serialize(stream);
+            GpSettings.Gp1PowerUpSetting.Serialize(stream);
+            GpSettings.Gp2PowerUpSetting.Serialize(stream);
+            GpSettings.Gp3PowerUpSetting.Serialize(stream);
         }
     }
 }

@@ -41,13 +41,13 @@ namespace MCP2221IO.Responses
         /// </summary>
         public DeviceStatus DeviceStatus { get; private set; }
 
-        public override void Deserialise(Stream stream)
+        public override void Deserialize(Stream stream)
         {
-            base.Deserialise(stream);
+            base.Deserialize(stream);
 
             DeviceStatus = new DeviceStatus();
 
-            DeviceStatus.Deserialise(stream);
+            DeviceStatus.Deserialize(stream);
         }
     }
 }

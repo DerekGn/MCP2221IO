@@ -53,9 +53,9 @@ namespace MCP2221IO.Commands
         public string Value { get; }
 
         // <inheritdoc/>
-        public override void Serialise(Stream stream)
+        public override void Serialize(Stream stream)
         {
-            base.Serialise(stream);
+            base.Serialize(stream);
 
             stream.WriteByte((byte)((Value.Length * 2) + 2));
 

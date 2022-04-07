@@ -49,9 +49,9 @@ namespace MCP2221IO.Commands
         /// </summary>
         public IList<byte> Data { get; }
 
-        public override void Serialise(Stream stream)
+        public override void Serialize(Stream stream)
         {
-            base.Serialise(stream);
+            base.Serialize(stream);
             stream.WriteUShort((ushort)Data.Count);
             stream.WriteByte(Address);
             stream.Write(Data.ToArray(), 0, Data.Count);

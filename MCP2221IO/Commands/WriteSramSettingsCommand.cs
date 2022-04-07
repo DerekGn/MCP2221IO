@@ -28,6 +28,9 @@ using System.IO;
 
 namespace MCP2221IO.Commands
 {
+    /// <summary>
+    /// 
+    /// </summary>
     internal class WriteSramSettingsCommand : BaseCommand
     {
         public WriteSramSettingsCommand(SramSettings sramSettings, bool clearInterrupts) : base(CommandCodes.SetSram)
@@ -37,11 +40,12 @@ namespace MCP2221IO.Commands
         }
 
         public SramSettings SramSettings { get; }
+
         public bool ClearInterrupts { get; }
 
-        public override void Serialise(Stream stream)
+        public override void Serialize(Stream stream)
         {
-            base.Serialise(stream);
+            base.Serialize(stream);
 
             int update = 0x80;
             update |= (int)SramSettings.ClockDutyCycle << 3;
@@ -75,19 +79,10 @@ namespace MCP2221IO.Commands
 
             stream.WriteByte(0x80);
 
-            WritePort(stream, SramSettings.Gp0Settings);
-            WritePort(stream, SramSettings.Gp1Settings);
-            WritePort(stream, SramSettings.Gp2Settings);
-            WritePort(stream, SramSettings.Gp3Settings);
-        }
-
-        private void WritePort<T>(Stream stream, GpSetting<T> port) where T : System.Enum
-        {
-            int update = (port.OutputValue ? 0x40 : 0) << 4;
-            update |= port.IsInput ? 0x8 : 0x00;
-            update |= (int)(object)port.Designation & 0b111;
-
-            stream.WriteByte((byte)update);
+            SramSettings.Gp0Settings.Serialize(stream);
+            SramSettings.Gp1Settings.Serialize(stream);
+            SramSettings.Gp2Settings.Serialize(stream);
+            SramSettings.Gp3Settings.Serialize(stream);
         }
     }
 }

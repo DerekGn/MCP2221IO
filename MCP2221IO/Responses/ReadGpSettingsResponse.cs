@@ -42,16 +42,16 @@ namespace MCP2221IO.Responses
         /// </summary>
         public GpSettings GpSettings { get; set; }
 
-        public override void Deserialise(Stream stream)
+        public override void Deserialize(Stream stream)
         {
-            base.Deserialise(stream);
+            base.Deserialize(stream);
 
             stream.ReadByte();
             stream.ReadByte();
 
             GpSettings = new GpSettings();
 
-            GpSettings.Deserialise(stream);
+            GpSettings.Deserialize(stream);
         }
     }
 }

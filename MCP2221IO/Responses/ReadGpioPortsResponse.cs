@@ -42,9 +42,9 @@ namespace MCP2221IO.Responses
 
         public GpioPort GpioPort3 { get; private set; }
 
-        public override void Deserialise(Stream stream)
+        public override void Deserialize(Stream stream)
         {
-            base.Deserialise(stream);
+            base.Deserialize(stream);
 
             GpioPort0 = new GpioPort();
             GpioPort1 = new GpioPort();

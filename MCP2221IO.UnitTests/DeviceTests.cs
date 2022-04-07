@@ -24,8 +24,8 @@
 
 using FluentAssertions;
 using MCP2221IO.Commands;
-using MCP2221IO.Gpio;
 using MCP2221IO.Exceptions;
+using MCP2221IO.Gpio;
 using MCP2221IO.Settings;
 using MCP2221IO.Usb;
 using Moq;
@@ -675,7 +675,7 @@ namespace MCP2221IO.UnitTests
         {
             stream.Write(new byte[64], 0, 64);
             stream.Position = 0;
-            stream.WriteByte((byte) CommandCodes.GetSram);
+            stream.WriteByte((byte)CommandCodes.GetSram);
             stream.WriteByte(0); // Command OK
             stream.WriteByte(0); // sram structure length
             stream.WriteByte(0); // gp structure length care

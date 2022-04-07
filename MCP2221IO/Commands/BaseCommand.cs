@@ -42,7 +42,7 @@ namespace MCP2221IO.Commands
         public CommandCodes CommandCode { get; }
 
         // <inheritdoc/>
-        public virtual void Serialise(Stream stream)
+        public virtual void Serialize(Stream stream)
         {
             if (stream == null)
             {

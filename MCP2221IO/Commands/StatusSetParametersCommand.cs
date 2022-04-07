@@ -40,7 +40,7 @@ namespace MCP2221IO.Commands
         private readonly byte _setSpeed;
         private readonly byte _divisor;
 
-        public StatusSetParametersCommand(bool cancelTransfer = false, byte divisor = 0) 
+        public StatusSetParametersCommand(bool cancelTransfer = false, byte divisor = 0)
             : base(CommandCodes.StatusSetParameters)
         {
             if (cancelTransfer)
@@ -56,9 +56,9 @@ namespace MCP2221IO.Commands
         }
 
         // <inheritdoc/>
-        public override void Serialise(Stream stream)
+        public override void Serialize(Stream stream)
         {
-            base.Serialise(stream);
+            base.Serialize(stream);
             stream.WriteByte(0);
             stream.WriteByte(_cancelCommand);
             stream.WriteByte(_setSpeed);

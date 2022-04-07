@@ -33,54 +33,54 @@ namespace MCP2221IO.Settings
         /// The current clock out divider value
         /// </summary>
         public ClockOutDivider ClockDivider { get; set; }
-        
+
         /// <summary>
         /// DAC Reference voltage option
         /// </summary>
         public DacRefVoltage DacRefVoltage { get; set; }
-        
+
         /// <summary>
         /// DAC reference option
         /// </summary>
         public DacRefOption DacRefOption { get; set; }
-        
+
         /// <summary>
         /// Power up DAC Output Value
         /// </summary>
         public byte DacOutput { get; set; }
-        
+
         /// <summary>
         /// ADC Reference voltage option
         /// </summary>
         public AdcRefVoltage AdcRefVoltage { get; set; }
-        
+
         /// <summary>
         /// ADC reference option
         /// </summary>
         public AdcRefOption AdcRefOption { get; set; }
-        
+
         /// <summary>
         /// If set, the interrupt detection flag will be set when a
         /// negative edge occurs.
         /// </summary>
         public bool InterruptNegativeEdge { get; set; }
-        
+
         /// <summary>
         /// If set, the interrupt detection flag will be set when a
         /// positive edge occurs.
         /// </summary>
         public bool InterruptPositiveEdge { get; set; }
-        
+
         /// <summary>
         /// The requested mA value during the USB enumeration
         /// </summary>
-        public int PowerRequestMa 
+        public int PowerRequestMa
         {
             get
             {
                 return _powerRequestMa / 2;
             }
-            protected set 
+            protected set
             {
                 _powerRequestMa = value * 2;
             }

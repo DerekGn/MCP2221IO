@@ -43,16 +43,16 @@ namespace MCP2221IO.Responses
         public CommandCodes CommandCode { get; }
 
         // <inheritdoc/>
-        public virtual void Deserialise(Stream stream)
+        public virtual void Deserialize(Stream stream)
         {
-            if(stream == null)
+            if (stream == null)
             {
                 throw new ArgumentNullException(nameof(stream));
             }
 
             if (stream.Length != 64)
             {
-                throw new InvalidStreamLengthException($"Unexpected stream length Expected: [0x40] Actual [{stream.Length}]"); 
+                throw new InvalidStreamLengthException($"Unexpected stream length Expected: [0x40] Actual [{stream.Length}]");
             }
 
             stream.Position = 0;

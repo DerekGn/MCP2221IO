@@ -29,7 +29,7 @@ namespace MCP2221IO.Commands
     /// </summary>
     internal class WriteUsbManufacturerDescriptorCommand : WriteFlashDataStringCommand
     {
-        public WriteUsbManufacturerDescriptorCommand(string value) 
+        public WriteUsbManufacturerDescriptorCommand(string value)
             : base(value, WriteFlashSubCode.WriteManufacturerDescriptor)
         {
         }

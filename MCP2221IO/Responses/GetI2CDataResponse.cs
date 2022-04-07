@@ -40,13 +40,13 @@ namespace MCP2221IO.Responses
 
         public IList<byte> Data { get; private set; }
 
-        public override void Deserialise(Stream stream)
+        public override void Deserialize(Stream stream)
         {
-            base.Deserialise(stream);
+            base.Deserialize(stream);
 
             int temp = stream.ReadByte();
 
-            if(temp ==  0x7F)
+            if (temp == 0x7F)
             {
                 throw new CommandExecutionFailedException("I2C data read failed");
             }

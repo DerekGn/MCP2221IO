@@ -22,6 +22,7 @@
 * SOFTWARE.
 */
 
+using System;
 using System.IO;
 using System.Text;
 
@@ -60,13 +61,22 @@ namespace MCP2221IO.Settings
         }
 
         // <inheritdoc/>
-        public virtual void Deserialise(Stream stream)
+        internal void Deserialize(Stream stream)
         {
             int temp = stream.ReadByte();
 
             OutputValue = (temp & 0x10) == 0x10;
             IsInput = (temp & 0x80) == 0x80;
             Designation = (T)(object)(temp & 0x07);
+        }
+
+        internal void Serialize(Stream stream)
+        {
+            int update = (OutputValue ? 0x40 : 0) << 4;
+            update |= IsInput ? 0x8 : 0x00;
+            update |= (int)(object)Designation & 0b111;
+
+            stream.WriteByte((byte)update);
         }
     }
 }

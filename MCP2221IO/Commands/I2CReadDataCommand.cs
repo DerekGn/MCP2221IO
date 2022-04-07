@@ -47,9 +47,9 @@ namespace MCP2221IO.Commands
         /// </summary>
         public ushort Length { get; }
 
-        public override void Serialise(Stream stream)
+        public override void Serialize(Stream stream)
         {
-            base.Serialise(stream);
+            base.Serialize(stream);
 
             stream.WriteUShort(Length);
             stream.WriteUShort(Address);

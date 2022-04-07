@@ -42,9 +42,9 @@ namespace MCP2221IO.Commands
         public WriteFlashSubCode SubCode { get; }
 
         // <inheritdoc/>
-        public override void Serialise(Stream stream)
+        public override void Serialize(Stream stream)
         {
-            base.Serialise(stream);
+            base.Serialize(stream);
             stream.WriteByte((byte)CommandCode);
             stream.WriteByte((byte)SubCode);
         }

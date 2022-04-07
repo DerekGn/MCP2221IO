@@ -158,7 +158,7 @@ namespace MCP2221IO
         void ReadSramSettings();
 
         /// <summary>
-        /// 
+        /// Read the Gpio ports
         /// </summary>
         void ReadGpioPorts();
 
@@ -176,10 +176,11 @@ namespace MCP2221IO
         /// <summary>
         /// Write the <see cref="SramSettings"/> to the device
         /// </summary>
-        void WriteSramSettings();
+        /// <param name="clearInterrupts">Clear any pending interrupts</param>
+        void WriteSramSettings(bool clearInterrupts);
 
         /// <summary>
-        /// 
+        /// Write the Gpio ports
         /// </summary>
         void WriteGpioPorts();
     }

@@ -24,16 +24,70 @@
 
 using MCP2221IO.Settings;
 using System;
+using System.IO;
 
 namespace MCP2221IO.Commands
 {
     internal class WriteSramSettingsCommand : BaseCommand
     {
-        public WriteSramSettingsCommand(SramSettings sramSettings) : base(CommandCodes.SetSram)
+        public WriteSramSettingsCommand(SramSettings sramSettings, bool clearInterrupts) : base(CommandCodes.SetSram)
         {
             SramSettings = sramSettings ?? throw new ArgumentNullException(nameof(sramSettings));
+            ClearInterrupts = clearInterrupts;
         }
 
         public SramSettings SramSettings { get; }
+        public bool ClearInterrupts { get; }
+
+        public override void Serialise(Stream stream)
+        {
+            base.Serialise(stream);
+
+            int update = 0x80;
+            update |= (int)SramSettings.ClockDutyCycle << 3;
+            update |= (int)SramSettings.ClockDivider & 0b111;
+
+            stream.WriteByte((byte)update);
+
+            update = 0x80;
+            update |= (int)SramSettings.DacRefVoltage << 3;
+            update |= (int)SramSettings.DacRefOption;
+
+            stream.WriteByte((byte)update);
+
+            update = 0x80;
+            update |= SramSettings.DacOutput & 0x0F;
+
+            stream.WriteByte((byte)update);
+
+            update = 0x80;
+            update |= ((int)SramSettings.AdcRefVoltage & 0x06) << 2;
+            update |= (int)SramSettings.AdcRefOption;
+
+            stream.WriteByte((byte)update);
+
+            update = 0x80;
+            update |= SramSettings.InterruptPositiveEdge ? 0x03 : 0x00;
+            update |= SramSettings.InterruptNegativeEdge ? 0x02 : 0x00;
+            update |= ClearInterrupts ? 0x01 : 0x00;
+
+            stream.WriteByte((byte)update);
+
+            stream.WriteByte(0x80);
+
+            WritePort(stream, SramSettings.Gp0Settings);
+            WritePort(stream, SramSettings.Gp1Settings);
+            WritePort(stream, SramSettings.Gp2Settings);
+            WritePort(stream, SramSettings.Gp3Settings);
+        }
+
+        private void WritePort<T>(Stream stream, GpSetting<T> port) where T : System.Enum
+        {
+            int update = (port.OutputValue ? 0x40 : 0) << 4;
+            update |= port.IsInput ? 0x8 : 0x00;
+            update |= (int)(object)port.Designation & 0b111;
+
+            stream.WriteByte((byte)update);
+        }
     }
 }

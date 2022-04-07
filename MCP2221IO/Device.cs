@@ -39,6 +39,7 @@ namespace MCP2221IO
     {
         internal const int MaxBlockSize = 60;
 
+        internal bool _gpioPortsRead = false;
         private string _factorySerialNumber;
         private IUsbDevice _usbDevice;
 
@@ -51,33 +52,33 @@ namespace MCP2221IO
         public DeviceStatus Status => ExecuteCommand<StatusSetParametersResponse>(new StatusSetParametersCommand()).DeviceStatus;
 
         // <inheritdoc/>
-        public ChipSettings ChipSettings { get; private set; }
+        public ChipSettings ChipSettings { get; internal set; }
 
         // <inheritdoc/>
-        public GpSettings GpSettings { get; private set; }
+        public GpSettings GpSettings { get; internal set; }
 
         // <inheritdoc/>
-        public SramSettings SramSettings { get; private set; }
+        public SramSettings SramSettings { get; internal set; }
 
         /// <summary>
         /// Gpio 0 port settings
         /// </summary>
-        public GpioPort GpioPort0 { get; private set; }
+        public GpioPort GpioPort0 { get; internal set; }
 
         /// <summary>
         /// Gpio 1 port settings
         /// </summary>
-        public GpioPort GpioPort1 { get; private set; }
+        public GpioPort GpioPort1 { get; internal set; }
 
         /// <summary>
         /// Gpio 2 port settings
         /// </summary>
-        public GpioPort GpioPort2 { get; private set; }
+        public GpioPort GpioPort2 { get; internal set; }
 
         /// <summary>
         /// Gpio 3 port settings
         /// </summary>
-        public GpioPort GpioPort3 { get; private set; }
+        public GpioPort GpioPort3 { get; internal set; }
 
         // <inheritdoc/>
         public string UsbManufacturerDescriptor
@@ -166,6 +167,8 @@ namespace MCP2221IO
             GpioPort1 = response.GpioPort1;
             GpioPort2 = response.GpioPort2;
             GpioPort3 = response.GpioPort3;
+
+            _gpioPortsRead = true;
         }
 
         // <inheritdoc/>
@@ -176,13 +179,13 @@ namespace MCP2221IO
                 throw new ReadRequiredException($"{nameof(ChipSettings)} must be read from the device");
             }
 
-            ExecuteCommand<WriteFlashDataResponse>(new WriteChipSettingsCommand(ChipSettings));
+            ExecuteCommand<WriteFlashDataResponse>(new WriteChipSettingsCommand(ChipSettings, password));
         }
 
         // <inheritdoc/>
         public void WriteGpSettings()
         {
-            if (ChipSettings == null)
+            if (GpSettings == null)
             {
                 throw new ReadRequiredException($"{nameof(GpSettings)} must be read from the device");
             }
@@ -191,19 +194,25 @@ namespace MCP2221IO
         }
 
         // <inheritdoc/>
-        public void WriteSramSettings()
+        public void WriteSramSettings(bool clearInterrupts)
         {
             if (SramSettings == null)
             {
                 throw new ReadRequiredException($"{nameof(SramSettings)} must be read from the device");
             }
 
-            ExecuteCommand<WriteSramSettingsResponse>(new WriteSramSettingsCommand(SramSettings));
+            ExecuteCommand<WriteSramSettingsResponse>(new WriteSramSettingsCommand(SramSettings, clearInterrupts));
         }
 
         // <inheritdoc/>
         public void WriteGpioPorts()
         {
+            if (!_gpioPortsRead)
+            {
+                throw new ReadRequiredException($"Gpio ports must be read from the device");
+            }
+
+            ExecuteCommand<WriteGpioPortsResponse>(new WriteGpioPortsCommand(GpioPort0, GpioPort1, GpioPort2, GpioPort3));
         }
 
         // <inheritdoc/>

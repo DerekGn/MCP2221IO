@@ -69,6 +69,7 @@ namespace MCP2221IO.Settings
 
             stringBuilder.AppendLine($"{nameof(CdcSerialNumberEnable)}: {CdcSerialNumberEnable}");
             stringBuilder.AppendLine($"{nameof(ChipSecurity)}: {ChipSecurity}");
+            stringBuilder.AppendLine($"{nameof(ClockDutyCycle)}: {ClockDutyCycle}");
             stringBuilder.AppendLine($"{nameof(ClockDivider)}: {ClockDivider}");
             stringBuilder.AppendLine($"{nameof(DacRefVoltage)}: {DacRefVoltage}");
             stringBuilder.AppendLine($"{nameof(DacRefOption)}: {DacRefOption}");
@@ -95,7 +96,9 @@ namespace MCP2221IO.Settings
 
             CdcSerialNumberEnable = (temp & 0x80) == 0x80;
             ChipSecurity = (ChipSecurity)(temp & 0b11);
-            ClockDivider = (ClockOutDivider)(stream.ReadByte() & 0x0F);
+            temp = stream.ReadByte();
+            ClockDutyCycle = (ClockDutyCycle)((temp & 0x18) >> 3);
+            ClockDivider = (ClockOutDivider)(stream.ReadByte() & 0x07);
 
             temp = stream.ReadByte();
 

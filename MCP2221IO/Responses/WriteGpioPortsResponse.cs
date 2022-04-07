@@ -22,20 +22,14 @@
 * SOFTWARE.
 */
 
-namespace MCP2221IO.Gpio
+using MCP2221IO.Commands;
+
+namespace MCP2221IO.Responses
 {
-    /// <summary>
-    /// GPIO direction (input/output) – works only when GP3 is set for GPIO operation
-    /// </summary>
-    public enum GpioDirection
+    internal class WriteGpioPortsResponse : BaseResponse
     {
-        /// <summary>
-        /// GPIO Output mode.
-        /// </summary>
-        GpioOutput = 0,
-        /// <summary>
-        /// GPIO Input mode.
-        /// </summary>
-        GpioInput = 1
+        public WriteGpioPortsResponse() : base(CommandCodes.SetGpioValues)
+        {
+        }
     }
 }

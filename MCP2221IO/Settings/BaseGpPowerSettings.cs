@@ -22,7 +22,6 @@
 * SOFTWARE.
 */
 
-using MCP2221IO.Gpio;
 using System.IO;
 using System.Text;
 
@@ -42,7 +41,7 @@ namespace MCP2221IO.Settings
         /// <summary>
         /// The Gpio port direction
         /// </summary>
-        public GpioDirection Direction { get; set; }
+        public bool IsInput { get; set; }
 
         /// <summary>
         /// The current Gp settings port designation
@@ -54,7 +53,7 @@ namespace MCP2221IO.Settings
             StringBuilder stringBuilder = new StringBuilder();
 
             stringBuilder.Append($"{nameof(OutputValue)}: [{OutputValue}] ");
-            stringBuilder.Append($"{nameof(Direction)}: [{Direction}] ");
+            stringBuilder.Append($"{nameof(IsInput)}: [{IsInput}] ");
             stringBuilder.Append($"{nameof(Designation)}: [{Designation}]");
 
             return stringBuilder.ToString();
@@ -66,7 +65,7 @@ namespace MCP2221IO.Settings
             int temp = stream.ReadByte();
 
             OutputValue = (temp & 0x10) == 0x10;
-            Direction = (GpioDirection)((temp & 0x80) >> 3);
+            IsInput = (temp & 0x80) == 0x80;
             Designation = (T)(object)(temp & 0x07);
         }
     }

@@ -22,20 +22,25 @@
 * SOFTWARE.
 */
 
+using MCP2221IO.Extensions;
 using MCP2221IO.Settings;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace MCP2221IO.Commands
 {
     internal class WriteChipSettingsCommand : WriteFlashDataCommand
     {
-        public WriteChipSettingsCommand(ChipSettings chipSettings) : base(WriteFlashSubCode.WriteChipSettings)
+        public WriteChipSettingsCommand(ChipSettings chipSettings, Password password) : base(WriteFlashSubCode.WriteChipSettings)
         {
             ChipSettings = chipSettings ?? throw new ArgumentNullException(nameof(chipSettings));
+            Password = password ?? throw new ArgumentNullException(nameof(password));
         }
 
         public ChipSettings ChipSettings { get; }
+
+        public Password Password { get; }
 
         public override void Serialise(Stream stream)
         {
@@ -46,7 +51,34 @@ namespace MCP2221IO.Commands
 
             stream.WriteByte((byte)update);
 
-            throw new NotImplementedException();
+            update |= (int)ChipSettings.ClockDivider;
+            update |= ((int)ChipSettings.ClockDutyCycle << 3);
+            stream.WriteByte((byte)update);
+
+            update |= ChipSettings.DacOutput;
+            update |= ((int)ChipSettings.DacRefOption << 4);
+            update |= ((int)ChipSettings.DacRefVoltage << 5);
+
+            stream.WriteByte((byte)update);
+
+            update |= ChipSettings.InterruptNegativeEdge ? 1 : 0 << 6;
+            update |= ChipSettings.InterruptPositiveEdge ? 1 : 0 << 5;
+            update |= (int) ChipSettings.AdcRefVoltage << 3;
+            update |= (int) ChipSettings.AdcRefOption << 2;
+
+            stream.WriteByte((byte)update);
+
+            stream.WriteUShort(ChipSettings.Vid);
+            stream.WriteUShort(ChipSettings.Pid);
+
+            update |= (int)ChipSettings.SelfPowered << 6;
+            update |= (int)ChipSettings.RemoteWake << 5;
+
+            stream.WriteByte((byte)update);
+            stream.WriteByte((byte)ChipSettings._powerRequestMa);
+
+            stream.Write(Password.Bytes.ToArray());
         }
     }
 }
+

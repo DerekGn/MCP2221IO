@@ -24,7 +24,6 @@
 
 using MCP2221IO.Extensions;
 using MCP2221IO.Gpio;
-using System;
 using System.IO;
 using System.Text;
 
@@ -70,22 +69,22 @@ namespace MCP2221IO.Settings
         /// <summary>
         /// The GP0 settings
         /// </summary>
-        public GpSetting<Gpio0Designation> Gp0Settings { get; protected set; }
+        public GpSetting<Gpio0Designation> Gp0Settings { get; internal set; }
 
         /// <summary>
         /// The GP1 settings
         /// </summary>
-        public GpSetting<Gpio1Designation> Gp1Settings { get; protected set; }
+        public GpSetting<Gpio1Designation> Gp1Settings { get; internal set; }
 
         /// <summary>
         /// The GP2 settings
         /// </summary>
-        public GpSetting<Gpio2Designation> Gp2Settings { get; protected set; }
+        public GpSetting<Gpio2Designation> Gp2Settings { get; internal set; }
 
         /// <summary>
         /// The GP3 settings
         /// </summary>
-        public GpSetting<Gpio3Designation> Gp3Settings { get; protected set; }
+        public GpSetting<Gpio3Designation> Gp3Settings { get; internal set; }
 
         public override string ToString()
         {
@@ -93,6 +92,7 @@ namespace MCP2221IO.Settings
 
             stringBuilder.AppendLine($"{nameof(CdcSerialNumberEnable)}: {CdcSerialNumberEnable}");
             stringBuilder.AppendLine($"{nameof(ChipSecurity)}: {ChipSecurity}");
+            stringBuilder.AppendLine($"{nameof(ClockDutyCycle)}: {ClockDutyCycle}");
             stringBuilder.AppendLine($"{nameof(ClockDivider)}: {ClockDivider}");
             stringBuilder.AppendLine($"{nameof(DacRefVoltage)}: {DacRefVoltage}");
             stringBuilder.AppendLine($"{nameof(DacRefOption)}: {DacRefOption}");
@@ -124,7 +124,9 @@ namespace MCP2221IO.Settings
 
             CdcSerialNumberEnable = (temp & 0x80) == 0x80;
             ChipSecurity = (SramChipSecurity)(temp & 0b11);
-            ClockDivider = (ClockOutDivider)(stream.ReadByte() & 0x0F);
+            temp = stream.ReadByte();
+            ClockDutyCycle = (ClockDutyCycle)((temp & 0x18) >> 3);
+            ClockDivider = (ClockOutDivider)(stream.ReadByte() & 0x07);
 
             temp = stream.ReadByte();
 

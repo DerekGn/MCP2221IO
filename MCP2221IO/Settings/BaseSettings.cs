@@ -26,6 +26,9 @@ namespace MCP2221IO.Settings
 {
     public abstract class BaseSettings
     {
+        internal int _powerRequestMa;
+
+        public ClockDutyCycle ClockDutyCycle { get; set; }
         /// <summary>
         /// The current clock out divider value
         /// </summary>
@@ -71,6 +74,16 @@ namespace MCP2221IO.Settings
         /// <summary>
         /// The requested mA value during the USB enumeration
         /// </summary>
-        public int PowerRequestMa { get; protected set; }
+        public int PowerRequestMa 
+        {
+            get
+            {
+                return _powerRequestMa / 2;
+            }
+            protected set 
+            {
+                _powerRequestMa = value * 2;
+            }
+        }
     }
 }

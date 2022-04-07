@@ -134,6 +134,8 @@ namespace MCP2221IO.UnitTests
             _device.ReadGpioPorts();
 
             // Assert
+            _mockUsbDevice.Verify(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()), Times.Once);
+
             _output.WriteLine($"GpioPort0: {_device.GpioPort0}");
             _output.WriteLine($"GpioPort1: {_device.GpioPort1}");
             _output.WriteLine($"GpioPort2: {_device.GpioPort2}");
@@ -153,10 +155,13 @@ namespace MCP2221IO.UnitTests
                     }
                 );
 
+            _device.ChipSettings = new ChipSettings();
+
             // Act
             _device.WriteChipSettings(new Password(new List<byte>()));
 
             // Assert
+            _mockUsbDevice.Verify(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()), Times.Once);
         }
 
         [Fact]
@@ -172,10 +177,19 @@ namespace MCP2221IO.UnitTests
                     }
                 );
 
+            _device.GpSettings = new GpSettings()
+            {
+                Gp0PowerUpSetting = new GpSetting<Gpio0Designation>(),
+                Gp1PowerUpSetting = new GpSetting<Gpio1Designation>(),
+                Gp2PowerUpSetting = new GpSetting<Gpio2Designation>(),
+                Gp3PowerUpSetting = new GpSetting<Gpio3Designation>()
+            };
+
             // Act
             _device.WriteGpSettings();
 
             // Assert
+            _mockUsbDevice.Verify(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()), Times.Once);
         }
 
         [Fact]
@@ -187,19 +201,48 @@ namespace MCP2221IO.UnitTests
                 (
                     (a, b) =>
                     {
-                        WriteFlashWriteResponse(b, 0);
+                        WriteSramWriteResponse(b);
                     }
                 );
 
+            _device.SramSettings = new SramSettings()
+            {
+                Gp0Settings = new GpSetting<Gpio0Designation>(),
+                Gp1Settings = new GpSetting<Gpio1Designation>(),
+                Gp2Settings = new GpSetting<Gpio2Designation>(),
+                Gp3Settings = new GpSetting<Gpio3Designation>()
+            };
+
             // Act
-            _device.WriteSramSettings();
+            _device.WriteSramSettings(true);
 
             // Assert
+            _mockUsbDevice.Verify(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()), Times.Once);
         }
 
         [Fact]
         public void WriteGpioPorts()
         {
+            // Arrange
+            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()))
+                .Callback<Stream, Stream>
+                (
+                    (a, b) =>
+                    {
+                        WriteSetGpioValuesResponse(b);
+                    }
+                );
+
+            _device._gpioPortsRead = true;
+            _device.GpioPort0 = new GpioPort();
+            _device.GpioPort1 = new GpioPort();
+            _device.GpioPort2 = new GpioPort();
+            _device.GpioPort3 = new GpioPort();
+            // Act
+            _device.WriteGpioPorts();
+
+            // Assert
+            _mockUsbDevice.Verify(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()), Times.Once);
         }
 
         [Fact]
@@ -584,6 +627,20 @@ namespace MCP2221IO.UnitTests
             buffer.Should().NotBeNullOrEmpty();
         }
 
+        private void WriteSetGpioValuesResponse(Stream stream)
+        {
+            stream.Write(new byte[64], 0, 64);
+            stream.Position = 0;
+            stream.WriteByte((byte)CommandCodes.SetGpioValues);
+        }
+
+        private void WriteSramWriteResponse(Stream stream)
+        {
+            stream.Write(new byte[64], 0, 64);
+            stream.Position = 0;
+            stream.WriteByte((byte)CommandCodes.SetSram);
+        }
+
         private void WriteReadGpioPortsResponse(Stream stream)
         {
             stream.Write(new byte[64], 0, 64);
@@ -707,18 +764,6 @@ namespace MCP2221IO.UnitTests
             stream.WriteByte(3);
             var bytes = Encoding.Unicode.GetBytes(value);
             stream.Write(bytes, 0, bytes.Length);
-        }
-
-        private void WriteGpioPortsResponse(Stream stream)
-        {
-            stream.Write(new byte[64], 0, 64);
-            stream.Position = 0;
-            stream.WriteByte((byte)CommandCodes.ReadFlashData);
-            stream.Write(new byte[2], 0, 2);
-            stream.WriteByte(0x18); // GIO0
-            stream.WriteByte(0x19); // GIO1
-            stream.WriteByte(0x1A); // GIO2
-            stream.WriteByte(0x1B); // GIO3
         }
 
         private void WriteChipSettingsResponse(Stream stream)

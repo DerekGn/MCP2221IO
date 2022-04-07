@@ -24,6 +24,7 @@
 
 using MCP2221IO.Settings;
 using System;
+using System.IO;
 
 namespace MCP2221IO.Commands
 {
@@ -35,5 +36,24 @@ namespace MCP2221IO.Commands
         }
 
         public GpSettings GpSettings { get; }
+
+        public override void Serialise(Stream stream)
+        {
+            base.Serialise(stream);
+
+            WritePort(stream, GpSettings.Gp0PowerUpSetting);
+            WritePort(stream, GpSettings.Gp1PowerUpSetting);
+            WritePort(stream, GpSettings.Gp2PowerUpSetting);
+            WritePort(stream, GpSettings.Gp3PowerUpSetting);
+        }
+
+        private void WritePort<T>(Stream stream, GpSetting<T> port) where T : System.Enum
+        {
+            int update = (port.OutputValue ? 0x40 : 0) << 4;
+            update |= port.IsInput ? 0x8 : 0x00;
+            update |= (int)(object)port.Designation & 0b111;
+
+            stream.WriteByte((byte)update);
+        }
     }
 }

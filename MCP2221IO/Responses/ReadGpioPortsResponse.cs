@@ -51,10 +51,10 @@ namespace MCP2221IO.Responses
             GpioPort2 = new GpioPort();
             GpioPort3 = new GpioPort();
 
-            GpioPort0.Deserialise(stream);
-            GpioPort1.Deserialise(stream);
-            GpioPort2.Deserialise(stream);
-            GpioPort3.Deserialise(stream);
+            GpioPort0.Deserialize(stream);
+            GpioPort1.Deserialize(stream);
+            GpioPort2.Deserialize(stream);
+            GpioPort3.Deserialize(stream);
         }
     }
 }

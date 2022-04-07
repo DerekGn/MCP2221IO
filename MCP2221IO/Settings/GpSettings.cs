@@ -33,13 +33,13 @@ namespace MCP2221IO.Settings
     /// </summary>
     public class GpSettings
     {
-        public GpSetting<Gpio0Designation> Gp0PowerUpSetting { get; private set; }
+        public GpSetting<Gpio0Designation> Gp0PowerUpSetting { get; internal set; }
 
-        public GpSetting<Gpio1Designation> Gp1PowerUpSetting { get; private set; }
+        public GpSetting<Gpio1Designation> Gp1PowerUpSetting { get; internal set; }
 
-        public GpSetting<Gpio2Designation> Gp2PowerUpSetting { get; private set; }
+        public GpSetting<Gpio2Designation> Gp2PowerUpSetting { get; internal set; }
 
-        public GpSetting<Gpio3Designation> Gp3PowerUpSetting { get; private set; }
+        public GpSetting<Gpio3Designation> Gp3PowerUpSetting { get; internal set; }
 
         public override string ToString()
         {

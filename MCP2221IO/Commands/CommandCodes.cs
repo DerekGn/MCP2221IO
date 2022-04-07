@@ -35,6 +35,10 @@ namespace MCP2221IO.Commands
         /// </summary>
         GetI2CData = 0x40,
         /// <summary>
+        /// Set the GPIO port values
+        /// </summary>
+        SetGpioValues = 0x50,
+        /// <summary>
         /// Get the GPIO port values
         /// </summary>
         GetGpioValues = 0x51,

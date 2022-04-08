@@ -31,7 +31,7 @@ namespace MCP2221IO.Commands
     /// for the status of the device. It is also used to 
     /// establish certain I2C bus parameters/conditions.
     /// </summary>
-    internal class StatusSetParametersCommand : BaseCommand
+    internal class WriteStatusSetParametersCommand : BaseCommand
     {
         private const int I2C_CANCEL_XFER = 0x10;
         private const int I2C_SET_SPEED = 0x20;
@@ -40,7 +40,7 @@ namespace MCP2221IO.Commands
         private readonly byte _setSpeed;
         private readonly byte _divisor;
 
-        public StatusSetParametersCommand(bool cancelTransfer = false, byte divisor = 0)
+        public WriteStatusSetParametersCommand(bool cancelTransfer = false, byte divisor = 0)
             : base(CommandCodes.StatusSetParameters)
         {
             if (cancelTransfer)

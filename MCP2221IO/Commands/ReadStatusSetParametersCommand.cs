@@ -22,32 +22,23 @@
 * SOFTWARE.
 */
 
-using MCP2221IO.Commands;
 using System.IO;
-using System.Text;
 
-namespace MCP2221IO.Responses
+namespace MCP2221IO.Commands
 {
-    internal abstract class BaseDescriptorResponse : BaseResponse
+    internal class ReadStatusSetParametersCommand : BaseCommand
     {
-        protected BaseDescriptorResponse() : base(CommandCodes.ReadFlashData)
+        public ReadStatusSetParametersCommand() : base(CommandCodes.StatusSetParameters)
         {
         }
 
-        public string Value { get; private set; }
-
-        public override void Deserialize(Stream stream)
+        public override void Serialize(Stream stream)
         {
-            base.Deserialize(stream);
+            base.Serialize(stream);
 
-            int bufferSize = stream.ReadByte();
-            byte[] buffer = new byte[bufferSize];
-
-            stream.ReadByte();
-
-            stream.Read(buffer);
-
-            Value = Encoding.Unicode.GetString(buffer);
+            stream.WriteByte(0);    // Don't care
+            stream.WriteByte(0xFF); // Cancel current I2C/SMBus transfer(sub - command) no change
+            stream.WriteByte(0xFF); // Set I2C/SMBus communication speed (sub-command) no change
         }
     }
 }

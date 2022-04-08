@@ -22,6 +22,7 @@
 * SOFTWARE.
 */
 
+using System;
 using System.IO;
 using System.Text;
 
@@ -41,7 +42,12 @@ namespace MCP2221IO.Commands
         {
             if (string.IsNullOrWhiteSpace(value))
             {
-                throw new System.ArgumentException($"'{nameof(value)}' cannot be null or whitespace.", nameof(value));
+                throw new ArgumentException($"'{nameof(value)}' cannot be null or whitespace.", nameof(value));
+            }
+
+            if (value.Length > 30)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value), $"'{nameof(value)}' cannot be greater than 30 characters");
             }
 
             Value = value;

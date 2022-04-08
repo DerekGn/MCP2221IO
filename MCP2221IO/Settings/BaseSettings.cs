@@ -22,13 +22,21 @@
 * SOFTWARE.
 */
 
+using System;
+
 namespace MCP2221IO.Settings
 {
     public abstract class BaseSettings
     {
+        private const int MaxUsbMa = 500;
+
         internal int _powerRequestMa;
 
+        /// <summary>
+        /// The clock duty cycle
+        /// </summary>
         public ClockDutyCycle ClockDutyCycle { get; set; }
+
         /// <summary>
         /// The current clock out divider value
         /// </summary>
@@ -78,11 +86,16 @@ namespace MCP2221IO.Settings
         {
             get
             {
-                return _powerRequestMa / 2;
+                return _powerRequestMa * 2;
             }
             protected set
             {
-                _powerRequestMa = value * 2;
+                if(value > MaxUsbMa)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(PowerRequestMa), $"Value must be less than {MaxUsbMa}");
+                }
+
+                _powerRequestMa = value / 2;
             }
         }
     }

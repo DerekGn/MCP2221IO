@@ -143,6 +143,21 @@ namespace MCP2221IO
         void Reset();
 
         /// <summary>
+        /// Cancel the active I2C bus transfer
+        /// </summary>
+        void CancelI2CBusTransfer();
+
+        /// <summary>
+        /// Update the I2C bus speed
+        /// </summary>
+        void UpdateI2CBusSpeed(int speed);
+
+        /// <summary>
+        /// Read the <see cref="DeviceStatus"/> from the device
+        /// </summary>
+        void ReadDeviceStatus();
+
+        /// <summary>
         /// Read the <see cref="ChipSettings"/> from the device
         /// </summary>
         void ReadChipSettings();

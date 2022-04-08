@@ -31,9 +31,14 @@ namespace MCP2221IO
 {
     public class DeviceStatus
     {
-
+        /// <summary>
+        /// The I2C Transfer state
+        /// </summary>
         public I2CCancelTransferState CancelTransferState { get; private set; }
 
+        /// <summary>
+        /// The I2C bus speed
+        /// </summary>
         public I2CSpeedStatus SpeedStatus { get; private set; }
 
         /// <summary>

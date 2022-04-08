@@ -52,7 +52,7 @@ namespace MCP2221IO
         }
 
         // <inheritdoc/>
-        public DeviceStatus Status => ExecuteCommand<StatusSetParametersResponse>(new StatusSetParametersCommand()).DeviceStatus;
+        public DeviceStatus Status { get; internal set; }
 
         // <inheritdoc/>
         public ChipSettings ChipSettings { get; internal set; }
@@ -63,44 +63,36 @@ namespace MCP2221IO
         // <inheritdoc/>
         public SramSettings SramSettings { get; internal set; }
 
-        /// <summary>
-        /// Gpio 0 port settings
-        /// </summary>
+        // <inheritdoc/>
         public GpioPort GpioPort0 { get; internal set; }
 
-        /// <summary>
-        /// Gpio 1 port settings
-        /// </summary>
+        // <inheritdoc/>
         public GpioPort GpioPort1 { get; internal set; }
 
-        /// <summary>
-        /// Gpio 2 port settings
-        /// </summary>
+        // <inheritdoc/>
         public GpioPort GpioPort2 { get; internal set; }
 
-        /// <summary>
-        /// Gpio 3 port settings
-        /// </summary>
+        // <inheritdoc/>
         public GpioPort GpioPort3 { get; internal set; }
 
         // <inheritdoc/>
         public string UsbManufacturerDescriptor
         {
-            get => ExecuteCommand<UsbManufacturerDescriptorResponse>(new ReadUsbManufacturerDescriptorCommand()).Value;
+            get => ExecuteCommand<DescriptorResponse>(new ReadUsbManufacturerDescriptorCommand()).Value;
             set => ExecuteCommand<WriteFlashDataResponse>(new WriteUsbManufacturerDescriptorCommand(value));
         }
 
         // <inheritdoc/>
         public string UsbProductDescriptor
         {
-            get => ExecuteCommand<UsbProductDescriptorResponse>(new ReadUsbProductDescriptorCommand()).Value;
+            get => ExecuteCommand<DescriptorResponse>(new ReadUsbProductDescriptorCommand()).Value;
             set => ExecuteCommand<WriteFlashDataResponse>(new WriteUsbProductDescriptorCommand(value));
         }
 
         // <inheritdoc/>
         public string UsbSerialNumberDescriptor
         {
-            get => ExecuteCommand<UsbSerialNumberDescriptorResponse>(new ReadUsbSerialNumberDescriptorCommand()).Value;
+            get => ExecuteCommand<DescriptorResponse>(new ReadUsbSerialNumberDescriptorCommand()).Value;
             set => ExecuteCommand<WriteFlashDataResponse>(new WriteUsbSerialNumberCommand(value));
         }
 
@@ -141,6 +133,12 @@ namespace MCP2221IO
         public IList<byte> I2CReadDataRepeatedStart(byte address, ushort length)
         {
             return I2CReadData<I2CReadDataRepeatedStarteResponse>(CommandCodes.ReadI2CDataRepeatedStart, address, length);
+        }
+
+        // <inheritdoc/>
+        public void ReadDeviceStatus()
+        {
+            Status = ExecuteCommand<StatusSetParametersResponse>(new ReadStatusSetParametersCommand()).DeviceStatus;
         }
 
         // <inheritdoc/>
@@ -224,6 +222,16 @@ namespace MCP2221IO
             ExecuteCommand(new ResetCommand());
         }
 
+        // <inheritdoc/>
+        public void CancelI2CBusTransfer()
+        { 
+        }
+
+        // <inheritdoc/>
+        public void UpdateI2CBusSpeed(int speed)
+        {
+        }
+
         private IList<byte> I2CReadData<T>(CommandCodes commandCode, byte address, ushort length) where T : IResponse, new()
         {
             List<byte> result = new List<byte>();
@@ -301,18 +309,9 @@ namespace MCP2221IO
                     _usbDevice = null;
                 }
 
-                // TODO: free unmanaged resources (unmanaged objects) and override finalizer
-                // TODO: set large fields to null
                 disposedValue = true;
             }
         }
-
-        // // TODO: override finalizer only if 'Dispose(bool disposing)' has code to free unmanaged resources
-        // ~Device()
-        // {
-        //     // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-        //     Dispose(disposing: false);
-        // }
 
         public void Dispose()
         {

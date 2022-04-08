@@ -22,9 +22,32 @@
 * SOFTWARE.
 */
 
+using MCP2221IO.Commands;
+using System.IO;
+using System.Text;
+
 namespace MCP2221IO.Responses
 {
-    internal class UsbProductDescriptorResponse : BaseDescriptorResponse
+    internal class DescriptorResponse : BaseResponse
     {
+        public DescriptorResponse() : base(CommandCodes.ReadFlashData)
+        {
+        }
+
+        public string Value { get; private set; }
+
+        public override void Deserialize(Stream stream)
+        {
+            base.Deserialize(stream);
+
+            int bufferSize = stream.ReadByte();
+            byte[] buffer = new byte[bufferSize];
+
+            stream.ReadByte();
+
+            stream.Read(buffer);
+
+            Value = Encoding.Unicode.GetString(buffer);
+        }
     }
 }

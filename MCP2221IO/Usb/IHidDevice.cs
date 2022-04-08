@@ -26,8 +26,10 @@ using System.IO;
 
 namespace MCP2221IO.Usb
 {
-    public interface IUsbDevice
+    public interface IHidDevice
     {
+        void Open();
+
         void Write(Stream stream);
 
         void WriteRead(Stream outStream, Stream inStream);

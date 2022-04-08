@@ -22,17 +22,34 @@
 * SOFTWARE.
 */
 
-using CommandLine;
+using HidSharp;
+using System;
+using System.IO;
 
-namespace MCP2221IOConsole
+namespace MCP2221IO.Usb
 {
-    class Options
+    public class HidSharpHidDevice : IHidDevice
     {
-        [Option('v', "vid", Required = false, HelpText = "The VID of the MCP2221", Default = 0x04D8)]
-        public int Vid { get; set; }
-        [Option('p', "pid", Required = false, HelpText = "The PID of the MCP2221", Default = 0x00DD)]
-        public int Pid { get; set; }
-        [Option('s', "serial", Required = false, HelpText = "The serial number of the MCP2221 instance to use")]
-        public string SerialNumber { get; set; }
+        private readonly HidDevice _hidDevice;
+
+        public HidSharpHidDevice(HidDevice hidDevice)
+        {
+            _hidDevice = hidDevice ?? throw new ArgumentNullException(nameof(hidDevice));
+        }
+
+        public void Open()
+        {
+            _hidDevice.Open();
+        }
+
+        public void Write(Stream stream)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void WriteRead(Stream outStream, Stream inStream)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

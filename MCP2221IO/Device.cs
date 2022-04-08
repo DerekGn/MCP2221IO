@@ -28,6 +28,7 @@ using MCP2221IO.Gpio;
 using MCP2221IO.Responses;
 using MCP2221IO.Settings;
 using MCP2221IO.Usb;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -41,14 +42,15 @@ namespace MCP2221IO
     public class Device : IDevice
     {
         internal const int MaxBlockSize = 60;
-
         internal bool _gpioPortsRead = false;
         private string _factorySerialNumber;
-        private IUsbDevice _usbDevice;
+        private ILogger<IDevice> _logger;
+        private IHidDevice _hidDevice;
 
-        public Device(IUsbDevice usbDevice)
+        public Device(ILogger<IDevice> logger, IHidDevice hidDevice)
         {
-            _usbDevice = usbDevice ?? throw new ArgumentNullException(nameof(usbDevice));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _hidDevice = hidDevice ?? throw new ArgumentNullException(nameof(hidDevice));
         }
 
         // <inheritdoc/>
@@ -224,12 +226,26 @@ namespace MCP2221IO
 
         // <inheritdoc/>
         public void CancelI2CBusTransfer()
-        { 
+        {
+            Status = ExecuteCommand<StatusSetParametersResponse>(new CancelI2CBusTransferCommand()).DeviceStatus;
         }
 
         // <inheritdoc/>
         public void UpdateI2CBusSpeed(int speed)
         {
+            Status = ExecuteCommand<StatusSetParametersResponse>(new UpdateI2CBusSpeedCommand(speed)).DeviceStatus;
+        }
+
+        // <inheritdoc/>
+        public void Open()
+        {
+            _hidDevice.Open();
+        }
+
+        // <inheritdoc/>
+        public void Close()
+        {
+            Dispose();
         }
 
         private IList<byte> I2CReadData<T>(CommandCodes commandCode, byte address, ushort length) where T : IResponse, new()
@@ -266,7 +282,7 @@ namespace MCP2221IO
 
             command.Serialize(memoryStream);
 
-            _usbDevice.Write(memoryStream);
+            _hidDevice.Write(memoryStream);
         }
 
         private T ExecuteCommand<T>(ICommand command) where T : IResponse, new()
@@ -276,7 +292,7 @@ namespace MCP2221IO
 
             command.Serialize(outStream);
 
-            _usbDevice.WriteRead(outStream, inStream);
+            _hidDevice.WriteRead(outStream, inStream);
 
             var result = new T();
 
@@ -306,7 +322,7 @@ namespace MCP2221IO
             {
                 if (disposing)
                 {
-                    _usbDevice = null;
+                    _hidDevice = null;
                 }
 
                 disposedValue = true;

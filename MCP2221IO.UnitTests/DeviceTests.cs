@@ -28,6 +28,7 @@ using MCP2221IO.Exceptions;
 using MCP2221IO.Gpio;
 using MCP2221IO.Settings;
 using MCP2221IO.Usb;
+using Microsoft.Extensions.Logging;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -40,14 +41,14 @@ namespace MCP2221IO.UnitTests
 {
     public class DeviceTests
     {
-        private readonly Mock<IUsbDevice> _mockUsbDevice;
+        private readonly Mock<IHidDevice> _mockUsbDevice;
         private readonly ITestOutputHelper _output;
         private readonly Device _device;
 
         public DeviceTests(ITestOutputHelper output)
         {
-            _mockUsbDevice = new Mock<IUsbDevice>();
-            _device = new Device(_mockUsbDevice.Object);
+            _mockUsbDevice = new Mock<IHidDevice>();
+            _device = new Device(Mock.Of<ILogger<IDevice>>(), _mockUsbDevice.Object);
             _output = output;
         }
 

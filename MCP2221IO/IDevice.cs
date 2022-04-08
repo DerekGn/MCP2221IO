@@ -198,5 +198,15 @@ namespace MCP2221IO
         /// Write the Gpio ports
         /// </summary>
         void WriteGpioPorts();
+
+        /// <summary>
+        /// Open the device
+        /// </summary>
+        void Open();
+
+        /// <summary>
+        /// Close the device
+        /// </summary>
+        void Close();
     }
 }

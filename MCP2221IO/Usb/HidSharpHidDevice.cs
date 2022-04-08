@@ -31,6 +31,7 @@ namespace MCP2221IO.Usb
     public class HidSharpHidDevice : IHidDevice
     {
         private readonly HidDevice _hidDevice;
+        private HidStream _hidStream;
 
         public HidSharpHidDevice(HidDevice hidDevice)
         {
@@ -39,17 +40,17 @@ namespace MCP2221IO.Usb
 
         public void Open()
         {
-            _hidDevice.Open();
+            _hidStream = _hidDevice.Open();
         }
 
-        public void Write(Stream stream)
+        public void Write(byte[] outBytes)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
-        public void WriteRead(Stream outStream, Stream inStream)
+        public byte[] WriteRead(byte[] outBytes)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

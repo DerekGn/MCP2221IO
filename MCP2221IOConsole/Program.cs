@@ -72,6 +72,8 @@ namespace MCP2221IOConsole
                         new HidSharpHidDevice(hidDevice));
 
                     device.Open();
+
+                    device.ReadDeviceStatus();
                 }
                 else
                 {

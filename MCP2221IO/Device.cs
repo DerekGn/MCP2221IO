@@ -31,8 +31,10 @@ using MCP2221IO.Usb;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace MCP2221IO
 {
@@ -43,8 +45,9 @@ namespace MCP2221IO
     {
         internal const int MaxBlockSize = 60;
         internal bool _gpioPortsRead = false;
+
+        private readonly ILogger<IDevice> _logger;
         private string _factorySerialNumber;
-        private ILogger<IDevice> _logger;
         private IHidDevice _hidDevice;
 
         public Device(ILogger<IDevice> logger, IHidDevice hidDevice)
@@ -80,22 +83,53 @@ namespace MCP2221IO
         // <inheritdoc/>
         public string UsbManufacturerDescriptor
         {
-            get => ExecuteCommand<DescriptorResponse>(new ReadUsbManufacturerDescriptorCommand()).Value;
-            set => ExecuteCommand<WriteFlashDataResponse>(new WriteUsbManufacturerDescriptorCommand(value));
+            get => HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    return ExecuteCommand<DescriptorResponse>(new ReadUsbManufacturerDescriptorCommand()).Value;
+                });
+            set =>
+                HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    ExecuteCommand<WriteFlashDataResponse>(new WriteUsbManufacturerDescriptorCommand(value));
+                });
         }
 
         // <inheritdoc/>
         public string UsbProductDescriptor
         {
-            get => ExecuteCommand<DescriptorResponse>(new ReadUsbProductDescriptorCommand()).Value;
-            set => ExecuteCommand<WriteFlashDataResponse>(new WriteUsbProductDescriptorCommand(value));
+            get => HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    return ExecuteCommand<DescriptorResponse>(new ReadUsbProductDescriptorCommand()).Value;
+                });
+            set => HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    ExecuteCommand<WriteFlashDataResponse>(new WriteUsbProductDescriptorCommand(value));
+                });
         }
 
         // <inheritdoc/>
         public string UsbSerialNumberDescriptor
         {
-            get => ExecuteCommand<DescriptorResponse>(new ReadUsbSerialNumberDescriptorCommand()).Value;
-            set => ExecuteCommand<WriteFlashDataResponse>(new WriteUsbSerialNumberCommand(value));
+            get => HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    return ExecuteCommand<DescriptorResponse>(new ReadUsbSerialNumberDescriptorCommand()).Value;
+                });
+            set => HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    ExecuteCommand<WriteFlashDataResponse>(new WriteUsbSerialNumberCommand(value));
+                });
         }
 
         // <inheritdoc/>
@@ -104,142 +138,232 @@ namespace MCP2221IO
         // <inheritdoc/>
         public void UnlockFlash(ulong password)
         {
-            ExecuteCommand<UnlockFlashResponse>(new UnlockFlashCommand(password));
+            HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    ExecuteCommand<UnlockFlashResponse>(new UnlockFlashCommand(password));
+                });
         }
 
         // <inheritdoc/>
         public void I2CWriteData(byte address, IList<byte> data)
         {
-            I2CWriteData<I2CWriteDataResponse>(CommandCodes.WriteI2CData, address, data);
+            HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    I2CWriteData<I2CWriteDataResponse>(CommandCodes.WriteI2CData, address, data);
+                });
         }
 
         // <inheritdoc/>
         public void I2CWriteDataRepeatStart(byte address, IList<byte> data)
         {
-            I2CWriteData<I2CWriteDataRepeatStartResponse>(CommandCodes.WriteI2CDataRepeatedStart, address, data);
+            HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    I2CWriteData<I2CWriteDataRepeatStartResponse>(CommandCodes.WriteI2CDataRepeatedStart, address, data);
+                });
         }
 
         // <inheritdoc/>
         public void I2CWriteDataNoStop(byte address, IList<byte> data)
         {
-            I2CWriteData<I2CWriteDataNoStopResponse>(CommandCodes.WriteI2CDataNoStop, address, data);
+            HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    I2CWriteData<I2CWriteDataNoStopResponse>(CommandCodes.WriteI2CDataNoStop, address, data);
+                });
         }
 
         // <inheritdoc/>
         public IList<byte> I2CReadData(byte address, ushort length)
         {
-            return I2CReadData<I2CReadDataResponse>(CommandCodes.ReadI2CData, address, length);
+            return HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    return I2CReadData<I2CReadDataResponse>(CommandCodes.ReadI2CData, address, length);
+                });
         }
 
         // <inheritdoc/>
         public IList<byte> I2CReadDataRepeatedStart(byte address, ushort length)
         {
-            return I2CReadData<I2CReadDataRepeatedStarteResponse>(CommandCodes.ReadI2CDataRepeatedStart, address, length);
+            return HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    return I2CReadData<I2CReadDataRepeatedStarteResponse>(CommandCodes.ReadI2CDataRepeatedStart, address, length);
+                });
         }
 
         // <inheritdoc/>
         public void ReadDeviceStatus()
         {
-            Status = ExecuteCommand<StatusSetParametersResponse>(new ReadStatusSetParametersCommand()).DeviceStatus;
+            HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    Status = ExecuteCommand<StatusSetParametersResponse>(new ReadStatusSetParametersCommand()).DeviceStatus;
+                });
         }
 
         // <inheritdoc/>
         public void ReadChipSettings()
         {
-            ChipSettings = ExecuteCommand<ReadChipSettingsResponse>(new ReadChipSettingsCommand()).ChipSettings;
+            HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    ChipSettings = ExecuteCommand<ReadChipSettingsResponse>(new ReadChipSettingsCommand()).ChipSettings;
+                });
         }
 
         // <inheritdoc/>
         public void ReadGpSettings()
         {
-            GpSettings = ExecuteCommand<ReadGpSettingsResponse>(new ReadGpSettingsCommand()).GpSettings;
+            HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    GpSettings = ExecuteCommand<ReadGpSettingsResponse>(new ReadGpSettingsCommand()).GpSettings;
+                });
         }
 
         // <inheritdoc/>
         public void ReadSramSettings()
         {
-            SramSettings = ExecuteCommand<ReadSramSettingsResponse>(new ReadSramSettingsCommand()).SramSettings;
+            HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    SramSettings = ExecuteCommand<ReadSramSettingsResponse>(new ReadSramSettingsCommand()).SramSettings;
+                });
         }
 
         // <inheritdoc/>
         public void ReadGpioPorts()
         {
-            var response = ExecuteCommand<ReadGpioPortsResponse>(new ReadGpioPortsCommand());
+            HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    var response = ExecuteCommand<ReadGpioPortsResponse>(new ReadGpioPortsCommand());
 
-            GpioPort0 = response.GpioPort0;
-            GpioPort1 = response.GpioPort1;
-            GpioPort2 = response.GpioPort2;
-            GpioPort3 = response.GpioPort3;
+                    GpioPort0 = response.GpioPort0;
+                    GpioPort1 = response.GpioPort1;
+                    GpioPort2 = response.GpioPort2;
+                    GpioPort3 = response.GpioPort3;
 
-            _gpioPortsRead = true;
+                    _gpioPortsRead = true;
+                });
         }
 
         // <inheritdoc/>
         public void WriteChipSettings(Password password)
         {
-            if (ChipSettings == null)
-            {
-                throw new ReadRequiredException($"{nameof(ChipSettings)} must be read from the device");
-            }
+            HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    if (ChipSettings == null)
+                    {
+                        throw new ReadRequiredException($"{nameof(ChipSettings)} must be read from the device");
+                    }
 
-            ExecuteCommand<WriteFlashDataResponse>(new WriteChipSettingsCommand(ChipSettings, password));
+                    ExecuteCommand<WriteFlashDataResponse>(new WriteChipSettingsCommand(ChipSettings, password));
+                });
         }
 
         // <inheritdoc/>
         public void WriteGpSettings()
         {
-            if (GpSettings == null)
-            {
-                throw new ReadRequiredException($"{nameof(GpSettings)} must be read from the device");
-            }
+            HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    if (GpSettings == null)
+                    {
+                        throw new ReadRequiredException($"{nameof(GpSettings)} must be read from the device");
+                    }
 
-            ExecuteCommand<WriteFlashDataResponse>(new WriteGpSettingsCommand(GpSettings));
+                    ExecuteCommand<WriteFlashDataResponse>(new WriteGpSettingsCommand(GpSettings));
+                });
         }
 
         // <inheritdoc/>
         public void WriteSramSettings(bool clearInterrupts)
         {
-            if (SramSettings == null)
-            {
-                throw new ReadRequiredException($"{nameof(SramSettings)} must be read from the device");
-            }
+            HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    if (SramSettings == null)
+                    {
+                        throw new ReadRequiredException($"{nameof(SramSettings)} must be read from the device");
+                    }
 
-            ExecuteCommand<WriteSramSettingsResponse>(new WriteSramSettingsCommand(SramSettings, clearInterrupts));
+                    ExecuteCommand<WriteSramSettingsResponse>(new WriteSramSettingsCommand(SramSettings, clearInterrupts));
+                });
         }
 
         // <inheritdoc/>
         public void WriteGpioPorts()
         {
-            if (!_gpioPortsRead)
-            {
-                throw new ReadRequiredException($"Gpio ports must be read from the device");
-            }
+            HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    if (!_gpioPortsRead)
+                    {
+                        throw new ReadRequiredException($"Gpio ports must be read from the device");
+                    }
 
-            ExecuteCommand<WriteGpioPortsResponse>(new WriteGpioPortsCommand(GpioPort0, GpioPort1, GpioPort2, GpioPort3));
+                    ExecuteCommand<WriteGpioPortsResponse>(new WriteGpioPortsCommand(GpioPort0, GpioPort1, GpioPort2, GpioPort3));
+                });
         }
 
         // <inheritdoc/>
         public void Reset()
         {
-            ExecuteCommand(new ResetCommand());
+            HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    ExecuteCommand(new ResetCommand());
+                });
         }
 
         // <inheritdoc/>
         public void CancelI2CBusTransfer()
         {
-            Status = ExecuteCommand<StatusSetParametersResponse>(new CancelI2CBusTransferCommand()).DeviceStatus;
+            HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    Status = ExecuteCommand<StatusSetParametersResponse>(new CancelI2CBusTransferCommand()).DeviceStatus;
+                });
         }
 
         // <inheritdoc/>
         public void UpdateI2CBusSpeed(int speed)
         {
-            Status = ExecuteCommand<StatusSetParametersResponse>(new UpdateI2CBusSpeedCommand(speed)).DeviceStatus;
+            HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    Status = ExecuteCommand<StatusSetParametersResponse>(new UpdateI2CBusSpeedCommand(speed)).DeviceStatus;
+                });
         }
 
         // <inheritdoc/>
         public void Open()
         {
-            _hidDevice.Open();
+            HandleOperationExecution(nameof(Device), () => _hidDevice.Open());
         }
 
         // <inheritdoc/>
@@ -250,30 +374,57 @@ namespace MCP2221IO
 
         private IList<byte> I2CReadData<T>(CommandCodes commandCode, byte address, ushort length) where T : IResponse, new()
         {
-            List<byte> result = new List<byte>();
+            return HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    List<byte> result = new List<byte>();
 
-            int blockCount = (length + MaxBlockSize - 1) / MaxBlockSize;
+                    int blockCount = (length + MaxBlockSize - 1) / MaxBlockSize;
 
-            ExecuteCommand<T>(new I2CReadDataCommand(commandCode, address, length));
+                    ExecuteCommand<T>(new I2CReadDataCommand(commandCode, address, length));
 
-            for (int i = 0; i < blockCount; i++)
-            {
-                result.AddRange(ExecuteCommand<GetI2CDataResponse>(new GetI2CDataCommand()).Data);
-            }
+                    for (int i = 0; i < blockCount; i++)
+                    {
+                        result.AddRange(ExecuteCommand<GetI2CDataResponse>(new GetI2CDataCommand()).Data);
+                    }
 
-            return result;
+                    return result;
+                });
         }
 
         private void I2CWriteData<T>(CommandCodes commandCode, byte address, IList<byte> data) where T : IResponse, new()
         {
-            int blockCount = (data.Count + MaxBlockSize - 1) / MaxBlockSize;
+            HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    int blockCount = (data.Count + MaxBlockSize - 1) / MaxBlockSize;
 
-            for (int i = 0; i < blockCount; i++)
-            {
-                int blockSize = Math.Min(MaxBlockSize, Math.Abs(data.Count - (i * MaxBlockSize)));
+                    for (int i = 0; i < blockCount; i++)
+                    {
+                        int blockSize = Math.Min(MaxBlockSize, Math.Abs(data.Count - (i * MaxBlockSize)));
 
-                ExecuteCommand<T>(new I2CWriteDataCommand(commandCode, address, data.Skip(MaxBlockSize * i).Take(blockSize).ToList()));
-            }
+                        ExecuteCommand<T>(new I2CWriteDataCommand(commandCode, address, data.Skip(MaxBlockSize * i).Take(blockSize).ToList()));
+                    }
+                });
+        }
+
+        private string GetFactorySerialNumber()
+        {
+            return HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    if (String.IsNullOrWhiteSpace(_factorySerialNumber))
+                    {
+                        var response = ExecuteCommand<FactorySerialNumberResponse>(new ReadFactorySerialNumberCommand());
+
+                        _factorySerialNumber = response.SerialNumber;
+                    }
+
+                    return _factorySerialNumber;
+                });
         }
 
         private void ExecuteCommand(ICommand command)
@@ -282,7 +433,7 @@ namespace MCP2221IO
 
             command.Serialize(memoryStream);
 
-            _hidDevice.Write(memoryStream);
+            _hidDevice.Write(memoryStream.ToArray());
         }
 
         private T ExecuteCommand<T>(ICommand command) where T : IResponse, new()
@@ -292,7 +443,7 @@ namespace MCP2221IO
 
             command.Serialize(outStream);
 
-            _hidDevice.WriteRead(outStream, inStream);
+            inStream.Write(_hidDevice.WriteRead(outStream.ToArray()));
 
             var result = new T();
 
@@ -301,16 +452,45 @@ namespace MCP2221IO
             return result;
         }
 
-        private string GetFactorySerialNumber()
+        [DebuggerStepThrough]
+        private void HandleOperationExecution(string className, Action operation, [CallerMemberName] string memberName = "")
         {
-            if (String.IsNullOrWhiteSpace(_factorySerialNumber))
-            {
-                var response = ExecuteCommand<FactorySerialNumberResponse>(new ReadFactorySerialNumberCommand());
+            Stopwatch sw = new Stopwatch();
 
-                _factorySerialNumber = response.SerialNumber;
+            try
+            {
+                sw.Start();
+                operation();
+                sw.Stop();
+
+                _logger.LogDebug($"Executed [{className}].[{memberName}] in [{sw.Elapsed.TotalMilliseconds}] ms");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"An exception occurred executing [{className}].[{memberName}] Reason: [{ex.Message}]");
+            }
+        }
+
+        [DebuggerStepThrough]
+        private T HandleOperationExecution<T>(string className, Func<T> operation, [CallerMemberName] string memberName = "")
+        {
+            Stopwatch sw = new Stopwatch();
+            T result = default(T);
+
+            try
+            {
+                sw.Start();
+                result = operation();
+                sw.Stop();
+
+                _logger.LogDebug($"Executed [{className}].[{memberName}] in [{sw.Elapsed.TotalMilliseconds}] ms");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"An exception occurred executing [{className}].[{memberName}] Reason: [{ex.Message}]");
             }
 
-            return _factorySerialNumber;
+            return result;
         }
 
         #region Dispose

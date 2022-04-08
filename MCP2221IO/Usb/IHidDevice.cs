@@ -30,8 +30,8 @@ namespace MCP2221IO.Usb
     {
         void Open();
 
-        void Write(Stream stream);
+        void Write(byte[] outBytes);
 
-        void WriteRead(Stream outStream, Stream inStream);
+        byte[] WriteRead(byte[] outBytes);
     }
 }

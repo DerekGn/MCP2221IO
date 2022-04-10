@@ -24,7 +24,6 @@
 
 using HidSharp;
 using System;
-using System.IO;
 
 namespace MCP2221IO.Usb
 {
@@ -45,12 +44,14 @@ namespace MCP2221IO.Usb
 
         public void Write(byte[] outBytes)
         {
-            throw new NotImplementedException();
+            _hidStream.Write(outBytes);
         }
 
         public byte[] WriteRead(byte[] outBytes)
         {
-            throw new NotImplementedException();
+            _hidStream.Write(outBytes);
+
+            return _hidStream.Read();
         }
     }
 }

@@ -50,23 +50,23 @@ namespace MCP2221IO.Responses
                 throw new ArgumentNullException(nameof(stream));
             }
 
-            if (stream.Length != 64)
+            if (stream.Length != 65)
             {
-                throw new InvalidStreamLengthException($"Unexpected stream length Expected: [0x40] Actual [{stream.Length}]");
+                throw new InvalidStreamLengthException($"Unexpected stream length Expected: [0x41] Actual [0x{stream.Length:x}]");
             }
 
-            stream.Position = 0;
+            stream.Position = 1;
 
             byte responseCode = (byte)stream.ReadByte();
             if (responseCode != (byte)CommandCode)
             {
-                throw new InvalidResponseTypeException($"Unexpected response code Expected: [{(byte)CommandCode:x}] Actual [{responseCode:x}]");
+                throw new InvalidResponseTypeException($"Unexpected response code Expected: [0x{(byte)CommandCode:x}] Actual [0x{responseCode:x}]");
             }
 
             byte executionResult = (byte)stream.ReadByte();
             if (executionResult != 0)
             {
-                throw new CommandExecutionFailedException($"Unexpected command execution status Expected: [0x00] Actual [{executionResult:x}]");
+                throw new CommandExecutionFailedException($"Unexpected command execution status Expected: [0x00] Actual [0x{executionResult:x}]");
             }
         }
     }

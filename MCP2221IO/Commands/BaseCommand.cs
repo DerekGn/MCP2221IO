@@ -55,6 +55,7 @@ namespace MCP2221IO.Commands
             }
 
             stream.Position = 0;
+            stream.WriteByte(0);
             stream.WriteByte((byte)CommandCode);
         }
     }

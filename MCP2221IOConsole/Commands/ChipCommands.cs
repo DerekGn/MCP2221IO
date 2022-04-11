@@ -1,15 +1,15 @@
 ﻿
-using CommandLine;
+using McMaster.Extensions.CommandLineUtils;
+using System;
 
 namespace MCP2221IOConsole.Commands
 {
-    [Verb("chip", HelpText = "Access device Chip settings")]
-    internal class ChipCommands : BaseCommand
+    [Command("chip", Description = "Access device Chip settings")]
+    [Subcommand(typeof(ReadChipSettingsCommand))]
+    internal class ChipCommand : BaseCommand
     {
-        [Option('r', "read", SetName = "Read", Required = false, HelpText = "Read the chip settings")]
-        public bool Read { get; set; }
-
-        [Option('w', "write", SetName = "Write", Required = false, HelpText = "Write the chip settings")]
-        public bool Write { get; set; }
+        public ChipCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        {
+        }
     }
 }

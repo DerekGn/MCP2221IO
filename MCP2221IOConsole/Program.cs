@@ -22,27 +22,23 @@
 * SOFTWARE.
 */
 
-using CommandLine;
-using HidSharp;
-using MCP2221IO;
-using MCP2221IO.Usb;
+using McMaster.Extensions.CommandLineUtils;
 using MCP2221IOConsole.Commands;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Serilog;
-using System;
-using System.Collections.Generic;
 using System.IO;
 
 namespace MCP2221IOConsole
 {
+    [Command(Name = "Mcp2221", Description = "A console application for accessing a MCP2221 device"),
+        Subcommand(typeof(ChipCommand))]
     class Program
     {
         private static ServiceProvider _serviceProvider;
         private static IConfiguration _configuration;
-        
-        static int Main(string[] args)
+
+        public static int Main(string[] args)
         {
             _configuration = SetupConfiguration(args);
 
@@ -53,66 +49,18 @@ namespace MCP2221IOConsole
 
             _serviceProvider = BuildServiceProvider();
 
-            return Parser.Default.ParseArguments<ChipCommands, GpCommands>(args)
-                .MapResult(
-                (ChipCommands command) => ExecuteChipCommands(command),
-                (GpCommands command) => ExecuteGpCommands(command),
-                errors => 1);
+            var app = new CommandLineApplication<Program>();
+            app.Conventions
+                .UseDefaultConventions()
+                .UseConstructorInjection(_serviceProvider);
+            return app.Execute(args);
         }
 
-        private static int ExecuteChipCommands(ChipCommands command)
+        private int OnExecute(CommandLineApplication app, IConsole console)
         {
-            return ExecuteCommand(command, (device) =>
-            {
-                if(command.Read)
-                {
-                    device.ReadChipSettings();
-
-                    Console.WriteLine(device.ChipSettings.ToString());
-                }
-
-                return 1;
-            });
-        }
-
-        private static int ExecuteGpCommands(GpCommands command)
-        {
-            return ExecuteCommand(command, (device) =>
-            {
-
-                return 1;
-            });
-        }
-
-        private static int ExecuteCommand(BaseCommand baseCommand, Func<IDevice, int> action)
-        {
-            var logger = _serviceProvider.GetService<ILogger<Program>>();
-            int result = -1;
-
-            try
-            {
-                var hidDevice = DeviceList.Local.GetHidDeviceOrNull(baseCommand.Vid, baseCommand.Pid);
-
-                if (hidDevice != null)
-                {
-                    using HidSharpHidDevice hidSharpHidDevice = new HidSharpHidDevice(_serviceProvider.GetService<ILogger<IHidDevice>>(), hidDevice);
-                    using MCP2221IO.Device device = new MCP2221IO.Device(_serviceProvider.GetService<ILogger<IDevice>>(), hidSharpHidDevice);
-
-                    device.Open();
-
-                    result = action(device);
-                }
-                else
-                {
-                    logger.LogWarning($"Unable to find HID device VID: [0x{baseCommand.Vid:x}] PID: [0x{baseCommand.Vid:x}] SerialNumber: [{baseCommand.SerialNumber}]");
-                }
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "An unhandled exception occurred");
-            }
-
-            return result;
+            console.WriteLine("You must specify at a subcommand.");
+            app.ShowHelp();
+            return 1;
         }
 
         private static ServiceProvider BuildServiceProvider()

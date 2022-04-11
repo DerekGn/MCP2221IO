@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "MCP2221IOConsole": {
+      "commandName": "Project",
+      "commandLineArgs": "chip read"
+    }
+  }
+}

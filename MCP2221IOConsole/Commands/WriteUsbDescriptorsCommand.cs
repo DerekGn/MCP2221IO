@@ -27,23 +27,14 @@ using System;
 
 namespace MCP2221IOConsole.Commands
 {
-    [Command("read-cs", Description = "Read Device Chip Settings")]
-    class ReadChipSettingsCommand : BaseCommand
+    [Command("write-usb", Description = "Write Device Usb Descriptors")]
+    internal class WriteUsbDescriptorsCommand : BaseCommand
     {
-        public ReadChipSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public WriteUsbDescriptorsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 
-        protected override int OnExecute(CommandLineApplication app, IConsole console)
-        {
-            return ExecuteCommand((device) =>
-            {
-                device.ReadChipSettings();
-
-                console.WriteLine(device.ChipSettings);
-
-                return 0;
-            });
-        }
+        [Option()]
+        public (bool hasValue, string value) Manufacturer { get; set; }
     }
 }

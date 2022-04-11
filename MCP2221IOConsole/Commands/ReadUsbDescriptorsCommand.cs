@@ -27,10 +27,10 @@ using System;
 
 namespace MCP2221IOConsole.Commands
 {
-    [Command("read-cs", Description = "Read Device Chip Settings")]
-    class ReadChipSettingsCommand : BaseCommand
+    [Command("read-usb", Description = "Read Device Usb Descriptors")]
+    internal class ReadUsbDescriptorsCommand : BaseCommand
     {
-        public ReadChipSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public ReadUsbDescriptorsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 
@@ -38,10 +38,10 @@ namespace MCP2221IOConsole.Commands
         {
             return ExecuteCommand((device) =>
             {
-                device.ReadChipSettings();
-
-                console.WriteLine(device.ChipSettings);
-
+                console.WriteLine($"{nameof(device.UsbManufacturerDescriptor)}:\t[{device.UsbManufacturerDescriptor}]");
+                console.WriteLine($"{nameof(device.UsbSerialNumberDescriptor)}:\t[{device.UsbSerialNumberDescriptor}]");
+                console.WriteLine($"{nameof(device.UsbProductDescriptor)}:\t\t[{device.UsbProductDescriptor}]");
+                console.WriteLine($"{nameof(device.FactorySerialNumber)}:\t\t[{device.FactorySerialNumber}]");
                 return 0;
             });
         }

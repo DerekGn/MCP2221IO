@@ -27,23 +27,15 @@ using System;
 
 namespace MCP2221IOConsole.Commands
 {
-    [Command("read-cs", Description = "Read Device Chip Settings")]
-    class ReadChipSettingsCommand : BaseCommand
+    [Command("flash", Description = "Access device flash settings")]
+    [Subcommand(typeof(ReadChipSettingsCommand))]
+    [Subcommand(typeof(WriteChipSettingsCommand))]
+    [Subcommand(typeof(ReadUsbDescriptorsCommand))]
+    [Subcommand(typeof(WriteUsbDescriptorsCommand))]
+    internal class FlashCommand : BaseCommand
     {
-        public ReadChipSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public FlashCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
-        }
-
-        protected override int OnExecute(CommandLineApplication app, IConsole console)
-        {
-            return ExecuteCommand((device) =>
-            {
-                device.ReadChipSettings();
-
-                console.WriteLine(device.ChipSettings);
-
-                return 0;
-            });
         }
     }
 }

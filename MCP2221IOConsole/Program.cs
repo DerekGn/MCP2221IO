@@ -32,10 +32,9 @@ using System.IO;
 namespace MCP2221IOConsole
 {
     [Command(Name = "Mcp2221", Description = "A console application for accessing a MCP2221 device"),
-        Subcommand(typeof(ChipCommand))]
+        Subcommand(typeof(FlashCommand))]
     class Program
     {
-        private static ServiceProvider _serviceProvider;
         private static IConfiguration _configuration;
 
         public static int Main(string[] args)
@@ -47,12 +46,12 @@ namespace MCP2221IOConsole
                 .Enrich.FromLogContext()
                 .CreateLogger();
 
-            _serviceProvider = BuildServiceProvider();
+            var serviceProvider = BuildServiceProvider();
 
             var app = new CommandLineApplication<Program>();
             app.Conventions
                 .UseDefaultConventions()
-                .UseConstructorInjection(_serviceProvider);
+                .UseConstructorInjection(serviceProvider);
             return app.Execute(args);
         }
 

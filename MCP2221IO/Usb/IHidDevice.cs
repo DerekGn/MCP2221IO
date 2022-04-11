@@ -22,11 +22,11 @@
 * SOFTWARE.
 */
 
-using System.IO;
+using System;
 
 namespace MCP2221IO.Usb
 {
-    public interface IHidDevice
+    public interface IHidDevice : IDisposable
     {
         void Open();
 

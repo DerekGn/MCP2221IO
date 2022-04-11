@@ -26,6 +26,7 @@ using CommandLine;
 using HidSharp;
 using MCP2221IO;
 using MCP2221IO.Usb;
+using MCP2221IOConsole.Commands;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -41,7 +42,7 @@ namespace MCP2221IOConsole
         private static ServiceProvider _serviceProvider;
         private static IConfiguration _configuration;
         
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
             _configuration = SetupConfiguration(args);
 
@@ -52,41 +53,66 @@ namespace MCP2221IOConsole
 
             _serviceProvider = BuildServiceProvider();
 
-            Parser.Default.ParseArguments<Options>(args)
-                .WithParsed(RunOptions)
-                .WithNotParsed(HandleParseError);
+            return Parser.Default.ParseArguments<ChipCommands, GpCommands>(args)
+                .MapResult(
+                (ChipCommands command) => ExecuteChipCommands(command),
+                (GpCommands command) => ExecuteGpCommands(command),
+                errors => 1);
         }
 
-        static void RunOptions(Options options)
+        private static int ExecuteChipCommands(ChipCommands command)
+        {
+            return ExecuteCommand(command, (device) =>
+            {
+                if(command.Read)
+                {
+                    device.ReadChipSettings();
+
+                    Console.WriteLine(device.ChipSettings.ToString());
+                }
+
+                return 1;
+            });
+        }
+
+        private static int ExecuteGpCommands(GpCommands command)
+        {
+            return ExecuteCommand(command, (device) =>
+            {
+
+                return 1;
+            });
+        }
+
+        private static int ExecuteCommand(BaseCommand baseCommand, Func<IDevice, int> action)
         {
             var logger = _serviceProvider.GetService<ILogger<Program>>();
+            int result = -1;
 
             try
             {
-                var hidDevice = DeviceList.Local.GetHidDeviceOrNull(options.Vid, options.Pid);
+                var hidDevice = DeviceList.Local.GetHidDeviceOrNull(baseCommand.Vid, baseCommand.Pid);
 
                 if (hidDevice != null)
                 {
-                    using MCP2221IO.Device device = new MCP2221IO.Device(
-                        _serviceProvider.GetService<ILogger<IDevice>>(),
-                        new HidSharpHidDevice(hidDevice));
+                    using HidSharpHidDevice hidSharpHidDevice = new HidSharpHidDevice(_serviceProvider.GetService<ILogger<IHidDevice>>(), hidDevice);
+                    using MCP2221IO.Device device = new MCP2221IO.Device(_serviceProvider.GetService<ILogger<IDevice>>(), hidSharpHidDevice);
 
                     device.Open();
+
+                    result = action(device);
                 }
                 else
                 {
-                    logger.LogWarning($"Unable to find HID device VID: [{options.Vid}] PID: [{options.Vid}] SerialNumber: [{options.SerialNumber}]");
+                    logger.LogWarning($"Unable to find HID device VID: [0x{baseCommand.Vid:x}] PID: [0x{baseCommand.Vid:x}] SerialNumber: [{baseCommand.SerialNumber}]");
                 }
             }
             catch (Exception ex)
             {
                 logger.LogError(ex, "An unhandled exception occurred");
             }
-            
-        }
 
-        static void HandleParseError(IEnumerable<Error> errors)
-        {
+            return result;
         }
 
         private static ServiceProvider BuildServiceProvider()

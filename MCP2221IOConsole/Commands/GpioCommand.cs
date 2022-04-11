@@ -27,10 +27,10 @@ using System;
 
 namespace MCP2221IOConsole.Commands
 {
-    [Command("write-cs", Description = "Write Device Chip Settings")]
-    internal class WriteChipSettingsCommand : BaseCommand
+    [Command(Description = "Access device Gpio settings")]
+    internal class GpioCommand : BaseCommand
     {
-        public WriteChipSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public GpioCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
     }

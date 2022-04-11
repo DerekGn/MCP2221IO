@@ -22,16 +22,9 @@
 * SOFTWARE.
 */
 
-using McMaster.Extensions.CommandLineUtils;
-using System;
-
 namespace MCP2221IOConsole.Commands
 {
-    [Command("write-cs", Description = "Write Device Chip Settings")]
-    internal class WriteChipSettingsCommand : BaseCommand
+    internal class WriteSramSettingsCommand
     {
-        public WriteChipSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
-        {
-        }
     }
 }

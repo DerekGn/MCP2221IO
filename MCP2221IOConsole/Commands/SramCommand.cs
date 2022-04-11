@@ -27,10 +27,14 @@ using System;
 
 namespace MCP2221IOConsole.Commands
 {
-    [Command("write-cs", Description = "Write Device Chip Settings")]
-    internal class WriteChipSettingsCommand : BaseCommand
+    [Command(Description = "Access device sram settings")]
+    [Subcommand(
+        typeof(ReadSramSettingsCommand),
+        typeof(WriteSramSettingsCommand)
+    )]
+    internal class SramCommand : BaseCommand
     {
-        public WriteChipSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public SramCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
     }

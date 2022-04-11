@@ -27,10 +27,10 @@ using System;
 
 namespace MCP2221IOConsole.Commands
 {
-    [Command("write-cs", Description = "Write Device Chip Settings")]
-    internal class WriteChipSettingsCommand : BaseCommand
+    [Command("read-gp", Description = "Read Device GP Settings")]
+    internal class ReadGpSettingsCommand : BaseCommand
     {
-        public WriteChipSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public ReadGpSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
     }

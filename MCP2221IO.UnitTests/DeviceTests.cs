@@ -273,7 +273,7 @@ namespace MCP2221IO.UnitTests
         {
             // Arrange
             _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
-                .Returns(WriteStringResponse("MANUFACTURER"));
+                .Returns(TestPayloads.ManufacturerDescriptorResponse);
             
             // Act
             string descriptor = _device.UsbManufacturerDescriptor;
@@ -306,7 +306,7 @@ namespace MCP2221IO.UnitTests
         {
             // Arrange
             _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
-                .Returns(WriteStringResponse("PRODUCT"));
+                .Returns(TestPayloads.ProductDescriptorResponse);
 
             // Act
             string descriptor = _device.UsbProductDescriptor;
@@ -339,7 +339,7 @@ namespace MCP2221IO.UnitTests
         {
             // Arrange
             _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
-                .Returns(WriteStringResponse("SERIAL NUMBER"));
+                .Returns(TestPayloads.SerialNumberDescriptorResponse);
 
             // Act
             string descriptor = _device.UsbSerialNumberDescriptor;
@@ -372,7 +372,7 @@ namespace MCP2221IO.UnitTests
         {
             // Arrange
             _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
-                .Returns(WriteSerialNumberResponse());
+                .Returns(TestPayloads.FactorySerialNumberResponse);
 
             // Act
             string serialNumber = _device.FactorySerialNumber;
@@ -662,38 +662,6 @@ namespace MCP2221IO.UnitTests
             MemoryStream stream = GetStream();
             stream.WriteByte((byte)CommandCodes.WriteFlashData);
             stream.WriteByte((byte)status);
-
-            return stream.ToArray();
-        }
-
-        private byte[] WriteSerialNumberResponse()
-        {
-            MemoryStream stream = GetStream();
-            stream.WriteByte((byte)CommandCodes.ReadFlashData);
-            stream.WriteByte(0);
-            stream.WriteByte(8);
-            stream.WriteByte(0);
-            stream.WriteByte(0x55);
-            stream.WriteByte(0xAA);
-            stream.WriteByte(0xFE);
-            stream.WriteByte(0xED);
-            stream.WriteByte(0xDE);
-            stream.WriteByte(0xAD);
-            stream.WriteByte(0xBE);
-            stream.WriteByte(0xEF);
-
-            return stream.ToArray();
-        }
-
-        private byte[] WriteStringResponse(string value)
-        {
-            MemoryStream stream = GetStream();
-            stream.WriteByte((byte)CommandCodes.ReadFlashData);
-            stream.WriteByte(0);
-            stream.WriteByte((byte)((value.Length + 1) * 2));
-            stream.WriteByte(3);
-            var bytes = Encoding.Unicode.GetBytes(value);
-            stream.Write(bytes, 0, bytes.Length);
 
             return stream.ToArray();
         }

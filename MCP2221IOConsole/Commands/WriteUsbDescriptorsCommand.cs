@@ -34,7 +34,14 @@ namespace MCP2221IOConsole.Commands
         {
         }
 
-        [Option()]
+        [Option(ShortName = "um", Description = "The USB Manufacturer String Descriptor")]
         public (bool hasValue, string value) Manufacturer { get; set; }
+
+        [Option(ShortName = "up", Description = "The USB Product String Descriptor")]
+        public (bool hasValue, string value) Product { get; set; }
+
+        [Option(ShortName = "us", Description = "The USB Serial Number String Descriptor")]
+        public (bool hasValue, string value) SerialNumber { get; set; }
     }
 }
+

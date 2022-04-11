@@ -28,7 +28,7 @@ using System;
 namespace MCP2221IOConsole.Commands
 {
     [Command("read-cs", Description = "Read Device Chip Settings")]
-    class ReadChipSettingsCommand : BaseCommand
+    internal class ReadChipSettingsCommand : BaseCommand
     {
         public ReadChipSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {

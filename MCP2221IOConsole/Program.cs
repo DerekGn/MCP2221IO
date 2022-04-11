@@ -31,8 +31,11 @@ using System.IO;
 
 namespace MCP2221IOConsole
 {
-    [Command(Name = "Mcp2221", Description = "A console application for accessing a MCP2221 device"),
-        Subcommand(typeof(FlashCommand))]
+    [Command(Description = "A console application for accessing a MCP2221 device"),
+        Subcommand(typeof(ResetCommand)),
+        Subcommand(typeof(FlashCommand)),
+        Subcommand(typeof(SramCommand)),
+        Subcommand(typeof(GpioCommand))]
     class Program
     {
         private static IConfiguration _configuration;

@@ -45,7 +45,7 @@ namespace MCP2221IOConsole.Commands
         [Option(Description = "The PID of the MCP2221")]
         public int Pid { get; set; } = 0x00DD;
         [Option(Description = "The serial number of the MCP2221 instance")]
-        public string SerialNumber { get; set; }
+        public string Serial { get; set; }
 
         protected int ExecuteCommand(Func<IDevice, int> action)
         {
@@ -66,12 +66,12 @@ namespace MCP2221IOConsole.Commands
                 }
                 else
                 {
-                    Console.Error.WriteLine($"Unable to find HID device VID: [0x{Vid:x}] PID: [0x{Vid:x}] SerialNumber: [{SerialNumber}]");
+                    Console.Error.WriteLine($"Unable to find HID device VID: [0x{Vid:x}] PID: [0x{Vid:x}] SerialNumber: [{Serial}]");
                 }
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"An unhandled exception occurred: {ex.ToString()}");
+                Console.Error.WriteLine($"An unhandled exception occurred: {ex}");
             }
 
             return result;

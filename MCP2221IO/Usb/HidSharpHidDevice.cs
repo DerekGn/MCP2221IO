@@ -53,13 +53,13 @@ namespace MCP2221IO.Usb
 
         public byte[] WriteRead(byte[] outBytes)
         {
-            _logger.LogDebug($"Output HID Packet: [{BitConverter.ToString(outBytes).Replace("-", ",")}]");
+            _logger.LogDebug($"Output HID Packet: [{BitConverter.ToString(outBytes).Replace("-", ",0x")}]");
 
             _hidStream.Write(outBytes);
 
             var inBytes = _hidStream.Read();
 
-            _logger.LogDebug($"Input HID Packet: [{BitConverter.ToString(inBytes).Replace("-", ",")}]");
+            _logger.LogDebug($"Input HID Packet: [{BitConverter.ToString(inBytes).Replace("-", ",0x")}]");
 
             return inBytes;
         }

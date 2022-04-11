@@ -38,6 +38,12 @@ namespace MCP2221IO.Commands
         public override void Serialize(Stream stream)
         {
             base.Serialize(stream);
+
+            stream.WriteByte(0);    // Don't care
+            stream.WriteByte(0xFF); // Cancel current I2C/SMBus transfer(sub - command) no change
+            stream.WriteByte(0x20); // Set I2C/SMBus communication speed (sub-command)
+
+            stream.WriteByte((byte)((12000000 / Speed) - 2));
         }
     }
 }

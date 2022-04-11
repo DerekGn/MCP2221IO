@@ -40,14 +40,14 @@ namespace MCP2221IO.UnitTests
 {
     public class DeviceTests
     {
-        private readonly Mock<IHidDevice> _mockUsbDevice;
+        private readonly Mock<IHidDevice> _mockHidDevice;
         private readonly ITestOutputHelper _output;
         private readonly Device _device;
 
         public DeviceTests(ITestOutputHelper output)
         {
-            _mockUsbDevice = new Mock<IHidDevice>();
-            _device = new Device(Mock.Of<ILogger<IDevice>>(), _mockUsbDevice.Object);
+            _mockHidDevice = new Mock<IHidDevice>();
+            _device = new Device(Mock.Of<ILogger<IDevice>>(), _mockHidDevice.Object);
             _output = output;
         }
 
@@ -55,7 +55,7 @@ namespace MCP2221IO.UnitTests
         public void TestReadDeviceStatus()
         {
             // Arrange
-            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
                 .Returns(WriteTestStatusSetParametersResponse(0));
 
             // Act
@@ -71,7 +71,7 @@ namespace MCP2221IO.UnitTests
         public void TestReadChipSettings()
         {
             // Arrange
-            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
                 .Returns(WriteChipSettingsResponse());
 
             // Act
@@ -87,7 +87,7 @@ namespace MCP2221IO.UnitTests
         public void TestReadGpSettings()
         {
             // Arrange
-            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
                 .Returns(WriteGpSettingsResponse());
 
             // Act
@@ -103,7 +103,7 @@ namespace MCP2221IO.UnitTests
         public void TestReadSramSettings()
         {
             // Arrange
-            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
                 .Returns(WriteReadSramSettingsResponse());
 
             // Act
@@ -119,14 +119,14 @@ namespace MCP2221IO.UnitTests
         public void TestReadGpioSettings()
         {
             // Arrange
-            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
                 .Returns(WriteReadGpioPortsResponse());
 
             // Act
             _device.ReadGpioPorts();
 
             // Assert
-            _mockUsbDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Once);
+            _mockHidDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Once);
 
             _output.WriteLine($"GpioPort0: {_device.GpioPort0}");
             _output.WriteLine($"GpioPort1: {_device.GpioPort1}");
@@ -138,7 +138,7 @@ namespace MCP2221IO.UnitTests
         public void TestWriteChipSettings()
         {
             // Arrange
-            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
                 .Returns(WriteFlashWriteResponse(0));
 
             _device.ChipSettings = new ChipSettings();
@@ -147,14 +147,14 @@ namespace MCP2221IO.UnitTests
             _device.WriteChipSettings(new Password(new List<byte>()));
 
             // Assert
-            _mockUsbDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Once);
+            _mockHidDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Once);
         }
 
         [Fact]
         public void TestWriteGpSettings()
         {
             // Arrange
-            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
                 .Returns(WriteFlashWriteResponse(0));
 
             _device.GpSettings = new GpSettings()
@@ -169,14 +169,14 @@ namespace MCP2221IO.UnitTests
             _device.WriteGpSettings();
 
             // Assert
-            _mockUsbDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Once);
+            _mockHidDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Once);
         }
 
         [Fact]
         public void TestWriteSramSettings()
         {
             // Arrange
-            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
                 .Returns(WriteFlashWriteResponse(0));
 
             _device.SramSettings = new SramSettings()
@@ -191,14 +191,14 @@ namespace MCP2221IO.UnitTests
             _device.WriteSramSettings(true);
 
             // Assert
-            _mockUsbDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Once);
+            _mockHidDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Once);
         }
 
         [Fact]
         public void WriteGpioPorts()
         {
             // Arrange
-            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
                 .Returns(WriteSetGpioValuesResponse());
             
             _device._gpioPortsRead = true;
@@ -210,7 +210,7 @@ namespace MCP2221IO.UnitTests
             _device.WriteGpioPorts();
 
             // Assert
-            _mockUsbDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Once);
+            _mockHidDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Once);
         }
 
         //[Fact]
@@ -272,7 +272,7 @@ namespace MCP2221IO.UnitTests
         public void TestGetUsbManufacturerDescriptorOk()
         {
             // Arrange
-            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
                 .Returns(WriteStringResponse("MANUFACTURER"));
             
             // Act
@@ -290,7 +290,7 @@ namespace MCP2221IO.UnitTests
             // Arrange
             byte[] descriptor = null;
 
-            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
                 .Returns(WriteFlashWriteResponse(0))
                 .Callback<byte[]>(b => descriptor = b);
 
@@ -305,7 +305,7 @@ namespace MCP2221IO.UnitTests
         public void TestGetUsbProductDescriptorOk()
         {
             // Arrange
-            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
                 .Returns(WriteStringResponse("PRODUCT"));
 
             // Act
@@ -323,7 +323,7 @@ namespace MCP2221IO.UnitTests
             // Arrange
             byte[] descriptor = null;
 
-            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
                 .Returns(WriteFlashWriteResponse(0))
                 .Callback<byte[]>(b => descriptor = b);
 
@@ -338,7 +338,7 @@ namespace MCP2221IO.UnitTests
         public void TestGetUsbSerialNumberDescriptorOk()
         {
             // Arrange
-            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
                 .Returns(WriteStringResponse("SERIAL NUMBER"));
 
             // Act
@@ -356,7 +356,7 @@ namespace MCP2221IO.UnitTests
             // Arrange
             byte[] descriptor = null;
 
-            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
                 .Returns(WriteFlashWriteResponse(0))
                 .Callback<byte[]>(b => descriptor = b);
 
@@ -371,7 +371,7 @@ namespace MCP2221IO.UnitTests
         public void TestGetFactorySerialNumberOk()
         {
             // Arrange
-            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
                 .Returns(WriteSerialNumberResponse());
 
             // Act
@@ -389,7 +389,7 @@ namespace MCP2221IO.UnitTests
             // Arrange
             Stream writeStream = null;
 
-            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
                 .Returns(WriteFlashUnlockResponse());
 
             // Act
@@ -403,7 +403,7 @@ namespace MCP2221IO.UnitTests
         public void TestI2CWriteDataTest()
         {
             // Arrange
-            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
                 .Returns(WriteReponse(CommandCodes.WriteI2CData));
 
             var buffer = new List<byte>() { };
@@ -417,14 +417,14 @@ namespace MCP2221IO.UnitTests
             _device.I2CWriteData(0xFF, buffer);
 
             // Assert
-            _mockUsbDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Exactly(17));
+            _mockHidDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Exactly(17));
         }
 
         [Fact]
         public void TestI2CWriteDataNoStopTest()
         {
             // Arrange
-            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
                 .Returns(WriteReponse(CommandCodes.WriteI2CDataNoStop));
 
             var buffer = new List<byte>() { };
@@ -438,14 +438,14 @@ namespace MCP2221IO.UnitTests
             _device.I2CWriteDataNoStop(0xFF, buffer);
 
             // Assert
-            _mockUsbDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Exactly(17));
+            _mockHidDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Exactly(17));
         }
 
         [Fact]
         public void TestI2CWriteDataTestRepartStart()
         {
             // Arrange
-            _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
                 .Returns(WriteReponse(CommandCodes.WriteI2CDataRepeatedStart));
 
             var buffer = new List<byte>() { };
@@ -459,7 +459,7 @@ namespace MCP2221IO.UnitTests
             _device.I2CWriteDataRepeatStart(0xFF, buffer);
 
             // Assert
-            _mockUsbDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Exactly(17));
+            _mockHidDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Exactly(17));
         }
 
         [Fact]
@@ -469,7 +469,7 @@ namespace MCP2221IO.UnitTests
             int blockCount = 0;
 
             // Arrange
-            _mockUsbDevice.SetupSequence(_ => _.WriteRead(It.IsAny<byte[]>()))
+            _mockHidDevice.SetupSequence(_ => _.WriteRead(It.IsAny<byte[]>()))
                 .Returns(WriteReponse(CommandCodes.ReadI2CData))
                 .Returns(WriteGetI2CDataResponse(CommandCodes.GetI2CData, Math.Min(Device.MaxBlockSize, Math.Abs(DataLength - (blockCount++ * Device.MaxBlockSize)))))
                 .Returns(WriteGetI2CDataResponse(CommandCodes.GetI2CData, Math.Min(Device.MaxBlockSize, Math.Abs(DataLength - (blockCount++ * Device.MaxBlockSize)))))
@@ -479,7 +479,7 @@ namespace MCP2221IO.UnitTests
             var buffer = _device.I2CReadData(0xFF, DataLength);
 
             // Assert
-            _mockUsbDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Exactly(4));
+            _mockHidDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Exactly(4));
             buffer.Should().NotBeNullOrEmpty();
         }
 
@@ -490,7 +490,7 @@ namespace MCP2221IO.UnitTests
             int blockCount = 0;
 
             // Arrange
-            _mockUsbDevice.SetupSequence(_ => _.WriteRead(It.IsAny<byte[]>()))
+            _mockHidDevice.SetupSequence(_ => _.WriteRead(It.IsAny<byte[]>()))
                 .Returns(WriteReponse(CommandCodes.ReadI2CDataRepeatedStart))
                 .Returns(WriteGetI2CDataResponse(CommandCodes.GetI2CData, Math.Min(Device.MaxBlockSize, Math.Abs(DataLength - (blockCount++ * Device.MaxBlockSize)))))
                 .Returns(WriteGetI2CDataResponse(CommandCodes.GetI2CData, Math.Min(Device.MaxBlockSize, Math.Abs(DataLength - (blockCount++ * Device.MaxBlockSize)))))
@@ -500,7 +500,7 @@ namespace MCP2221IO.UnitTests
             var buffer = _device.I2CReadDataRepeatedStart(0xFF, DataLength);
 
             // Assert
-            _mockUsbDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Exactly(4));
+            _mockHidDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Exactly(4));
             buffer.Should().NotBeNullOrEmpty();
         }
 
@@ -513,37 +513,60 @@ namespace MCP2221IO.UnitTests
             _device.Reset();
 
             // Assert
-            _mockUsbDevice.Verify(_ => _.Write(It.IsAny<byte[]>()), Times.Once);
+            _mockHidDevice.Verify(_ => _.Write(It.IsAny<byte[]>()), Times.Once);
+        }
+
+        [Fact]
+        public void TestCancelI2CBusTransfer()
+        {
+            // Arrange
+            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+                .Returns(WriteTestStatusSetParametersResponse(0));
+
+            // Act
+            _device.CancelI2CBusTransfer();
+
+            // Assert
+            _device.Status.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void TestUpdateI2CBusSpeed()
+        {
+            // Arrange
+            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+                .Returns(WriteTestStatusSetParametersResponse(0));
+
+            // Act
+            _device.UpdateI2CBusSpeed(100);
+
+            // Assert
+            _device.Status.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void TestOpen()
+        {
+            // Arrange
+
+            // Act
+            _device.Open();
+
+            // Assert
+            _mockHidDevice.Verify(_ => _.Open(), Times.Once);
         }
 
         private byte[] WriteSetGpioValuesResponse()
         {
-            MemoryStream stream = new MemoryStream();
-
-            stream.Write(new byte[64], 0, 64);
-            stream.Position = 0;
+            MemoryStream stream = GetStream();
             stream.WriteByte((byte)CommandCodes.SetGpioValues);
-
-            return stream.ToArray();
-        }
-
-        private byte[] WriteSramWriteResponse()
-        {
-            MemoryStream stream = new MemoryStream();
-
-            stream.Write(new byte[64], 0, 64);
-            stream.Position = 0;
-            stream.WriteByte((byte)CommandCodes.SetSram);
 
             return stream.ToArray();
         }
 
         private byte[] WriteReadGpioPortsResponse()
         {
-            MemoryStream stream = new MemoryStream();
-
-            stream.Write(new byte[64], 0, 64);
-            stream.Position = 0;
+            MemoryStream stream = GetStream();
             stream.WriteByte((byte)CommandCodes.GetGpioValues);
             stream.WriteByte(0); // Command OK
             stream.WriteByte(0xEE); // GPIO0 Pin Value
@@ -560,10 +583,7 @@ namespace MCP2221IO.UnitTests
 
         private byte[] WriteGpSettingsResponse()
         {
-            MemoryStream stream = new MemoryStream();
-
-            stream.Write(new byte[64], 0, 64);
-            stream.Position = 0;
+            MemoryStream stream = GetStream();
             stream.WriteByte((byte)CommandCodes.ReadFlashData);
             stream.WriteByte(0); // Command OK
             stream.WriteByte(0); // sram structure length
@@ -578,10 +598,7 @@ namespace MCP2221IO.UnitTests
 
         private byte[] WriteReadSramSettingsResponse()
         {
-            MemoryStream stream = new MemoryStream();
-
-            stream.Write(new byte[64], 0, 64);
-            stream.Position = 0;
+            MemoryStream stream = GetStream();
             stream.WriteByte((byte)CommandCodes.GetSram);
             stream.WriteByte(0); // Command OK
             stream.WriteByte(0); // sram structure length
@@ -614,10 +631,7 @@ namespace MCP2221IO.UnitTests
 
         private byte[] WriteGetI2CDataResponse(CommandCodes commandCode, int length)
         {
-            MemoryStream stream = new MemoryStream();
-
-            stream.Write(new byte[64], 0, 64);
-            stream.Position = 0;
+            MemoryStream stream = GetStream();
             stream.WriteByte((byte)commandCode);
             stream.WriteByte(0);
             stream.WriteByte((byte)length);
@@ -628,10 +642,7 @@ namespace MCP2221IO.UnitTests
 
         private byte[] WriteReponse(CommandCodes commandCode)
         {
-            MemoryStream stream = new MemoryStream();
-
-            stream.Write(new byte[64], 0, 64);
-            stream.Position = 0;
+            MemoryStream stream = GetStream();
             stream.WriteByte((byte)commandCode);
 
             return stream.ToArray();
@@ -639,10 +650,7 @@ namespace MCP2221IO.UnitTests
 
         private byte[] WriteFlashUnlockResponse()
         {
-            MemoryStream stream = new MemoryStream();
-
-            stream.Write(new byte[64], 0, 64);
-            stream.Position = 0;
+            MemoryStream stream = GetStream();
             stream.WriteByte((byte)CommandCodes.SendFlashAccessPassword);
             stream.WriteByte(0);
 
@@ -651,10 +659,7 @@ namespace MCP2221IO.UnitTests
 
         private byte[] WriteFlashWriteResponse(int status)
         {
-            MemoryStream stream = new MemoryStream();
-
-            stream.Write(new byte[64], 0, 64);
-            stream.Position = 0;
+            MemoryStream stream = GetStream();
             stream.WriteByte((byte)CommandCodes.WriteFlashData);
             stream.WriteByte((byte)status);
 
@@ -663,10 +668,7 @@ namespace MCP2221IO.UnitTests
 
         private byte[] WriteSerialNumberResponse()
         {
-            MemoryStream stream = new MemoryStream();
-
-            stream.Write(new byte[64], 0, 64);
-            stream.Position = 0;
+            MemoryStream stream = GetStream();
             stream.WriteByte((byte)CommandCodes.ReadFlashData);
             stream.WriteByte(0);
             stream.WriteByte(8);
@@ -685,10 +687,7 @@ namespace MCP2221IO.UnitTests
 
         private byte[] WriteStringResponse(string value)
         {
-            MemoryStream stream = new MemoryStream();
-
-            stream.Write(new byte[64], 0, 64);
-            stream.Position = 0;
+            MemoryStream stream = GetStream();
             stream.WriteByte((byte)CommandCodes.ReadFlashData);
             stream.WriteByte(0);
             stream.WriteByte((byte)((value.Length + 1) * 2));
@@ -701,10 +700,7 @@ namespace MCP2221IO.UnitTests
 
         private byte[] WriteChipSettingsResponse()
         {
-            MemoryStream stream = new MemoryStream();
-
-            stream.Write(new byte[64], 0, 64);
-            stream.Position = 0;
+            MemoryStream stream = GetStream();
             stream.WriteByte((byte)CommandCodes.ReadFlashData);
             stream.WriteByte(0); // Command OK
             stream.WriteByte(0); // structure length
@@ -725,10 +721,7 @@ namespace MCP2221IO.UnitTests
 
         private byte[] WriteTestStatusSetParametersResponse(byte status)
         {
-            MemoryStream stream = new MemoryStream();
-
-            stream.Write(new byte[64], 0, 64);
-            stream.Position = 0;
+            MemoryStream stream = GetStream();
             stream.WriteByte((byte)CommandCodes.StatusSetParameters);
             stream.WriteByte(status);
             stream.WriteByte((byte)I2CCancelTransferState.MarkedForCancellation);
@@ -767,6 +760,16 @@ namespace MCP2221IO.UnitTests
             stream.WriteByte(0x55);
 
             return stream.ToArray();
+        }
+
+        private static MemoryStream GetStream()
+        {
+            MemoryStream stream = new MemoryStream();
+
+            stream.Write(new byte[65], 0, 65);
+            stream.Position = 0;
+            stream.WriteByte(0);
+            return stream;
         }
     }
 }

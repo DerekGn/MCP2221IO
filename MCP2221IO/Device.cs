@@ -87,7 +87,7 @@ namespace MCP2221IO
                 nameof(Device),
                 () =>
                 {
-                    return ExecuteCommand<DescriptorResponse>(new ReadUsbManufacturerDescriptorCommand()).Value;
+                    return ExecuteCommand<ReadFlashStringResponse>(new ReadUsbManufacturerDescriptorCommand()).Value;
                 });
             set =>
                 HandleOperationExecution(
@@ -105,7 +105,7 @@ namespace MCP2221IO
                 nameof(Device),
                 () =>
                 {
-                    return ExecuteCommand<DescriptorResponse>(new ReadUsbProductDescriptorCommand()).Value;
+                    return ExecuteCommand<ReadFlashStringResponse>(new ReadUsbProductDescriptorCommand()).Value;
                 });
             set => HandleOperationExecution(
                 nameof(Device),
@@ -122,7 +122,7 @@ namespace MCP2221IO
                 nameof(Device),
                 () =>
                 {
-                    return ExecuteCommand<DescriptorResponse>(new ReadUsbSerialNumberDescriptorCommand()).Value;
+                    return ExecuteCommand<ReadFlashStringResponse>(new ReadUsbSerialNumberDescriptorCommand()).Value;
                 });
             set => HandleOperationExecution(
                 nameof(Device),

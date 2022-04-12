@@ -28,9 +28,9 @@ using System.Text;
 
 namespace MCP2221IO.Responses
 {
-    internal class DescriptorResponse : BaseResponse
+    internal class ReadFlashStringResponse : BaseResponse
     {
-        public DescriptorResponse() : base(CommandCodes.ReadFlashData)
+        public ReadFlashStringResponse() : base(CommandCodes.ReadFlashData)
         {
         }
 

@@ -2,7 +2,7 @@
   "profiles": {
     "MCP2221IOConsole": {
       "commandName": "Project",
-      "commandLineArgs": "chip read"
+      "commandLineArgs": "flash write-usb -um Man"
     }
   }
 }

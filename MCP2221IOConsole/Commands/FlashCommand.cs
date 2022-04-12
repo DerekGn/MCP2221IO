@@ -34,6 +34,7 @@ namespace MCP2221IOConsole.Commands
     [Subcommand(typeof(WriteChipSettingsCommand))]
     [Subcommand(typeof(ReadUsbDescriptorsCommand))]
     [Subcommand(typeof(WriteUsbDescriptorsCommand))]
+    [Subcommand(typeof(WriteAccessPasswordCommand))]
     internal class FlashCommand : BaseCommand
     {
         public FlashCommand(IServiceProvider serviceProvider) : base(serviceProvider)

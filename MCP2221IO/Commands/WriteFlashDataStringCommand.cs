@@ -64,6 +64,7 @@ namespace MCP2221IO.Commands
             base.Serialize(stream);
 
             stream.WriteByte((byte)((Value.Length * 2) + 2));
+            stream.WriteByte(0x03);
 
             var bytes = Encoding.Unicode.GetBytes(Value);
 

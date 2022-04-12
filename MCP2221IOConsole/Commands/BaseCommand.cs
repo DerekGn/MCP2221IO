@@ -66,7 +66,7 @@ namespace MCP2221IOConsole.Commands
                 }
                 else
                 {
-                    Console.Error.WriteLine($"Unable to find HID device VID: [0x{Vid:x}] PID: [0x{Vid:x}] SerialNumber: [{Serial}]");
+                    Console.Error.WriteLine($"Unable to find HID device VID: [0x{Vid:X}] PID: [0x{Vid:X}] SerialNumber: [{Serial}]");
                 }
             }
             catch (Exception ex)

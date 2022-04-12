@@ -24,52 +24,58 @@
 
 using McMaster.Extensions.CommandLineUtils;
 using System;
+using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 
 namespace MCP2221IOConsole.Commands
 {
-    [Command("write-usb", Description = "Write Device Usb Descriptors")]
-    internal class WriteUsbDescriptorsCommand : BaseCommand
+    [Command("access", Description = "Unlock the Device supplying password")]
+    internal class WriteAccessPasswordCommand : BaseCommand
     {
-        public WriteUsbDescriptorsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public WriteAccessPasswordCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 
-        [Option("-um", "The USB Manufacturer String Descriptor", CommandOptionType.SingleValue)]
-        public (bool hasValue, string value) Manufacturer { get; set; }
-
-        [Option("-up","The USB Product String Descriptor", CommandOptionType.SingleValue)]
-        public (bool hasValue, string value) Product { get; set; }
-
-        [Option("-us", "The USB Serial Number String Descriptor", CommandOptionType.SingleValue)]
-        public (bool hasValue, string value) SerialNumber { get; set; }
+        [Required]
+        [Option("--pwd", Description = "The 8 byte password value")]
+        public string Password { get; set; }
 
         protected override int OnExecute(CommandLineApplication app, IConsole console)
         {
             return ExecuteCommand((device) =>
             {
-                if(Manufacturer.hasValue)
+                int result = 0;
+
+                if (Parse(Password, out var parsed))
                 {
-                    device.UsbManufacturerDescriptor = Manufacturer.value;
+                    device.UnlockFlash(parsed);
+                    
+                    console.WriteLine("Flash unlocked");
+                }
+                else
+                {
+                    console.Error.Write($"Value for {nameof(Password)} [{Password}] is invalid");
+                    result = -1;
                 }
 
-                if (Product.hasValue)
-                {
-                    device.UsbProductDescriptor = Manufacturer.value;
-                }
-
-                if (SerialNumber.hasValue)
-                {
-                    device.UsbSerialNumberDescriptor = SerialNumber.value;
-                }
-
-                if(!(Manufacturer.hasValue || Product.hasValue || SerialNumber.hasValue))
-                {
-                    console.Error.WriteLine("No values specified for update");
-                }
-
-                return Manufacturer.hasValue || Product.hasValue || SerialNumber.hasValue ? 0 : -1;
+                return result;
             });
+        }
+
+        private bool Parse(string password, out ulong value)
+        {
+            bool result;
+
+            if (password.StartsWith("0x"))
+            {
+                result = ulong.TryParse(password.Replace("0x", string.Empty), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out value);
+            }
+            else
+            {
+                result = ulong.TryParse(password, NumberStyles.Integer, CultureInfo.InvariantCulture, out value);
+            }
+
+            return result;
         }
     }
 }
-

@@ -31,7 +31,7 @@ namespace MCP2221IO.Commands
     /// </summary>
     internal abstract class WriteFlashDataCommand : BaseCommand
     {
-        protected WriteFlashDataCommand(WriteFlashSubCode subCode) : base(CommandCodes.ReadFlashData)
+        protected WriteFlashDataCommand(WriteFlashSubCode subCode) : base(CommandCodes.WriteFlashData)
         {
             SubCode = subCode;
         }
@@ -45,7 +45,6 @@ namespace MCP2221IO.Commands
         public override void Serialize(Stream stream)
         {
             base.Serialize(stream);
-            stream.WriteByte((byte)CommandCode);
             stream.WriteByte((byte)SubCode);
         }
     }

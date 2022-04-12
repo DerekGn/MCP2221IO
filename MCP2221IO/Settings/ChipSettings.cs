@@ -98,7 +98,7 @@ namespace MCP2221IO.Settings
             ChipSecurity = (ChipSecurity)(temp & 0b11);
             temp = stream.ReadByte();
             ClockDutyCycle = (ClockDutyCycle)((temp & 0x18) >> 3);
-            ClockDivider = (ClockOutDivider)(stream.ReadByte() & 0x07);
+            ClockDivider = (ClockOutDivider)(temp & 0x07);
 
             temp = stream.ReadByte();
 
@@ -120,7 +120,7 @@ namespace MCP2221IO.Settings
 
             SelfPowered = (UsbSelfPowered)((temp & 0x40) >> 6);
             RemoteWake = (UsbRemoteWake)((temp & 0x20) >> 5);
-            PowerRequestMa = stream.ReadByte() * 2;
+            _powerRequestMa = stream.ReadByte();
         }
     }
 }

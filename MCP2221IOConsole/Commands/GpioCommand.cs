@@ -28,6 +28,8 @@ using System;
 namespace MCP2221IOConsole.Commands
 {
     [Command(Description = "Access device Gpio settings")]
+    [Subcommand(typeof(ReadGpioSettingsCommand))]
+    [Subcommand(typeof(WriteGpioSettingsCommand))]
     internal class GpioCommand : BaseCommand
     {
         public GpioCommand(IServiceProvider serviceProvider) : base(serviceProvider)

@@ -27,9 +27,9 @@ namespace MCP2221IO.Commands
     /// <summary>
     /// Read the Gpio ports
     /// </summary>
-    internal class ReadGpioPortsCommand : ReadFlashDataCommand
+    internal class ReadGpioPortsCommand : BaseCommand
     {
-        public ReadGpioPortsCommand() : base(ReadFlashSubCode.ReadGpSettings)
+        public ReadGpioPortsCommand() : base(CommandCodes.GetGpioValues)
         {
         }
     }

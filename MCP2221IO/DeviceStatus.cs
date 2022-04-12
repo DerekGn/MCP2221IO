@@ -82,6 +82,11 @@ namespace MCP2221IO
         public ushort I2CAddress { get; private set; }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public bool AckStatus { get; private set; }
+
+        /// <summary>
         /// SCL line value – as read from the pin
         /// </summary>
         public bool SclLineState { get; private set; }
@@ -130,6 +135,7 @@ namespace MCP2221IO
             stringBuilder.AppendLine($"{nameof(I2CClockDivisor)}: 0x{I2CClockDivisor:X}");
             stringBuilder.AppendLine($"{nameof(I2CTimeout)}: 0x{I2CTimeout:X}");
             stringBuilder.AppendLine($"{nameof(I2CAddress)}: 0x{I2CAddress:X}");
+            stringBuilder.AppendLine($"{nameof(AckStatus)}: {AckStatus}");
             stringBuilder.AppendLine($"{nameof(SclLineState)}: {SclLineState}");
             stringBuilder.AppendLine($"{nameof(SdaLineState)}: {SdaLineState}");
             stringBuilder.AppendLine($"{nameof(EdgeDetectionState)}: {EdgeDetectionState}");
@@ -137,7 +143,7 @@ namespace MCP2221IO
             stringBuilder.AppendLine($"{nameof(HardwareRevision)}: {HardwareRevision}");
             stringBuilder.AppendLine($"{nameof(FirmwareRevision)}: {FirmwareRevision}");
 
-            stringBuilder.AppendLine($"{nameof(Adc)}:\t[0x{Adc[0]:X}]\t[0x{Adc[1]:X}]\t[0x{Adc[2]:X}]");
+            stringBuilder.AppendLine($"{nameof(Adc)}:\r\n[0x{Adc[0]:X4}]\r\n[0x{Adc[1]:X4}]\r\n[0x{Adc[2]:X4}]");
 
             return stringBuilder.ToString();
         }
@@ -148,7 +154,7 @@ namespace MCP2221IO
             SpeedStatus = (I2CSpeedStatus)stream.ReadByte();
             I2CLastDivisor = (byte)stream.ReadByte();
 
-            stream.Position += 3;
+            stream.Seek(9, SeekOrigin.Begin);
 
             I2CStateMachineState = (byte)stream.ReadByte();
             I2CTransferLength = stream.ReadUShort();
@@ -158,21 +164,24 @@ namespace MCP2221IO
             I2CTimeout = (byte)stream.ReadByte();
             I2CAddress = stream.ReadUShort();
 
-            stream.Position += 4;
+            stream.Seek(21, SeekOrigin.Begin);
 
+            AckStatus = (stream.ReadByte() & 0x40) == 0x40;
             SclLineState = stream.ReadByte() == 1;
             SdaLineState = stream.ReadByte() == 1;
             EdgeDetectionState = stream.ReadByte() == 1;
             I2CReadPending = (byte)stream.ReadByte();
 
-            stream.Position += 19;
+            stream.Seek(47, SeekOrigin.Begin);
 
             HardwareRevision = string.Empty;
             HardwareRevision += (char)stream.ReadByte();
+            HardwareRevision += '.';
             HardwareRevision += (char)stream.ReadByte();
 
             FirmwareRevision = string.Empty;
             FirmwareRevision += (char)stream.ReadByte();
+            FirmwareRevision += '.';
             FirmwareRevision += (char)stream.ReadByte();
 
             List<ushort> adc = new List<ushort>();

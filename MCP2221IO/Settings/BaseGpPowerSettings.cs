@@ -66,7 +66,7 @@ namespace MCP2221IO.Settings
             int temp = stream.ReadByte();
 
             OutputValue = (temp & 0x10) == 0x10;
-            IsInput = (temp & 0x80) == 0x80;
+            IsInput = (temp & 0x08) == 0x08;
             Designation = (T)(object)(temp & 0x07);
         }
 

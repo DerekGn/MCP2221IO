@@ -1,4 +1,4 @@
-﻿/*
+/*
 * MIT License
 *
 * Copyright (c) 2022 Derek Goslin https://github.com/DerekGn
@@ -27,23 +27,11 @@ using System;
 
 namespace MCP2221IOConsole.Commands
 {
-    [Command("read-gp", Description = "Read Device GP Settings")]
-    internal class ReadGpSettingsCommand : BaseCommand
+    [Command("write-s", Description = "Write Device Status")]
+    internal class WriteStatusCommand : BaseCommand
     {
-        public ReadGpSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public WriteStatusCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
-        }
-
-        protected override int OnExecute(CommandLineApplication app, IConsole console)
-        {
-            return ExecuteCommand((device) =>
-            {
-                device.ReadGpSettings();
-
-                console.WriteLine(device.GpSettings);
-
-                return 0;
-            });
         }
     }
 }

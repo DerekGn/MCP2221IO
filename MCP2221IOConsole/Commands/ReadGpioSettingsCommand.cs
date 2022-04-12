@@ -27,10 +27,10 @@ using System;
 
 namespace MCP2221IOConsole.Commands
 {
-    [Command("read-gp", Description = "Read Device GP Settings")]
-    internal class ReadGpSettingsCommand : BaseCommand
+    [Command("read-gpio", Description = "Read Device Gpio Settings")]
+    internal class ReadGpioSettingsCommand : BaseCommand
     {
-        public ReadGpSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public ReadGpioSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 
@@ -38,9 +38,12 @@ namespace MCP2221IOConsole.Commands
         {
             return ExecuteCommand((device) =>
             {
-                device.ReadGpSettings();
+                device.ReadGpioPorts();
 
-                console.WriteLine(device.GpSettings);
+                console.WriteLine(device.GpioPort0);
+                console.WriteLine(device.GpioPort1);
+                console.WriteLine(device.GpioPort2);
+                console.WriteLine(device.GpioPort3);
 
                 return 0;
             });

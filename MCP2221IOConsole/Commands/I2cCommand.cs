@@ -27,23 +27,11 @@ using System;
 
 namespace MCP2221IOConsole.Commands
 {
-    [Command("read-gp", Description = "Read Device GP Settings")]
-    internal class ReadGpSettingsCommand : BaseCommand
+    [Command(Description = "Execute device I2C functions")]
+    internal class I2cCommand : BaseCommand
     {
-        public ReadGpSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public I2cCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
-        }
-
-        protected override int OnExecute(CommandLineApplication app, IConsole console)
-        {
-            return ExecuteCommand((device) =>
-            {
-                device.ReadGpSettings();
-
-                console.WriteLine(device.GpSettings);
-
-                return 0;
-            });
         }
     }
 }

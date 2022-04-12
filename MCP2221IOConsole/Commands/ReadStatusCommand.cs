@@ -1,4 +1,4 @@
-﻿/*
+/*
 * MIT License
 *
 * Copyright (c) 2022 Derek Goslin https://github.com/DerekGn
@@ -27,10 +27,10 @@ using System;
 
 namespace MCP2221IOConsole.Commands
 {
-    [Command("read-gp", Description = "Read Device GP Settings")]
-    internal class ReadGpSettingsCommand : BaseCommand
+    [Command("read-s", Description = "Read Device Status")]
+    internal class ReadStatusCommand : BaseCommand
     {
-        public ReadGpSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public ReadStatusCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 
@@ -38,9 +38,9 @@ namespace MCP2221IOConsole.Commands
         {
             return ExecuteCommand((device) =>
             {
-                device.ReadGpSettings();
+                device.ReadDeviceStatus();
 
-                console.WriteLine(device.GpSettings);
+                console.WriteLine(device.Status);
 
                 return 0;
             });

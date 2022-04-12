@@ -28,14 +28,12 @@ using System;
 namespace MCP2221IOConsole.Commands
 {
     [Command(Description = "Access device flash settings")]
-    [Subcommand(
-        typeof(ReadGpSettingsCommand),
-        typeof(WriteGpSettingsCommand),
-        typeof(ReadChipSettingsCommand),
-        typeof(WriteChipSettingsCommand),
-        typeof(ReadUsbDescriptorsCommand),
-        typeof(WriteUsbDescriptorsCommand)
-    )]
+    [Subcommand(typeof(ReadGpSettingsCommand))]
+    [Subcommand(typeof(WriteGpSettingsCommand))]
+    [Subcommand(typeof(ReadChipSettingsCommand))]
+    [Subcommand(typeof(WriteChipSettingsCommand))]
+    [Subcommand(typeof(ReadUsbDescriptorsCommand))]
+    [Subcommand(typeof(WriteUsbDescriptorsCommand))]
     internal class FlashCommand : BaseCommand
     {
         public FlashCommand(IServiceProvider serviceProvider) : base(serviceProvider)

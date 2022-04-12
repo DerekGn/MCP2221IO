@@ -56,7 +56,7 @@ namespace MCP2221IO.UnitTests
         {
             // Arrange
             _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
-                .Returns(WriteTestStatusSetParametersResponse(0));
+                .Returns(TestPayloads.DeviceStatusResponse);
 
             // Act
             _device.ReadDeviceStatus();
@@ -72,7 +72,7 @@ namespace MCP2221IO.UnitTests
         {
             // Arrange
             _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
-                .Returns(WriteChipSettingsResponse());
+                .Returns(TestPayloads.ChipSettingsResponse);
 
             // Act
             _device.ReadChipSettings();
@@ -88,7 +88,7 @@ namespace MCP2221IO.UnitTests
         {
             // Arrange
             _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
-                .Returns(WriteGpSettingsResponse());
+                .Returns(TestPayloads.GpSettingsResponse);
 
             // Act
             _device.ReadGpSettings();
@@ -120,7 +120,7 @@ namespace MCP2221IO.UnitTests
         {
             // Arrange
             _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
-                .Returns(WriteReadGpioPortsResponse());
+                .Returns(TestPayloads.GpioSettingsResponse);
 
             // Act
             _device.ReadGpioPorts();
@@ -662,27 +662,6 @@ namespace MCP2221IO.UnitTests
             MemoryStream stream = GetStream();
             stream.WriteByte((byte)CommandCodes.WriteFlashData);
             stream.WriteByte((byte)status);
-
-            return stream.ToArray();
-        }
-
-        private byte[] WriteChipSettingsResponse()
-        {
-            MemoryStream stream = GetStream();
-            stream.WriteByte((byte)CommandCodes.ReadFlashData);
-            stream.WriteByte(0); // Command OK
-            stream.WriteByte(0); // structure length
-            stream.WriteByte(0); // dont care
-            stream.WriteByte(0xF1); // CDC enabled
-            stream.WriteByte(0x02); // clock divider
-            stream.WriteByte(0xFF); // DAC
-            stream.WriteByte(0xFF); // int and adc
-            stream.WriteByte(0xED); // VID
-            stream.WriteByte(0xFE); // VID
-            stream.WriteByte(0xAD); // PID
-            stream.WriteByte(0xDE); // PID
-            stream.WriteByte(0x60); // Usb
-            stream.WriteByte(0x32); // usb power
 
             return stream.ToArray();
         }

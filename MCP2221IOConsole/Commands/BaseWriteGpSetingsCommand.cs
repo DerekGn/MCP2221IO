@@ -22,28 +22,42 @@
 * SOFTWARE.
 */
 
-namespace MCP2221IO.Gpio
+using McMaster.Extensions.CommandLineUtils;
+using MCP2221IO;
+using System;
+
+namespace MCP2221IOConsole.Commands
 {
-    /// <summary>
-    /// Gpio 3 designation
-    /// </summary>
-    public enum Gpio3Designation
+    internal abstract class BaseWriteGpSetingsCommand : BaseCommand
     {
-        /// <summary>
-        /// GPIO operation.
-        /// </summary>
-        GpioOperation = 0,
-        /// <summary>
-        /// Dedicated function operation (LED_I2C).
-        /// </summary>
-        DedicatedFunction = 1,
-        /// <summary>
-        /// Alternate Function 0 (ADC3).
-        /// </summary>
-        AlternateFunction0 = 2,
-        /// <summary>
-        /// Alternate Function 1 (DAC2).
-        /// </summary>
-        AlternateFunction1 = 3
+        protected BaseWriteGpSetingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        {
+        }
+
+        [Option("-i", Description = "The GP pin is set as input if set")]
+        public (bool HasValue, bool Value) IsInput { get; set; }
+
+        [Option("-o", Description = "The output value at power up when pin is set as output")]
+        public (bool HasValue, bool Value) OutputValue { get; set; }
+
+        internal void ApplySettings(IDevice device)
+        {
+            device.ReadGpSettings();
+
+            if(IsInput.HasValue)
+            {
+                device.GpSettings.Gp0PowerUpSetting.IsInput = IsInput.Value;
+            }
+
+            if (OutputValue.HasValue)
+            {
+                device.GpSettings.Gp0PowerUpSetting.OutputValue = OutputValue.Value;
+            }
+        }
+
+        internal bool SettingsApplied()
+        {
+            return IsInput.HasValue && OutputValue.HasValue;
+        }
     }
 }

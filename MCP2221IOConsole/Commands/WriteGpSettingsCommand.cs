@@ -28,6 +28,10 @@ using System;
 namespace MCP2221IOConsole.Commands
 {
     [Command("write-gp", Description = "Write Device GP Settings")]
+    [Subcommand(typeof(WriteGp0SettingsCommand))]
+    [Subcommand(typeof(WriteGp1SettingsCommand))]
+    [Subcommand(typeof(WriteGp2SettingsCommand))]
+    [Subcommand(typeof(WriteGp3SettingsCommand))]
     internal class WriteGpSettingsCommand : BaseCommand
     {
         public WriteGpSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)

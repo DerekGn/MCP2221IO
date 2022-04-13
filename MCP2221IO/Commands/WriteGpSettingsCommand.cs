@@ -44,10 +44,7 @@ namespace MCP2221IO.Commands
         {
             base.Serialize(stream);
 
-            GpSettings.Gp0PowerUpSetting.Serialize(stream);
-            GpSettings.Gp1PowerUpSetting.Serialize(stream);
-            GpSettings.Gp2PowerUpSetting.Serialize(stream);
-            GpSettings.Gp3PowerUpSetting.Serialize(stream);
+            GpSettings.Serialize(stream);
         }
     }
 }

@@ -33,5 +33,16 @@ namespace MCP2221IOConsole.Commands
         public WriteChipSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
+
+        protected override int OnExecute(CommandLineApplication app, IConsole console)
+        {
+            return ExecuteCommand((device) =>
+            {
+                //device.WriteChipSettings();
+
+
+                return 0;
+            });
+        }
     }
 }

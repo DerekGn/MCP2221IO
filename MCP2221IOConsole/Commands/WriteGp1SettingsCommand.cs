@@ -22,33 +22,44 @@
 * SOFTWARE.
 */
 
-using MCP2221IO.Settings;
+using McMaster.Extensions.CommandLineUtils;
+using MCP2221IO.Gp;
 using System;
-using System.IO;
-using System.Linq;
 
-namespace MCP2221IO.Commands
+namespace MCP2221IOConsole.Commands
 {
-    internal class WriteChipSettingsCommand : WriteFlashDataCommand
+    [Command("gp1", Description = "Write GP1 Power Up Settings")]
+    internal class WriteGp1SettingsCommand : BaseWriteGpSetingsCommand
     {
-        public WriteChipSettingsCommand(ChipSettings chipSettings, Password password) : base(WriteFlashSubCode.WriteChipSettings)
+        public WriteGp1SettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
-            ChipSettings = chipSettings ?? throw new ArgumentNullException(nameof(chipSettings));
-            Password = password ?? throw new ArgumentNullException(nameof(password));
         }
 
-        public ChipSettings ChipSettings { get; }
+        [Option("-d", Description = "The GP1 Power Up Designation")]
+        public (bool HasValue, Gp1Designation Value) Designation { get; set; }
 
-        public Password Password { get; }
-
-        public override void Serialize(Stream stream)
+        protected override int OnExecute(CommandLineApplication app, IConsole console)
         {
-            base.Serialize(stream);
+            return ExecuteCommand((device) =>
+            {
+                ApplySettings(device);
 
-            ChipSettings.Serialize(stream);
+                if (!(SettingsApplied() && Designation.HasValue))
+                {
+                    console.Error.WriteLine("No update values specified");
+                    app.ShowHelp();
+                }
+                else
+                {
+                    device.GpSettings.Gp1PowerUpSetting.Designation = Designation.Value;
 
-            stream.Write(Password.Bytes.ToArray());
+                    device.WriteGpSettings();
+
+                    console.WriteLine("GP1 Settings Updated");
+                }
+
+                return 0;
+            });
         }
     }
 }
-

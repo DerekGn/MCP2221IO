@@ -28,10 +28,8 @@ using System;
 namespace MCP2221IOConsole.Commands
 {
     [Command(Description = "Access device Status settings")]
-    [Subcommand(
-        typeof(ReadStatusCommand),
-        typeof(WriteStatusCommand)
-    )]
+    [Subcommand(typeof(ReadStatusCommand))]
+    [Subcommand(typeof(WriteStatusCommand))]
     internal class StatusCommand : BaseCommand
     {
         public StatusCommand(IServiceProvider serviceProvider) : base(serviceProvider)

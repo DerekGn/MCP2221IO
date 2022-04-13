@@ -22,25 +22,33 @@
 * SOFTWARE.
 */
 
-namespace MCP2221IO
+namespace MCP2221IO.Gp
 {
-    public enum Gpio2Designation
+    /// <summary>
+    ///  Gp1 Designation 
+    /// </summary>
+    public enum Gp1Designation
     {
         /// <summary>
         /// GPIO operation.
         /// </summary>
         GpioOperation = 0,
         /// <summary>
-        /// Dedicated function operation (USB).
+        /// Dedicated function operation (clock output).
         /// </summary>
         DedicatedFunction = 1,
         /// <summary>
-        /// Alternate Function 0 (ADC2).
+        /// Alternate Function 0 (ADC1).
         /// </summary>
         AlternateFunction0 = 2,
         /// <summary>
-        /// Alternate Function 1 (DAC1).
+        /// Alternate Function 1 (LED_UTx).
         /// </summary>
-        AlternateFunction1 = 3
+        AlternateFunction1 = 3,
+        /// <summary>
+        /// Alternate Function 2 (Interrupt detection).
+        /// </summary>
+        AlternateFunction2 = 4
+
     }
 }

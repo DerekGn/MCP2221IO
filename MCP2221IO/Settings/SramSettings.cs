@@ -23,7 +23,7 @@
 */
 
 using MCP2221IO.Extensions;
-using MCP2221IO.Gpio;
+using MCP2221IO.Gp;
 using System.IO;
 using System.Text;
 
@@ -69,22 +69,22 @@ namespace MCP2221IO.Settings
         /// <summary>
         /// The GP0 settings
         /// </summary>
-        public GpSetting<Gpio0Designation> Gp0Settings { get; internal set; }
+        public GpSetting<Gp0Designation> Gp0Settings { get; internal set; }
 
         /// <summary>
         /// The GP1 settings
         /// </summary>
-        public GpSetting<Gpio1Designation> Gp1Settings { get; internal set; }
+        public GpSetting<Gp1Designation> Gp1Settings { get; internal set; }
 
         /// <summary>
         /// The GP2 settings
         /// </summary>
-        public GpSetting<Gpio2Designation> Gp2Settings { get; internal set; }
+        public GpSetting<Gp2Designation> Gp2Settings { get; internal set; }
 
         /// <summary>
         /// The GP3 settings
         /// </summary>
-        public GpSetting<Gpio3Designation> Gp3Settings { get; internal set; }
+        public GpSetting<Gp3Designation> Gp3Settings { get; internal set; }
 
         public override string ToString()
         {
@@ -156,10 +156,10 @@ namespace MCP2221IO.Settings
 
             Password = new Password(buffer);
 
-            Gp0Settings = new GpSetting<Gpio0Designation>();
-            Gp1Settings = new GpSetting<Gpio1Designation>();
-            Gp2Settings = new GpSetting<Gpio2Designation>();
-            Gp3Settings = new GpSetting<Gpio3Designation>();
+            Gp0Settings = new GpSetting<Gp0Designation>();
+            Gp1Settings = new GpSetting<Gp1Designation>();
+            Gp2Settings = new GpSetting<Gp2Designation>();
+            Gp3Settings = new GpSetting<Gp3Designation>();
 
             Gp0Settings.Deserialize(stream);
             Gp1Settings.Deserialize(stream);

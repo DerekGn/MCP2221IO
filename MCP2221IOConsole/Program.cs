@@ -53,9 +53,11 @@ namespace MCP2221IOConsole
             var serviceProvider = BuildServiceProvider();
 
             var app = new CommandLineApplication<Program>();
+
             app.Conventions
                 .UseDefaultConventions()
                 .UseConstructorInjection(serviceProvider);
+
             return app.Execute(args);
         }
 

@@ -53,9 +53,10 @@ namespace MCP2221IO.Settings
         {
             StringBuilder stringBuilder = new StringBuilder();
 
-            stringBuilder.Append($"{nameof(OutputValue)}: [{OutputValue}] ");
-            stringBuilder.Append($"{nameof(IsInput)}: [{IsInput}] ");
-            stringBuilder.Append($"{nameof(Designation)}: [{Designation}]");
+            stringBuilder.Append(
+                $"{nameof(OutputValue)}: {OutputValue,5} " +
+                $"{nameof(IsInput)}: {IsInput,5} " +
+                $"{nameof(Designation)}: {Designation,17} ");
 
             return stringBuilder.ToString();
         }

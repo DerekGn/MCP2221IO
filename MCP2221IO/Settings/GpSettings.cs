@@ -22,7 +22,7 @@
 * SOFTWARE.
 */
 
-using MCP2221IO.Gpio;
+using MCP2221IO.Gp;
 using System.IO;
 using System.Text;
 
@@ -33,37 +33,45 @@ namespace MCP2221IO.Settings
     /// </summary>
     public class GpSettings
     {
-        public GpSetting<Gpio0Designation> Gp0PowerUpSetting { get; internal set; }
+        public GpSetting<Gp0Designation> Gp0PowerUpSetting { get; internal set; }
 
-        public GpSetting<Gpio1Designation> Gp1PowerUpSetting { get; internal set; }
+        public GpSetting<Gp1Designation> Gp1PowerUpSetting { get; internal set; }
 
-        public GpSetting<Gpio2Designation> Gp2PowerUpSetting { get; internal set; }
+        public GpSetting<Gp2Designation> Gp2PowerUpSetting { get; internal set; }
 
-        public GpSetting<Gpio3Designation> Gp3PowerUpSetting { get; internal set; }
+        public GpSetting<Gp3Designation> Gp3PowerUpSetting { get; internal set; }
 
         public override string ToString()
         {
             StringBuilder stringBuilder = new StringBuilder();
 
-            stringBuilder.AppendLine($"{nameof(Gp0PowerUpSetting)}:\r\n{Gp0PowerUpSetting}");
-            stringBuilder.AppendLine($"{nameof(Gp1PowerUpSetting)}:\r\n{Gp1PowerUpSetting}");
-            stringBuilder.AppendLine($"{nameof(Gp2PowerUpSetting)}:\r\n{Gp2PowerUpSetting}");
-            stringBuilder.AppendLine($"{nameof(Gp3PowerUpSetting)}:\r\n{Gp3PowerUpSetting}");
+            stringBuilder.AppendLine($"{nameof(Gp0PowerUpSetting)}=>{Gp0PowerUpSetting}");
+            stringBuilder.AppendLine($"{nameof(Gp1PowerUpSetting)}=>{Gp1PowerUpSetting}");
+            stringBuilder.AppendLine($"{nameof(Gp2PowerUpSetting)}=>{Gp2PowerUpSetting}");
+            stringBuilder.AppendLine($"{nameof(Gp3PowerUpSetting)}=>{Gp3PowerUpSetting}");
 
             return stringBuilder.ToString();
         }
 
         internal void Deserialize(Stream stream)
         {
-            Gp0PowerUpSetting = new GpSetting<Gpio0Designation>();
-            Gp1PowerUpSetting = new GpSetting<Gpio1Designation>();
-            Gp2PowerUpSetting = new GpSetting<Gpio2Designation>();
-            Gp3PowerUpSetting = new GpSetting<Gpio3Designation>();
+            Gp0PowerUpSetting = new GpSetting<Gp0Designation>();
+            Gp1PowerUpSetting = new GpSetting<Gp1Designation>();
+            Gp2PowerUpSetting = new GpSetting<Gp2Designation>();
+            Gp3PowerUpSetting = new GpSetting<Gp3Designation>();
 
             Gp0PowerUpSetting.Deserialize(stream);
             Gp1PowerUpSetting.Deserialize(stream);
             Gp2PowerUpSetting.Deserialize(stream);
             Gp3PowerUpSetting.Deserialize(stream);
+        }
+
+        internal void Serialize(Stream stream)
+        {
+            Gp0PowerUpSetting.Serialize(stream);
+            Gp1PowerUpSetting.Serialize(stream);
+            Gp2PowerUpSetting.Serialize(stream);
+            Gp3PowerUpSetting.Serialize(stream);
         }
     }
 }

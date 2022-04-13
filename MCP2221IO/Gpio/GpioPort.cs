@@ -52,8 +52,9 @@ namespace MCP2221IO.Gpio
             StringBuilder stringBuilder = new StringBuilder();
 
             stringBuilder.Append(
-                $"{nameof(Enabled)}: {Enabled,5} {nameof(IsInput)}: " +
-                $"{IsInput,5} {nameof(Value)}: {Value,5} ");
+                $"{nameof(Enabled)}: {Enabled,5} " +
+                $"{nameof(IsInput)}: {IsInput,5} " +
+                $"{nameof(Value)}: {Value,5} ");
 
             return stringBuilder.ToString();
         }

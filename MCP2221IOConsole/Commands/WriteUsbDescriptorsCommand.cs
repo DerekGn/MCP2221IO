@@ -35,39 +35,40 @@ namespace MCP2221IOConsole.Commands
         }
 
         [Option("-um", "The USB Manufacturer String Descriptor", CommandOptionType.SingleValue)]
-        public (bool hasValue, string value) Manufacturer { get; set; }
+        public (bool HasValue, string Value) Manufacturer { get; set; }
 
         [Option("-up","The USB Product String Descriptor", CommandOptionType.SingleValue)]
-        public (bool hasValue, string value) Product { get; set; }
+        public (bool HasValue, string Value) Product { get; set; }
 
         [Option("-us", "The USB Serial Number String Descriptor", CommandOptionType.SingleValue)]
-        public (bool hasValue, string value) SerialNumber { get; set; }
+        public (bool HasValue, string Value) SerialNumber { get; set; }
 
         protected override int OnExecute(CommandLineApplication app, IConsole console)
         {
             return ExecuteCommand((device) =>
             {
-                if(Manufacturer.hasValue)
+                if(Manufacturer.HasValue)
                 {
-                    device.UsbManufacturerDescriptor = Manufacturer.value;
+                    device.UsbManufacturerDescriptor = Manufacturer.Value;
                 }
 
-                if (Product.hasValue)
+                if (Product.HasValue)
                 {
-                    device.UsbProductDescriptor = Manufacturer.value;
+                    device.UsbProductDescriptor = Manufacturer.Value;
                 }
 
-                if (SerialNumber.hasValue)
+                if (SerialNumber.HasValue)
                 {
-                    device.UsbSerialNumberDescriptor = SerialNumber.value;
+                    device.UsbSerialNumberDescriptor = SerialNumber.Value;
                 }
 
-                if(!(Manufacturer.hasValue || Product.hasValue || SerialNumber.hasValue))
+                if(!(Manufacturer.HasValue || Product.HasValue || SerialNumber.HasValue))
                 {
-                    console.Error.WriteLine("No values specified for update");
+                    console.Error.WriteLine("No update values specified");
+                    app.ShowHelp();
                 }
 
-                return Manufacturer.hasValue || Product.hasValue || SerialNumber.hasValue ? 0 : -1;
+                return Manufacturer.HasValue || Product.HasValue || SerialNumber.HasValue ? 0 : -1;
             });
         }
     }

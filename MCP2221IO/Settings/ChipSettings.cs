@@ -122,5 +122,39 @@ namespace MCP2221IO.Settings
             RemoteWake = (UsbRemoteWake)((temp & 0x20) >> 5);
             _powerRequestMa = stream.ReadByte();
         }
+
+        internal void Serialize(Stream stream)
+        {
+            int update = CdcSerialNumberEnable ? 0x80 : 0x0;
+            update |= (int)ChipSecurity;
+
+            stream.WriteByte((byte)update);
+
+            update |= (int)ClockDivider;
+            update |= ((int)ClockDutyCycle << 3);
+            stream.WriteByte((byte)update);
+
+            update |= DacOutput;
+            update |= ((int)DacRefOption << 4);
+            update |= ((int)DacRefVoltage << 5);
+
+            stream.WriteByte((byte)update);
+
+            update |= InterruptNegativeEdge ? 1 : 0 << 6;
+            update |= InterruptPositiveEdge ? 1 : 0 << 5;
+            update |= (int)AdcRefVoltage << 3;
+            update |= (int)AdcRefOption << 2;
+
+            stream.WriteByte((byte)update);
+
+            stream.WriteUShort(Vid);
+            stream.WriteUShort(Pid);
+
+            update |= (int)SelfPowered << 6;
+            update |= (int)RemoteWake << 5;
+
+            stream.WriteByte((byte)update);
+            stream.WriteByte((byte)_powerRequestMa);
+        }
     }
 }

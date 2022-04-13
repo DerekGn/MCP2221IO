@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace MCP2221IO.Settings
 {
@@ -54,5 +55,10 @@ namespace MCP2221IO.Settings
         {
             return Value;
         }
+
+        /// <summary>
+        /// The default <see cref="Password"/>
+        /// </summary>
+        public static Password DefaultPassword => new Password(Encoding.ASCII.GetBytes("00000000"));
     }
 }

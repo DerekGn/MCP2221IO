@@ -22,33 +22,28 @@
 * SOFTWARE.
 */
 
-using MCP2221IO.Settings;
-using System;
-using System.IO;
-using System.Linq;
-
-namespace MCP2221IO.Commands
+namespace MCP2221IO.Gp
 {
-    internal class WriteChipSettingsCommand : WriteFlashDataCommand
+    /// <summary>
+    ///  Gp2 Designation 
+    /// </summary>
+    public enum Gp2Designation
     {
-        public WriteChipSettingsCommand(ChipSettings chipSettings, Password password) : base(WriteFlashSubCode.WriteChipSettings)
-        {
-            ChipSettings = chipSettings ?? throw new ArgumentNullException(nameof(chipSettings));
-            Password = password ?? throw new ArgumentNullException(nameof(password));
-        }
-
-        public ChipSettings ChipSettings { get; }
-
-        public Password Password { get; }
-
-        public override void Serialize(Stream stream)
-        {
-            base.Serialize(stream);
-
-            ChipSettings.Serialize(stream);
-
-            stream.Write(Password.Bytes.ToArray());
-        }
+        /// <summary>
+        /// GPIO operation.
+        /// </summary>
+        GpioOperation = 0,
+        /// <summary>
+        /// Dedicated function operation (USB).
+        /// </summary>
+        DedicatedFunction = 1,
+        /// <summary>
+        /// Alternate Function 0 (ADC2).
+        /// </summary>
+        AlternateFunction0 = 2,
+        /// <summary>
+        /// Alternate Function 1 (DAC1).
+        /// </summary>
+        AlternateFunction1 = 3
     }
 }
-

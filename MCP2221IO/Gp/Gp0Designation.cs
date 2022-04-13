@@ -22,12 +22,12 @@
 * SOFTWARE.
 */
 
-namespace MCP2221IO.Gpio
+namespace MCP2221IO.Gp
 {
     /// <summary>
-    ///  Gpio0 designation 
+    ///  Gp0 Designation 
     /// </summary>
-    public enum Gpio0Designation
+    public enum Gp0Designation
     {
         /// <summary>
         /// GPIO operation.

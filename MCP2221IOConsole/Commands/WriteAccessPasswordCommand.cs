@@ -37,7 +37,7 @@ namespace MCP2221IOConsole.Commands
         }
 
         [Required]
-        [Option("--pwd", Description = "The 8 byte password value")]
+        [Option("-pwd", Description = "The 8 byte password value")]
         public string Password { get; set; }
 
         protected override int OnExecute(CommandLineApplication app, IConsole console)

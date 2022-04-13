@@ -24,6 +24,7 @@
 
 using FluentAssertions;
 using MCP2221IO.Commands;
+using MCP2221IO.Gp;
 using MCP2221IO.Gpio;
 using MCP2221IO.Settings;
 using MCP2221IO.Usb;
@@ -32,7 +33,6 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -159,10 +159,10 @@ namespace MCP2221IO.UnitTests
 
             _device.GpSettings = new GpSettings()
             {
-                Gp0PowerUpSetting = new GpSetting<Gpio0Designation>(),
-                Gp1PowerUpSetting = new GpSetting<Gpio1Designation>(),
-                Gp2PowerUpSetting = new GpSetting<Gpio2Designation>(),
-                Gp3PowerUpSetting = new GpSetting<Gpio3Designation>()
+                Gp0PowerUpSetting = new GpSetting<Gp0Designation>(),
+                Gp1PowerUpSetting = new GpSetting<Gp1Designation>(),
+                Gp2PowerUpSetting = new GpSetting<Gp2Designation>(),
+                Gp3PowerUpSetting = new GpSetting<Gp3Designation>()
             };
 
             // Act
@@ -181,10 +181,10 @@ namespace MCP2221IO.UnitTests
 
             _device.SramSettings = new SramSettings()
             {
-                Gp0Settings = new GpSetting<Gpio0Designation>(),
-                Gp1Settings = new GpSetting<Gpio1Designation>(),
-                Gp2Settings = new GpSetting<Gpio2Designation>(),
-                Gp3Settings = new GpSetting<Gpio3Designation>()
+                Gp0Settings = new GpSetting<Gp0Designation>(),
+                Gp1Settings = new GpSetting<Gp1Designation>(),
+                Gp2Settings = new GpSetting<Gp2Designation>(),
+                Gp3Settings = new GpSetting<Gp3Designation>()
             };
 
             // Act

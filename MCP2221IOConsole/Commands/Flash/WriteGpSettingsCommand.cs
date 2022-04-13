@@ -25,25 +25,17 @@
 using McMaster.Extensions.CommandLineUtils;
 using System;
 
-namespace MCP2221IOConsole.Commands
+namespace MCP2221IOConsole.Commands.Flash
 {
-    [Command("read-usb", Description = "Read Device Usb Descriptors")]
-    internal class ReadUsbDescriptorsCommand : BaseCommand
+    [Command("write-gp", Description = "Write Device GP Settings")]
+    [Subcommand(typeof(WriteGp0SettingsCommand))]
+    [Subcommand(typeof(WriteGp1SettingsCommand))]
+    [Subcommand(typeof(WriteGp2SettingsCommand))]
+    [Subcommand(typeof(WriteGp3SettingsCommand))]
+    internal class WriteGpSettingsCommand : BaseCommand
     {
-        public ReadUsbDescriptorsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public WriteGpSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
-        }
-
-        protected override int OnExecute(CommandLineApplication app, IConsole console)
-        {
-            return ExecuteCommand((device) =>
-            {
-                console.WriteLine($"{nameof(device.UsbManufacturerDescriptor)}:\t[{device.UsbManufacturerDescriptor}]");
-                console.WriteLine($"{nameof(device.UsbSerialNumberDescriptor)}:\t[{device.UsbSerialNumberDescriptor}]");
-                console.WriteLine($"{nameof(device.UsbProductDescriptor)}:\t\t[{device.UsbProductDescriptor}]");
-                console.WriteLine($"{nameof(device.FactorySerialNumber)}:\t\t[{device.FactorySerialNumber}]");
-                return 0;
-            });
         }
     }
 }

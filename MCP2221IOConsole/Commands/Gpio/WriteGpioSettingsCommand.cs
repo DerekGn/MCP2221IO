@@ -21,45 +21,17 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
 */
-
+#warning TODO
 using McMaster.Extensions.CommandLineUtils;
-using MCP2221IO.Gp;
 using System;
 
-namespace MCP2221IOConsole.Commands
+namespace MCP2221IOConsole.Commands.Gpio
 {
-    [Command("gp0", Description = "Write GP0 Power Up Settings")]
-    internal class WriteGp0SettingsCommand : BaseWriteGpSetingsCommand
+    [Command("write-gpio", Description = "Write Device Gpio Settings")]
+    internal class WriteGpioSettingsCommand : BaseCommand
     {
-        public WriteGp0SettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public WriteGpioSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
-        }
-
-        [Option("-d", Description = "The GP0 Power Up Designation")]
-        public (bool HasValue, Gp0Designation Value) Designation { get; set; }
-
-        protected override int OnExecute(CommandLineApplication app, IConsole console)
-        {
-            return ExecuteCommand((device) =>
-            {
-                ApplySettings(device);
-
-                if(!(SettingsApplied() && Designation.HasValue))
-                {
-                    console.Error.WriteLine("No update values specified");
-                    app.ShowHelp();
-                }
-                else
-                {
-                    device.GpSettings.Gp0PowerUpSetting.Designation = Designation.Value;
-
-                    device.WriteGpSettings();
-
-                    console.WriteLine("GP0 Settings Updated");
-                }
-                
-                return 0;
-            });
         }
     }
 }

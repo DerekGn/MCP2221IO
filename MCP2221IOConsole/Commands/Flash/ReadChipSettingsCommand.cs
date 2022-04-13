@@ -23,40 +23,24 @@
 */
 
 using McMaster.Extensions.CommandLineUtils;
-using MCP2221IO.Gp;
 using System;
 
-namespace MCP2221IOConsole.Commands
+namespace MCP2221IOConsole.Commands.Flash
 {
-    [Command("gp2", Description = "Write GP2 Power Up Settings")]
-    internal class WriteGp2SettingsCommand : BaseWriteGpSetingsCommand
+    [Command("read-cs", Description = "Read Device Chip Settings")]
+    internal class ReadChipSettingsCommand : BaseCommand
     {
-        public WriteGp2SettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public ReadChipSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
-
-        [Option("-d", Description = "The GP2 Power Up Designation")]
-        public (bool HasValue, Gp2Designation Value) Designation { get; set; }
 
         protected override int OnExecute(CommandLineApplication app, IConsole console)
         {
             return ExecuteCommand((device) =>
             {
-                ApplySettings(device);
+                device.ReadChipSettings();
 
-                if (!(SettingsApplied() && Designation.HasValue))
-                {
-                    console.Error.WriteLine("No update values specified");
-                    app.ShowHelp();
-                }
-                else
-                {
-                    device.GpSettings.Gp2PowerUpSetting.Designation = Designation.Value;
-
-                    device.WriteGpSettings();
-
-                    console.WriteLine("GP2 Settings Updated");
-                }
+                console.WriteLine(device.ChipSettings);
 
                 return 0;
             });

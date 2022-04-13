@@ -21,24 +21,28 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
 */
-
+#warning TODO
 using McMaster.Extensions.CommandLineUtils;
 using System;
 
-namespace MCP2221IOConsole.Commands
+namespace MCP2221IOConsole.Commands.Flash
 {
-    [Command(Description = "Access device flash settings")]
-    [Subcommand(typeof(ReadGpSettingsCommand))]
-    [Subcommand(typeof(WriteGpSettingsCommand))]
-    [Subcommand(typeof(ReadChipSettingsCommand))]
-    [Subcommand(typeof(WriteChipSettingsCommand))]
-    [Subcommand(typeof(ReadUsbDescriptorsCommand))]
-    [Subcommand(typeof(WriteUsbDescriptorsCommand))]
-    [Subcommand(typeof(WriteAccessPasswordCommand))]
-    internal class FlashCommand : BaseCommand
+    [Command("write-cs", Description = "Write Device Chip Settings")]
+    internal class WriteChipSettingsCommand : BaseCommand
     {
-        public FlashCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public WriteChipSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
+        }
+
+        protected override int OnExecute(CommandLineApplication app, IConsole console)
+        {
+            return ExecuteCommand((device) =>
+            {
+                //device.WriteChipSettings();
+
+
+                return 0;
+            });
         }
     }
 }

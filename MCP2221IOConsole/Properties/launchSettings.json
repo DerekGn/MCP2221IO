@@ -2,7 +2,7 @@
   "profiles": {
     "MCP2221IOConsole": {
       "commandName": "Project",
-      "commandLineArgs": "flash write-gp gp0"
+      "commandLineArgs": " flash write-gp gp0 -d"
     }
   }
 }

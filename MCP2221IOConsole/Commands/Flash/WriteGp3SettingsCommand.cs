@@ -3,7 +3,7 @@ using McMaster.Extensions.CommandLineUtils;
 using MCP2221IO.Gp;
 using System;
 
-namespace MCP2221IOConsole.Commands
+namespace MCP2221IOConsole.Commands.Flash
 {
     [Command("gp3", Description = "Write GP3 Power Up Settings")]
     internal class WriteGp3SettingsCommand : BaseWriteGpSetingsCommand
@@ -12,7 +12,7 @@ namespace MCP2221IOConsole.Commands
         {
         }
 
-        [Option("-d", Description = "The GP3 Power Up Designation")]
+        [Option("-d", "The GP3 Power Up Designation", CommandOptionType.SingleValue)]
         public (bool HasValue, Gp3Designation Value) Designation { get; set; }
 
         protected override int OnExecute(CommandLineApplication app, IConsole console)
@@ -21,7 +21,7 @@ namespace MCP2221IOConsole.Commands
             {
                 ApplySettings(device);
 
-                if (!(SettingsApplied() && Designation.HasValue))
+                if (!(IsInput.HasValue || OutputValue.HasValue || Designation.HasValue))
                 {
                     console.Error.WriteLine("No update values specified");
                     app.ShowHelp();

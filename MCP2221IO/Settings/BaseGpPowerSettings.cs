@@ -73,8 +73,8 @@ namespace MCP2221IO.Settings
 
         internal void Serialize(Stream stream)
         {
-            int update = (OutputValue ? 0x40 : 0) << 4;
-            update |= IsInput ? 0x8 : 0x00;
+            int update = OutputValue ? 0x10 : 0x00;
+            update |= IsInput ? 0x08 : 0x00;
             update |= (int)(object)Designation & 0b111;
 
             stream.WriteByte((byte)update);

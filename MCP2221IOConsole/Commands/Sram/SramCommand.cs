@@ -22,9 +22,18 @@
 * SOFTWARE.
 */
 
-namespace MCP2221IOConsole.Commands
+using McMaster.Extensions.CommandLineUtils;
+using System;
+
+namespace MCP2221IOConsole.Commands.Sram
 {
-    internal class ReadSramSettingsCommand
+    [Command(Description = "Access device sram settings")]
+    [Subcommand(typeof(ReadSramSettingsCommand))]
+    [Subcommand(typeof(WriteSramSettingsCommand))]
+    internal class SramCommand : BaseCommand
     {
+        public SramCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        {
+        }
     }
 }

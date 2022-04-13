@@ -21,29 +21,17 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
 */
-
+#warning TODO
 using McMaster.Extensions.CommandLineUtils;
 using System;
 
-namespace MCP2221IOConsole.Commands
+namespace MCP2221IOConsole.Commands.I2C
 {
-    [Command("read-cs", Description = "Read Device Chip Settings")]
-    internal class ReadChipSettingsCommand : BaseCommand
+    [Command(Description = "Execute device I2C functions")]
+    internal class I2cCommand : BaseCommand
     {
-        public ReadChipSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public I2cCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
-        }
-
-        protected override int OnExecute(CommandLineApplication app, IConsole console)
-        {
-            return ExecuteCommand((device) =>
-            {
-                device.ReadChipSettings();
-
-                console.WriteLine(device.ChipSettings);
-
-                return 0;
-            });
         }
     }
 }

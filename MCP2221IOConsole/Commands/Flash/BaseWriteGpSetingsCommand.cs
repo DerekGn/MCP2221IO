@@ -23,17 +23,36 @@
 */
 
 using McMaster.Extensions.CommandLineUtils;
+using MCP2221IO;
 using System;
 
-namespace MCP2221IOConsole.Commands
+namespace MCP2221IOConsole.Commands.Flash
 {
-    [Command(Description = "Access device Gpio settings")]
-    [Subcommand(typeof(ReadGpioSettingsCommand))]
-    [Subcommand(typeof(WriteGpioSettingsCommand))]
-    internal class GpioCommand : BaseCommand
+    internal abstract class BaseWriteGpSetingsCommand : BaseCommand
     {
-        public GpioCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        protected BaseWriteGpSetingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
+        }
+
+        [Option("-i", Description = "The GP pin is set as input if set")]
+        public (bool HasValue, bool Value) IsInput { get; set; }
+
+        [Option("-o", Description = "The output value at power up when pin is set as output")]
+        public (bool HasValue, bool Value) OutputValue { get; set; }
+
+        internal void ApplySettings(IDevice device)
+        {
+            device.ReadGpSettings();
+
+            if(IsInput.HasValue)
+            {
+                device.GpSettings.Gp0PowerUpSetting.IsInput = IsInput.Value;
+            }
+
+            if (OutputValue.HasValue)
+            {
+                device.GpSettings.Gp0PowerUpSetting.OutputValue = OutputValue.Value;
+            }
         }
     }
 }

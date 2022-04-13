@@ -21,28 +21,10 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
 */
-
-using McMaster.Extensions.CommandLineUtils;
-using System;
-
-namespace MCP2221IOConsole.Commands
+#warning TODO
+namespace MCP2221IOConsole.Commands.Sram
 {
-    [Command("write-cs", Description = "Write Device Chip Settings")]
-    internal class WriteChipSettingsCommand : BaseCommand
+    internal class WriteSramSettingsCommand
     {
-        public WriteChipSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
-        {
-        }
-
-        protected override int OnExecute(CommandLineApplication app, IConsole console)
-        {
-            return ExecuteCommand((device) =>
-            {
-                //device.WriteChipSettings();
-
-
-                return 0;
-            });
-        }
     }
 }

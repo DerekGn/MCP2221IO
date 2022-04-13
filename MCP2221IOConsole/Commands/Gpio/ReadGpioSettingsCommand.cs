@@ -25,13 +25,28 @@
 using McMaster.Extensions.CommandLineUtils;
 using System;
 
-namespace MCP2221IOConsole.Commands
+namespace MCP2221IOConsole.Commands.Gpio
 {
-    [Command(Description = "Execute device I2C functions")]
-    internal class I2cCommand : BaseCommand
+    [Command("read-gpio", Description = "Read Device Gpio Settings")]
+    internal class ReadGpioSettingsCommand : BaseCommand
     {
-        public I2cCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public ReadGpioSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
+        }
+
+        protected override int OnExecute(CommandLineApplication app, IConsole console)
+        {
+            return ExecuteCommand((device) =>
+            {
+                device.ReadGpioPorts();
+
+                console.WriteLine(device.GpioPort0);
+                console.WriteLine(device.GpioPort1);
+                console.WriteLine(device.GpioPort2);
+                console.WriteLine(device.GpioPort3);
+
+                return 0;
+            });
         }
     }
 }

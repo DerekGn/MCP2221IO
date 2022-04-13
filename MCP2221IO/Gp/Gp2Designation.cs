@@ -32,18 +32,18 @@ namespace MCP2221IO.Gp
         /// <summary>
         /// GPIO operation.
         /// </summary>
-        GpioOperation = 0,
+        Gpio = 0,
         /// <summary>
         /// Dedicated function operation (USB).
         /// </summary>
-        DedicatedFunction = 1,
+        Usb = 1,
         /// <summary>
         /// Alternate Function 0 (ADC2).
         /// </summary>
-        AlternateFunction0 = 2,
+        Adc2 = 2,
         /// <summary>
         /// Alternate Function 1 (DAC1).
         /// </summary>
-        AlternateFunction1 = 3
+        Dac1 = 3
     }
 }

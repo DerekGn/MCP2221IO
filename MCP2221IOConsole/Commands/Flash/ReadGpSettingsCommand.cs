@@ -25,17 +25,25 @@
 using McMaster.Extensions.CommandLineUtils;
 using System;
 
-namespace MCP2221IOConsole.Commands
+namespace MCP2221IOConsole.Commands.Flash
 {
-    [Command(Description = "Access device sram settings")]
-    [Subcommand(
-        typeof(ReadSramSettingsCommand),
-        typeof(WriteSramSettingsCommand)
-    )]
-    internal class SramCommand : BaseCommand
+    [Command("read-gp", Description = "Read Device GP Settings")]
+    internal class ReadGpSettingsCommand : BaseCommand
     {
-        public SramCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public ReadGpSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
+        }
+
+        protected override int OnExecute(CommandLineApplication app, IConsole console)
+        {
+            return ExecuteCommand((device) =>
+            {
+                device.ReadGpSettings();
+
+                console.WriteLine(device.GpSettings);
+
+                return 0;
+            });
         }
     }
 }

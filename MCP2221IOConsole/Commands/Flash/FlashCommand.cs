@@ -25,28 +25,20 @@
 using McMaster.Extensions.CommandLineUtils;
 using System;
 
-namespace MCP2221IOConsole.Commands
+namespace MCP2221IOConsole.Commands.Flash
 {
-    [Command("read-gpio", Description = "Read Device Gpio Settings")]
-    internal class ReadGpioSettingsCommand : BaseCommand
+    [Command(Description = "Access device flash settings")]
+    [Subcommand(typeof(ReadGpSettingsCommand))]
+    [Subcommand(typeof(WriteGpSettingsCommand))]
+    [Subcommand(typeof(ReadChipSettingsCommand))]
+    [Subcommand(typeof(WriteChipSettingsCommand))]
+    [Subcommand(typeof(ReadUsbDescriptorsCommand))]
+    [Subcommand(typeof(WriteUsbDescriptorsCommand))]
+    [Subcommand(typeof(WriteAccessPasswordCommand))]
+    internal class FlashCommand : BaseCommand
     {
-        public ReadGpioSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public FlashCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
-        }
-
-        protected override int OnExecute(CommandLineApplication app, IConsole console)
-        {
-            return ExecuteCommand((device) =>
-            {
-                device.ReadGpioPorts();
-
-                console.WriteLine(device.GpioPort0);
-                console.WriteLine(device.GpioPort1);
-                console.WriteLine(device.GpioPort2);
-                console.WriteLine(device.GpioPort3);
-
-                return 0;
-            });
         }
     }
 }

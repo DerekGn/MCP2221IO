@@ -32,14 +32,14 @@ namespace MCP2221IO.Gp
         /// <summary>
         /// GPIO operation.
         /// </summary>
-        GpioOperation = 0,
+        Gpio = 0,
         /// <summary>
         /// Dedicated function operation (SSPND).
         /// </summary>
-        DedicatedFunction = 1,
+        Sspnd = 1,
         /// <summary>
         /// Alternate Function 0 (LED_URx).
         /// </summary>
-        AlternateFunction = 2,
+        LedURx = 2,
     }
 }

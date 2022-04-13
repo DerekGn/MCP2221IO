@@ -23,54 +23,46 @@
 */
 
 using McMaster.Extensions.CommandLineUtils;
+using MCP2221IO.Gp;
 using System;
 
-namespace MCP2221IOConsole.Commands
+namespace MCP2221IOConsole.Commands.Flash
 {
-    [Command("write-usb", Description = "Write Device Usb Descriptors")]
-    internal class WriteUsbDescriptorsCommand : BaseCommand
+    [Command("gp0", Description = "Write GP0 Power Up Settings")]
+    internal class WriteGp0SettingsCommand : BaseWriteGpSetingsCommand
     {
-        public WriteUsbDescriptorsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public WriteGp0SettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 
-        [Option("-um", "The USB Manufacturer String Descriptor", CommandOptionType.SingleValue)]
-        public (bool HasValue, string Value) Manufacturer { get; set; }
-
-        [Option("-up","The USB Product String Descriptor", CommandOptionType.SingleValue)]
-        public (bool HasValue, string Value) Product { get; set; }
-
-        [Option("-us", "The USB Serial Number String Descriptor", CommandOptionType.SingleValue)]
-        public (bool HasValue, string Value) SerialNumber { get; set; }
+        [Option("-d", "The GP0 Power Up Designation", CommandOptionType.SingleValue)]
+        public (bool HasValue, Gp0Designation Value) Designation { get; set; }
 
         protected override int OnExecute(CommandLineApplication app, IConsole console)
         {
             return ExecuteCommand((device) =>
             {
-                if(Manufacturer.HasValue)
-                {
-                    device.UsbManufacturerDescriptor = Manufacturer.Value;
-                }
+                ApplySettings(device);
 
-                if (Product.HasValue)
-                {
-                    device.UsbProductDescriptor = Manufacturer.Value;
-                }
-
-                if (SerialNumber.HasValue)
-                {
-                    device.UsbSerialNumberDescriptor = SerialNumber.Value;
-                }
-
-                if(!(Manufacturer.HasValue || Product.HasValue || SerialNumber.HasValue))
+                if (!(IsInput.HasValue || OutputValue.HasValue || Designation.HasValue))
                 {
                     console.Error.WriteLine("No update values specified");
                     app.ShowHelp();
                 }
+                else
+                {
+                    if(Designation.HasValue)
+                    {
+                        device.GpSettings.Gp0PowerUpSetting.Designation = Designation.Value;
+                    }
 
-                return Manufacturer.HasValue || Product.HasValue || SerialNumber.HasValue ? 0 : -1;
+                    device.WriteGpSettings();
+
+                    console.WriteLine("GP0 Settings Updated");
+                }
+
+                return 0;
             });
         }
     }
 }
-

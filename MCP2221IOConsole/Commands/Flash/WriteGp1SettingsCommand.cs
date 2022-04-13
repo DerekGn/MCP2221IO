@@ -23,19 +23,43 @@
 */
 
 using McMaster.Extensions.CommandLineUtils;
+using MCP2221IO.Gp;
 using System;
 
-namespace MCP2221IOConsole.Commands
+namespace MCP2221IOConsole.Commands.Flash
 {
-    [Command("write-gp", Description = "Write Device GP Settings")]
-    [Subcommand(typeof(WriteGp0SettingsCommand))]
-    [Subcommand(typeof(WriteGp1SettingsCommand))]
-    [Subcommand(typeof(WriteGp2SettingsCommand))]
-    [Subcommand(typeof(WriteGp3SettingsCommand))]
-    internal class WriteGpSettingsCommand : BaseCommand
+    [Command("gp1", Description = "Write GP1 Power Up Settings")]
+    internal class WriteGp1SettingsCommand : BaseWriteGpSetingsCommand
     {
-        public WriteGpSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public WriteGp1SettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
+        }
+
+        [Option("-d", "The GP1 Power Up Designation", CommandOptionType.SingleValue)]
+        public (bool HasValue, Gp1Designation Value) Designation { get; set; }
+
+        protected override int OnExecute(CommandLineApplication app, IConsole console)
+        {
+            return ExecuteCommand((device) =>
+            {
+                ApplySettings(device);
+
+                if (!(IsInput.HasValue || OutputValue.HasValue || Designation.HasValue))
+                {
+                    console.Error.WriteLine("No update values specified");
+                    app.ShowHelp();
+                }
+                else
+                {
+                    device.GpSettings.Gp1PowerUpSetting.Designation = Designation.Value;
+
+                    device.WriteGpSettings();
+
+                    console.WriteLine("GP1 Settings Updated");
+                }
+
+                return 0;
+            });
         }
     }
 }

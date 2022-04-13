@@ -24,10 +24,16 @@
 
 using McMaster.Extensions.CommandLineUtils;
 using MCP2221IOConsole.Commands;
+using MCP2221IOConsole.Commands.Flash;
+using MCP2221IOConsole.Commands.Gpio;
+using MCP2221IOConsole.Commands.I2C;
+using MCP2221IOConsole.Commands.Sram;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
+using System;
 using System.IO;
+using System.Linq;
 
 namespace MCP2221IOConsole
 {
@@ -43,29 +49,42 @@ namespace MCP2221IOConsole
 
         public static int Main(string[] args)
         {
-            _configuration = SetupConfiguration(args);
+            CommandLineApplication<Program> app = null;
+            int result = -1;
 
-            Log.Logger = new LoggerConfiguration()
-                .ReadFrom.Configuration(_configuration)
-                .Enrich.FromLogContext()
-                .CreateLogger();
+            try
+            {
+                _configuration = SetupConfiguration(args);
 
-            var serviceProvider = BuildServiceProvider();
+                Log.Logger = new LoggerConfiguration()
+                    .ReadFrom.Configuration(_configuration)
+                    .Enrich.FromLogContext()
+                    .CreateLogger();
 
-            var app = new CommandLineApplication<Program>();
+                var serviceProvider = BuildServiceProvider();
 
-            app.Conventions
-                .UseDefaultConventions()
-                .UseConstructorInjection(serviceProvider);
+                app = new CommandLineApplication<Program>();
 
-            return app.Execute(args);
-        }
+                app.Conventions
+                    .UseDefaultConventions()
+                    .UseConstructorInjection(serviceProvider);
 
-        private int OnExecute(CommandLineApplication app, IConsole console)
-        {
-            console.WriteLine("You must specify at a subcommand.");
-            app.ShowHelp();
-            return 1;
+                result = app.Execute(args);
+            }
+            catch (CommandParsingException ex)
+            {
+                Console.Error.WriteLine(ex.Message);
+                if (app != null)
+                {
+                    app.ShowHelp();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "An unhandled exception occurred");
+            }
+
+            return result;
         }
 
         private static ServiceProvider BuildServiceProvider()

@@ -23,15 +23,86 @@
 */
 #warning TODO
 using McMaster.Extensions.CommandLineUtils;
+using MCP2221IO.Gpio;
 using System;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace MCP2221IOConsole.Commands.Gpio
 {
-    [Command("write-gpio", Description = "Write Device Gpio Settings")]
+    [Command(Description = "Write Device GPIO Settings")]
     internal class WriteGpioSettingsCommand : BaseCommand
     {
         public WriteGpioSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
+        }
+
+        [Range(0, 3)]
+        [Option(Description = "The GPIO Port")]
+        public int[] Ports { get; set; }
+
+        [Option(Description = "The GP pin is set as input if set")]
+        public (bool HasValue, bool Value) IsInput { get; set; }
+
+        [Option(Description = "The output value of the GPIO Port")]
+        public (bool HasValue, bool Value) Output { get; set; }
+
+        protected override int OnExecute(CommandLineApplication app, IConsole console)
+        {
+            return ExecuteCommand((device) =>
+            {
+                int result = -1;
+
+                if (Ports != null && (IsInput.HasValue || Output.HasValue))
+                {
+                    var ports = Ports.Distinct();
+
+                    device.ReadGpioPorts();
+
+                    foreach (var port in ports)
+                    {
+                        GpioPort gpioPort = null;
+
+                        switch (port)
+                        {
+                            case 0:
+                                gpioPort = device.GpioPort0;
+                                break;
+                            case 1:
+                                gpioPort = device.GpioPort1;
+                                break;
+                            case 2:
+                                gpioPort = device.GpioPort2;
+                                break;
+                            case 3:
+                                gpioPort = device.GpioPort3;
+                                break;
+                        }
+
+                        if (IsInput.HasValue && gpioPort != null)
+                        {
+                            gpioPort.IsInput = IsInput.Value;
+                        }
+
+                        if (Output.HasValue && gpioPort != null)
+                        {
+                            gpioPort.Value = Output.Value;
+                        }
+                    }
+
+                    device.WriteGpioPorts();
+
+                    console.WriteLine($"Ports [{string.Join(",", ports)}] Updated");
+                    result = 0;
+                }
+                else
+                {
+                    console.Error.WriteLine("No update values specified");
+                    app.ShowHelp();
+                }
+
+                return result;
+            });
         }
     }
 }

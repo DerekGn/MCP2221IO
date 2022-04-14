@@ -38,7 +38,7 @@ namespace MCP2221IOConsole.Commands.Flash
         public (bool HasValue, bool Value) IsInput { get; set; }
 
         [Option("-o", Description = "The output value at power up when pin is set as output")]
-        public (bool HasValue, bool Value) OutputValue { get; set; }
+        public (bool HasValue, bool Value) Value { get; set; }
 
         internal void ApplySettings(IDevice device)
         {
@@ -49,9 +49,9 @@ namespace MCP2221IOConsole.Commands.Flash
                 device.GpSettings.Gp0PowerUpSetting.IsInput = IsInput.Value;
             }
 
-            if (OutputValue.HasValue)
+            if (Value.HasValue)
             {
-                device.GpSettings.Gp0PowerUpSetting.OutputValue = OutputValue.Value;
+                device.GpSettings.Gp0PowerUpSetting.Value = Value.Value;
             }
         }
     }

@@ -27,7 +27,7 @@ using System;
 
 namespace MCP2221IOConsole.Commands.Flash
 {
-    [Command("write-cs", Description = "Write Device Chip Settings")]
+    [Command(Description = "Write Device Chip Settings")]
     internal class WriteChipSettingsCommand : BaseCommand
     {
         public WriteChipSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)

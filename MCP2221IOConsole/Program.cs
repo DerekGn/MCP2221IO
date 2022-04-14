@@ -49,7 +49,6 @@ namespace MCP2221IOConsole
 
         public static int Main(string[] args)
         {
-            CommandLineApplication<Program> app = null;
             int result = -1;
 
             try
@@ -63,7 +62,7 @@ namespace MCP2221IOConsole
 
                 var serviceProvider = BuildServiceProvider();
 
-                app = new CommandLineApplication<Program>();
+                var app = new CommandLineApplication<Program>();
 
                 app.Conventions
                     .UseDefaultConventions()
@@ -74,10 +73,6 @@ namespace MCP2221IOConsole
             catch (CommandParsingException ex)
             {
                 Console.Error.WriteLine(ex.Message);
-                if (app != null)
-                {
-                    app.ShowHelp();
-                }
             }
             catch (Exception ex)
             {
@@ -105,6 +100,13 @@ namespace MCP2221IOConsole
                 .AddEnvironmentVariables()
                 .AddCommandLine(args)
                 .Build();
+        }
+
+        private int OnExecute(CommandLineApplication app, IConsole console)
+        {
+            console.WriteLine("You must specify at a subcommand.");
+            app.ShowHelp();
+            return 1;
         }
     }
 }

@@ -27,7 +27,7 @@ using System;
 
 namespace MCP2221IOConsole.Commands.Sram
 {
-    [Command(Description = "Access device sram settings")]
+    [Command(Description = "Access Device SRAM Settings")]
     [Subcommand(typeof(ReadSramSettingsCommand))]
     [Subcommand(typeof(WriteSramSettingsCommand))]
     internal class SramCommand : BaseCommand

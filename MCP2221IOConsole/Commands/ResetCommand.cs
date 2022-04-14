@@ -21,17 +21,29 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
 */
-#warning TODO
+
 using McMaster.Extensions.CommandLineUtils;
 using System;
 
 namespace MCP2221IOConsole.Commands
 {
-    [Command(Description = "Reset the device")]
+    [Command(Description = "Reset the Device")]
     internal class ResetCommand : BaseCommand
     {
         public ResetCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
+        }
+
+        protected override int OnExecute(CommandLineApplication app, IConsole console)
+        {
+            return ExecuteCommand((device) =>
+            {
+                device.Reset();
+
+                console.WriteLine("Device Reset");
+
+                return 0;
+            });
         }
     }
 }

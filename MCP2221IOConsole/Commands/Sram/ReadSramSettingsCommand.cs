@@ -22,10 +22,28 @@
 * SOFTWARE.
 */
 
-#warning TODO
+using McMaster.Extensions.CommandLineUtils;
+using System;
+
 namespace MCP2221IOConsole.Commands.Sram
 {
-    internal class ReadSramSettingsCommand
+    [Command(Description = "Read Device SRAM Settings")]
+    internal class ReadSramSettingsCommand : BaseCommand
     {
+        public ReadSramSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        {
+        }
+
+        protected override int OnExecute(CommandLineApplication app, IConsole console)
+        {
+            return ExecuteCommand((device) =>
+            {
+                device.ReadSramSettings();
+
+                console.WriteLine(device.SramSettings);
+
+                return 0;
+            });
+        }
     }
 }

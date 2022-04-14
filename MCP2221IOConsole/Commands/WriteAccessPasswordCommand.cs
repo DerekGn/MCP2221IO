@@ -29,7 +29,7 @@ using System.Globalization;
 
 namespace MCP2221IOConsole.Commands
 {
-    [Command("access", Description = "Unlock the Device supplying password")]
+    [Command(Description = "Unlock the Device With Password")]
     internal class WriteAccessPasswordCommand : BaseCommand
     {
         public WriteAccessPasswordCommand(IServiceProvider serviceProvider) : base(serviceProvider)
@@ -37,7 +37,7 @@ namespace MCP2221IOConsole.Commands
         }
 
         [Required]
-        [Option("-pwd", Description = "The 8 byte password value")]
+        [Option(Description = "The 8 byte password value")]
         public string Password { get; set; }
 
         protected override int OnExecute(CommandLineApplication app, IConsole console)

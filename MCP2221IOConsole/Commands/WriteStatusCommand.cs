@@ -27,7 +27,7 @@ using System;
 
 namespace MCP2221IOConsole.Commands
 {
-    [Command("write-s", Description = "Write Device Status")]
+    [Command(Description = "Write Device Status")]
     internal class WriteStatusCommand : BaseCommand
     {
         public WriteStatusCommand(IServiceProvider serviceProvider) : base(serviceProvider)

@@ -28,7 +28,7 @@ using System;
 
 namespace MCP2221IOConsole.Commands.Flash
 {
-    [Command("gp0", Description = "Write GP0 Power Up Settings")]
+    [Command(Description = "Write GP0 Power Up Settings")]
     internal class WriteGp0SettingsCommand : BaseWriteGpSetingsCommand
     {
         public WriteGp0SettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
@@ -44,7 +44,7 @@ namespace MCP2221IOConsole.Commands.Flash
             {
                 ApplySettings(device);
 
-                if (!(IsInput.HasValue || OutputValue.HasValue || Designation.HasValue))
+                if (!(IsInput.HasValue || Value.HasValue || Designation.HasValue))
                 {
                     console.Error.WriteLine("No update values specified");
                     app.ShowHelp();

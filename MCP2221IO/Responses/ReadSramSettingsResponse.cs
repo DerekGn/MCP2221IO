@@ -40,6 +40,8 @@ namespace MCP2221IO.Responses
         {
             base.Deserialize(stream);
 
+            stream.Seek(5, SeekOrigin.Begin);
+
             SramSettings = new SramSettings();
 
             SramSettings.Deserialise(stream);

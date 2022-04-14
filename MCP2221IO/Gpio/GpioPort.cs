@@ -22,6 +22,7 @@
 * SOFTWARE.
 */
 
+using MCP2221IO.Exceptions;
 using System.IO;
 using System.Text;
 
@@ -32,20 +33,36 @@ namespace MCP2221IO.Gpio
     /// </summary>
     public class GpioPort
     {
+        private bool? _value;
+
         /// <summary>
         /// Indicates if the port is configured for GPIO operation
         /// </summary>
-        public bool Enabled { get; set; }
+        public bool Enabled { get; private set; }
 
         /// <summary>
         /// The GPIO port value
         /// </summary>
-        public bool Value { get; set; }
+        public bool? Value 
+        {
+            get => _value;
+            set
+            {
+                if (Enabled)
+                {
+                    _value = value;
+                }
+                else
+                {
+                    throw new GpioNotEnabledException();
+                }
+            }
+        }
 
         /// <summary>
         /// The GPIO port direction
         /// </summary>
-        public bool IsInput { get; set; }
+        public bool? IsInput { get; set; }
 
         public override string ToString()
         {
@@ -61,24 +78,35 @@ namespace MCP2221IO.Gpio
 
         internal void Deserialize(Stream stream)
         {
-            Enabled = stream.ReadByte() != 0xEE;
-            IsInput = stream.ReadByte() == 0x00;
-            Value = stream.ReadByte() == 0x01;
+            int value = stream.ReadByte();
+
+            Enabled = value != 0xEE;
+
+            if (value != 0xEE)
+            {
+                Value = value == 0x01;
+            }
+
+            value = stream.ReadByte();
+
+            if (value != 0xEF)
+            {
+                IsInput = value == 0x01;
+            }
         }
 
         internal void Serialize(Stream stream)
         {
-            if (!Enabled)
-            {
-                stream.Write(new byte[] { 0, 0, 0, 0 });
-            }
-            else
-            {
-                stream.WriteByte(0xFF);
-                stream.WriteByte((byte)(Value ? 1 : 0));
+            Write(stream, Value);
+            Write(stream, IsInput);
+        }
 
+        internal void Write(Stream stream, bool? value)
+        {
+            if(value.HasValue)
+            {
                 stream.WriteByte(0xFF);
-                stream.WriteByte((byte)(IsInput ? 1 : 0));
+                stream.WriteByte((byte)(Value.Value ? 0x01 : 0x00));
             }
         }
     }

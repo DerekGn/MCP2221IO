@@ -37,7 +37,7 @@ namespace MCP2221IO.Settings
         /// <summary>
         /// The current output value on the Gpio port
         /// </summary>
-        public bool OutputValue { get; set; }
+        public bool Value { get; set; }
 
         /// <summary>
         /// The Gpio port direction
@@ -54,7 +54,7 @@ namespace MCP2221IO.Settings
             StringBuilder stringBuilder = new StringBuilder();
 
             stringBuilder.Append(
-                $"{nameof(OutputValue)}: {OutputValue,5} " +
+                $"{nameof(Value)}: {Value,5} " +
                 $"{nameof(IsInput)}: {IsInput,5} " +
                 $"{nameof(Designation)}: {Designation,17} ");
 
@@ -66,14 +66,14 @@ namespace MCP2221IO.Settings
         {
             int temp = stream.ReadByte();
 
-            OutputValue = (temp & 0x10) == 0x10;
+            Value = (temp & 0x10) == 0x10;
             IsInput = (temp & 0x08) == 0x08;
             Designation = (T)(object)(temp & 0x07);
         }
 
         internal void Serialize(Stream stream)
         {
-            int update = OutputValue ? 0x10 : 0x00;
+            int update = Value ? 0x10 : 0x00;
             update |= IsInput ? 0x08 : 0x00;
             update |= (int)(object)Designation & 0b111;
 

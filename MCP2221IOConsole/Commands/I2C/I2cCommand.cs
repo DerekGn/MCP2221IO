@@ -27,7 +27,7 @@ using System;
 
 namespace MCP2221IOConsole.Commands.I2C
 {
-    [Command(Description = "Execute device I2C functions")]
+    [Command(Description = "Execute Device I2C functions")]
     internal class I2cCommand : BaseCommand
     {
         public I2cCommand(IServiceProvider serviceProvider) : base(serviceProvider)

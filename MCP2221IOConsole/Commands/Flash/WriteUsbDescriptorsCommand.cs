@@ -27,20 +27,20 @@ using System;
 
 namespace MCP2221IOConsole.Commands.Flash
 {
-    [Command("write-usb", Description = "Write Device Usb Descriptors")]
+    [Command(Description = "Write Device Usb Descriptors")]
     internal class WriteUsbDescriptorsCommand : BaseCommand
     {
         public WriteUsbDescriptorsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 
-        [Option("-um", "The USB Manufacturer String Descriptor", CommandOptionType.SingleValue)]
+        [Option(Description = "The USB Manufacturer String Descriptor")]
         public (bool HasValue, string Value) Manufacturer { get; set; }
 
-        [Option("-up","The USB Product String Descriptor", CommandOptionType.SingleValue)]
+        [Option(Description = "The USB Product String Descriptor")]
         public (bool HasValue, string Value) Product { get; set; }
 
-        [Option("-us", "The USB Serial Number String Descriptor", CommandOptionType.SingleValue)]
+        [Option(Description = "The USB Serial Number String Descriptor")]
         public (bool HasValue, string Value) SerialNumber { get; set; }
 
         protected override int OnExecute(CommandLineApplication app, IConsole console)

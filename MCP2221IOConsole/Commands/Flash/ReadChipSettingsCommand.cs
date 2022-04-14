@@ -27,7 +27,7 @@ using System;
 
 namespace MCP2221IOConsole.Commands.Flash
 {
-    [Command("read-cs", Description = "Read Device Chip Settings")]
+    [Command(Description = "Read Device Chip Settings")]
     internal class ReadChipSettingsCommand : BaseCommand
     {
         public ReadChipSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)

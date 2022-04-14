@@ -117,16 +117,13 @@ namespace MCP2221IO.Settings
 
         internal virtual void Deserialise(Stream stream)
         {
-            stream.ReadByte();
-            stream.ReadByte();
-
             int temp = stream.ReadByte();
 
             CdcSerialNumberEnable = (temp & 0x80) == 0x80;
             ChipSecurity = (SramChipSecurity)(temp & 0b11);
             temp = stream.ReadByte();
             ClockDutyCycle = (ClockDutyCycle)((temp & 0x18) >> 3);
-            ClockDivider = (ClockOutDivider)(stream.ReadByte() & 0x07);
+            ClockDivider = (ClockOutDivider)(temp & 0x07);
 
             temp = stream.ReadByte();
 

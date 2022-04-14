@@ -22,9 +22,16 @@
 * SOFTWARE.
 */
 #warning TODO
+using McMaster.Extensions.CommandLineUtils;
+using System;
+
 namespace MCP2221IOConsole.Commands.Sram
 {
-    internal class WriteSramSettingsCommand
+    [Command(Description = "Write Device SRAM Settings")]
+    internal class WriteSramSettingsCommand : BaseCommand
     {
+        public WriteSramSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        {
+        }
     }
 }

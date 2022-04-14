@@ -104,7 +104,7 @@ namespace MCP2221IO.UnitTests
         {
             // Arrange
             _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
-                .Returns(WriteReadSramSettingsResponse());
+                .Returns(TestPayloads.SramSettingsResponse);
 
             // Act
             _device.ReadSramSettings();
@@ -473,7 +473,7 @@ namespace MCP2221IO.UnitTests
                 .Returns(WriteReponse(CommandCodes.ReadI2CData))
                 .Returns(WriteGetI2CDataResponse(CommandCodes.GetI2CData, Math.Min(Device.MaxBlockSize, Math.Abs(DataLength - (blockCount++ * Device.MaxBlockSize)))))
                 .Returns(WriteGetI2CDataResponse(CommandCodes.GetI2CData, Math.Min(Device.MaxBlockSize, Math.Abs(DataLength - (blockCount++ * Device.MaxBlockSize)))))
-                .Returns(WriteGetI2CDataResponse(CommandCodes.GetI2CData, Math.Min(Device.MaxBlockSize, Math.Abs(DataLength - (blockCount++ * Device.MaxBlockSize)))));
+                .Returns(WriteGetI2CDataResponse(CommandCodes.GetI2CData, Math.Min(Device.MaxBlockSize, Math.Abs(DataLength - (blockCount * Device.MaxBlockSize)))));
 
             // Act
             var buffer = _device.I2CReadData(0xFF, DataLength);
@@ -494,7 +494,7 @@ namespace MCP2221IO.UnitTests
                 .Returns(WriteReponse(CommandCodes.ReadI2CDataRepeatedStart))
                 .Returns(WriteGetI2CDataResponse(CommandCodes.GetI2CData, Math.Min(Device.MaxBlockSize, Math.Abs(DataLength - (blockCount++ * Device.MaxBlockSize)))))
                 .Returns(WriteGetI2CDataResponse(CommandCodes.GetI2CData, Math.Min(Device.MaxBlockSize, Math.Abs(DataLength - (blockCount++ * Device.MaxBlockSize)))))
-                .Returns(WriteGetI2CDataResponse(CommandCodes.GetI2CData, Math.Min(Device.MaxBlockSize, Math.Abs(DataLength - (blockCount++ * Device.MaxBlockSize)))));
+                .Returns(WriteGetI2CDataResponse(CommandCodes.GetI2CData, Math.Min(Device.MaxBlockSize, Math.Abs(DataLength - (blockCount * Device.MaxBlockSize)))));
 
             // Act
             var buffer = _device.I2CReadDataRepeatedStart(0xFF, DataLength);
@@ -560,71 +560,6 @@ namespace MCP2221IO.UnitTests
         {
             MemoryStream stream = GetStream();
             stream.WriteByte((byte)CommandCodes.SetGpioValues);
-
-            return stream.ToArray();
-        }
-
-        private byte[] WriteReadGpioPortsResponse()
-        {
-            MemoryStream stream = GetStream();
-            stream.WriteByte((byte)CommandCodes.GetGpioValues);
-            stream.WriteByte(0); // Command OK
-            stream.WriteByte(0xEE); // GPIO0 Pin Value
-            stream.WriteByte(0xEF); // GPIO0 Direction Value
-            stream.WriteByte(0x00); // GPIO1 Pin Value
-            stream.WriteByte(0x00); // GPIO1 Direction Value
-            stream.WriteByte(0x01); // GPIO2 Pin Value
-            stream.WriteByte(0x01); // GPIO2 Direction Value
-            stream.WriteByte(0xEE); // GPIO3 Pin Value
-            stream.WriteByte(0xEF); // GPIO3 Direction Value
-
-            return stream.ToArray();
-        }
-
-        private byte[] WriteGpSettingsResponse()
-        {
-            MemoryStream stream = GetStream();
-            stream.WriteByte((byte)CommandCodes.ReadFlashData);
-            stream.WriteByte(0); // Command OK
-            stream.WriteByte(0); // sram structure length
-            stream.WriteByte(0); // do not care
-            stream.WriteByte(0x18); // GIO0
-            stream.WriteByte(0x19); // GIO1
-            stream.WriteByte(0x1A); // GIO2
-            stream.WriteByte(0x1B); // GIO3
-
-            return stream.ToArray();
-        }
-
-        private byte[] WriteReadSramSettingsResponse()
-        {
-            MemoryStream stream = GetStream();
-            stream.WriteByte((byte)CommandCodes.GetSram);
-            stream.WriteByte(0); // Command OK
-            stream.WriteByte(0); // sram structure length
-            stream.WriteByte(0); // gp structure length care
-            stream.WriteByte(0xF1); // CDC enabled
-            stream.WriteByte(0x02); // clock divider
-            stream.WriteByte(0xFF); // DAC
-            stream.WriteByte(0xFF); // int and adc
-            stream.WriteByte(0xED); // VID
-            stream.WriteByte(0xFE); // VID
-            stream.WriteByte(0xAD); // PID
-            stream.WriteByte(0xDE); // PID
-            stream.WriteByte(0x60); // Usb
-            stream.WriteByte(0x32); // usb power
-            stream.WriteByte(0x55); // password
-            stream.WriteByte(0xAA); // password
-            stream.WriteByte(0x55); // password
-            stream.WriteByte(0xAA); // password
-            stream.WriteByte(0x55); // password
-            stream.WriteByte(0xAA); // password
-            stream.WriteByte(0x55); // password
-            stream.WriteByte(0xAA); // password
-            stream.WriteByte(0x18); // GIO0
-            stream.WriteByte(0x19); // GIO1
-            stream.WriteByte(0x1A); // GIO2
-            stream.WriteByte(0x1B); // GIO3
 
             return stream.ToArray();
         }

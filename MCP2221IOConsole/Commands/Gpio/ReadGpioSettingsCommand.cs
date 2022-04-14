@@ -27,7 +27,7 @@ using System;
 
 namespace MCP2221IOConsole.Commands.Gpio
 {
-    [Command("read-gpio", Description = "Read Device Gpio Settings")]
+    [Command(Description = "Read Device GPIO Settings")]
     internal class ReadGpioSettingsCommand : BaseCommand
     {
         public ReadGpioSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
@@ -40,10 +40,10 @@ namespace MCP2221IOConsole.Commands.Gpio
             {
                 device.ReadGpioPorts();
 
-                console.WriteLine(device.GpioPort0);
-                console.WriteLine(device.GpioPort1);
-                console.WriteLine(device.GpioPort2);
-                console.WriteLine(device.GpioPort3);
+                console.WriteLine($"{nameof(device.GpioPort0)}: {device.GpioPort0}");
+                console.WriteLine($"{nameof(device.GpioPort1)}: {device.GpioPort1}");
+                console.WriteLine($"{nameof(device.GpioPort2)}: {device.GpioPort2}");
+                console.WriteLine($"{nameof(device.GpioPort3)}: {device.GpioPort3}");
 
                 return 0;
             });

@@ -97,8 +97,15 @@ namespace MCP2221IO.Gpio
 
         internal void Serialize(Stream stream)
         {
-            Write(stream, Value);
-            Write(stream, IsInput);
+            if(Enabled)
+            {
+                Write(stream, Value);
+                Write(stream, IsInput);
+            }
+            else
+            {
+                stream.Write(new byte[] { 0x00, 0x00, 0x00, 0x00 });
+            }
         }
 
         internal void Write(Stream stream, bool? value)
@@ -106,7 +113,7 @@ namespace MCP2221IO.Gpio
             if(value.HasValue)
             {
                 stream.WriteByte(0xFF);
-                stream.WriteByte((byte)(Value.Value ? 0x01 : 0x00));
+                stream.WriteByte((byte)(value.Value ? 0x01 : 0x00));
             }
         }
     }

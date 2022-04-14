@@ -21,7 +21,7 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
 */
-#warning TODO
+
 using McMaster.Extensions.CommandLineUtils;
 using MCP2221IO.Gpio;
 using System;
@@ -55,44 +55,42 @@ namespace MCP2221IOConsole.Commands.Gpio
 
                 if (Ports != null && (IsInput.HasValue || Output.HasValue))
                 {
+                    bool updated = false;
+
                     var ports = Ports.Distinct();
 
                     device.ReadGpioPorts();
 
                     foreach (var port in ports)
                     {
-                        GpioPort gpioPort = null;
-
-                        switch (port)
+                        if (port == 0)
                         {
-                            case 0:
-                                gpioPort = device.GpioPort0;
-                                break;
-                            case 1:
-                                gpioPort = device.GpioPort1;
-                                break;
-                            case 2:
-                                gpioPort = device.GpioPort2;
-                                break;
-                            case 3:
-                                gpioPort = device.GpioPort3;
-                                break;
+                            updated |= UpdatePort(0, device.GpioPort0, console);
                         }
-
-                        if (IsInput.HasValue && gpioPort != null)
+                        else if (port == 1)
                         {
-                            gpioPort.IsInput = IsInput.Value;
+                            updated |= UpdatePort(1, device.GpioPort1, console);
                         }
-
-                        if (Output.HasValue && gpioPort != null)
+                        else if (port == 2)
                         {
-                            gpioPort.Value = Output.Value;
+                            updated |= UpdatePort(2, device.GpioPort2, console);
+                        }
+                        else if (port == 3)
+                        {
+                            updated |= UpdatePort(3, device.GpioPort3, console);
                         }
                     }
 
-                    device.WriteGpioPorts();
+                    if (updated)
+                    {
+                        device.WriteGpioPorts();
 
-                    console.WriteLine($"Ports [{string.Join(",", ports)}] Updated");
+                        console.WriteLine($"Ports Updated");
+                    }
+                    else
+                    {
+                        console.WriteLine($"No Ports Updated");
+                    }
                     result = 0;
                 }
                 else
@@ -103,6 +101,28 @@ namespace MCP2221IOConsole.Commands.Gpio
 
                 return result;
             });
+        }
+
+        private bool UpdatePort(int index, GpioPort gpioPort, IConsole console)
+        {
+            if(gpioPort.Enabled)
+            {
+                if (IsInput.HasValue)
+                {
+                    gpioPort.IsInput = IsInput.Value;
+                }
+
+                if (Output.HasValue)
+                {
+                    gpioPort.Value = Output.Value;
+                }
+            }
+            else
+            {
+                console.Error.WriteLine($"Port [{index}] Not Configured For GPIO");
+            }
+
+            return gpioPort.Enabled;
         }
     }
 }

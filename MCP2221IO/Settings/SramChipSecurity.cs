@@ -29,8 +29,17 @@ namespace MCP2221IO
     /// </summary>
     public enum SramChipSecurity
     {
+        /// <summary>
+        /// Permanently locked
+        /// </summary>
         PermanentlyLocked = 0b10,
+        /// <summary>
+        /// Password protected
+        /// </summary>
         PasswordProtection = 0b01,
+        /// <summary>
+        /// Unsecured
+        /// </summary>
         Unprotected = 0b00
     }
 }

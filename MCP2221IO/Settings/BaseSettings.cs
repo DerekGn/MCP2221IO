@@ -43,9 +43,9 @@ namespace MCP2221IO.Settings
         public ClockOutDivider ClockDivider { get; set; }
 
         /// <summary>
-        /// DAC Reference voltage option
+        /// DAC Reference Vrm voltage option
         /// </summary>
-        public DacRefVoltage DacRefVoltage { get; set; }
+        public VrmRef DacRefVrm { get; set; }
 
         /// <summary>
         /// DAC reference option
@@ -58,9 +58,9 @@ namespace MCP2221IO.Settings
         public byte DacOutput { get; set; }
 
         /// <summary>
-        /// ADC Reference voltage option
+        /// ADC Reference Vrm voltage option
         /// </summary>
-        public AdcRefVoltage AdcRefVoltage { get; set; }
+        public VrmRef AdcRefVrm { get; set; }
 
         /// <summary>
         /// ADC reference option

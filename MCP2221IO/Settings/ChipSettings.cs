@@ -71,12 +71,12 @@ namespace MCP2221IO.Settings
             stringBuilder.AppendLine($"{nameof(ChipSecurity)}: {ChipSecurity}");
             stringBuilder.AppendLine($"{nameof(ClockDutyCycle)}: {ClockDutyCycle}");
             stringBuilder.AppendLine($"{nameof(ClockDivider)}: {ClockDivider}");
-            stringBuilder.AppendLine($"{nameof(DacRefVoltage)}: {DacRefVoltage}");
+            stringBuilder.AppendLine($"{nameof(DacRefVrm)}: {DacRefVrm}");
             stringBuilder.AppendLine($"{nameof(DacRefOption)}: {DacRefOption}");
             stringBuilder.AppendLine($"{nameof(DacOutput)}: 0x{DacOutput:X}");
             stringBuilder.AppendLine($"{nameof(InterruptNegativeEdge)}: {InterruptNegativeEdge}");
             stringBuilder.AppendLine($"{nameof(InterruptPositiveEdge)}: {InterruptPositiveEdge}");
-            stringBuilder.AppendLine($"{nameof(AdcRefVoltage)}: {AdcRefVoltage}");
+            stringBuilder.AppendLine($"{nameof(AdcRefVrm)}: {AdcRefVrm}");
             stringBuilder.AppendLine($"{nameof(AdcRefOption)}: {AdcRefOption}");
             stringBuilder.AppendLine($"{nameof(Vid)}: 0x{Vid:X}");
             stringBuilder.AppendLine($"{nameof(Pid)}: 0x{Pid:X}");
@@ -102,7 +102,7 @@ namespace MCP2221IO.Settings
 
             temp = stream.ReadByte();
 
-            DacRefVoltage = (DacRefVoltage)((temp & 0xC0) >> 6);
+            DacRefVrm = (VrmRef)((temp & 0xC0) >> 6);
             DacRefOption = (DacRefOption)((temp & 0x10) >> 4);
             DacOutput = (byte)(temp & 0x0F);
 
@@ -110,7 +110,7 @@ namespace MCP2221IO.Settings
 
             InterruptNegativeEdge = (temp & 0x40) == 0x40;
             InterruptPositiveEdge = (temp & 0x20) == 0x20;
-            AdcRefVoltage = (AdcRefVoltage)((temp & 0x18) >> 3);
+            AdcRefVrm = (VrmRef)((temp & 0x18) >> 3);
             AdcRefOption = (AdcRefOption)((temp & 0x4) >> 2);
 
             Vid = stream.ReadUShort();
@@ -136,13 +136,13 @@ namespace MCP2221IO.Settings
 
             update |= DacOutput;
             update |= ((int)DacRefOption << 4);
-            update |= ((int)DacRefVoltage << 5);
+            update |= ((int)DacRefVrm << 5);
 
             stream.WriteByte((byte)update);
 
             update |= InterruptNegativeEdge ? 1 : 0 << 6;
             update |= InterruptPositiveEdge ? 1 : 0 << 5;
-            update |= (int)AdcRefVoltage << 3;
+            update |= (int)AdcRefVrm << 3;
             update |= (int)AdcRefOption << 2;
 
             stream.WriteByte((byte)update);

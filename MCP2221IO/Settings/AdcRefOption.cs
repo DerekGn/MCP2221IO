@@ -25,16 +25,16 @@
 namespace MCP2221IO.Settings
 {
     /// <summary>
-    /// ADC Reference Output Selection
+    /// ADC Reference Selection
     /// </summary>
     public enum AdcRefOption
     {
         /// <summary>
-        /// ADC reference output is ADC VRM voltage selection (factory default)
+        /// ADC reference ADC VRM voltage selection (factory default)
         /// </summary>
         Vdd = 1,
         /// <summary>
-        /// ADC reference output is VDD
+        /// ADC reference is VDD
         /// </summary>
         Vrm = 0
     }

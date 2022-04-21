@@ -25,9 +25,9 @@
 namespace MCP2221IO.Settings
 {
     /// <summary>
-    /// DAC Internal Voltage Reference (DAC VRM) Selection
+    /// Internal Voltage Reference VRM Selection
     /// </summary>
-    public enum DacRefVoltage
+    public enum VrmRef
     {
         /// <summary>
         /// Reference voltage is 4.096V (only if VDD is above this voltage)
@@ -42,7 +42,7 @@ namespace MCP2221IO.Settings
         /// </summary>
         Vrm1024V = 0b01,
         /// <summary>
-        /// Reference voltage is off (this is useful for the case in which the DAC uses other reference than VRM DAC; e.g., VDD )
+        /// Reference voltage is off
         /// </summary>
         VrmOff = 0
     }

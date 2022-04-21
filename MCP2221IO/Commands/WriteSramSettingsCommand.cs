@@ -54,7 +54,7 @@ namespace MCP2221IO.Commands
             stream.WriteByte((byte)update);
 
             update = 0x80;
-            update |= (int)SramSettings.DacRefVoltage << 3;
+            update |= (int)SramSettings.DacRefVrm << 3;
             update |= (int)SramSettings.DacRefOption;
 
             stream.WriteByte((byte)update);
@@ -65,7 +65,7 @@ namespace MCP2221IO.Commands
             stream.WriteByte((byte)update);
 
             update = 0x80;
-            update |= ((int)SramSettings.AdcRefVoltage & 0x06) << 2;
+            update |= ((int)SramSettings.AdcRefVrm & 0x06) << 2;
             update |= (int)SramSettings.AdcRefOption;
 
             stream.WriteByte((byte)update);

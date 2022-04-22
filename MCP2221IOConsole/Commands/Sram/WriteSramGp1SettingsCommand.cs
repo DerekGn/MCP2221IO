@@ -26,25 +26,25 @@ using McMaster.Extensions.CommandLineUtils;
 using MCP2221IO.Gp;
 using System;
 
-namespace MCP2221IOConsole.Commands.Flash
+namespace MCP2221IOConsole.Commands.Sram
 {
-    [Command(Description = "Write GP2 Power Up Settings")]
-    internal class WriteGp2SettingsCommand : BaseWriteGpSetingsCommand
+    [Command(Description = "Write Device SRAM GPIO1 Settings")]
+    internal class WriteSramGp1SettingsCommand : BaseWriteSramGpSettingsCommand
     {
-        public WriteGp2SettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public WriteSramGp1SettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 
-        [Option("-d", "The GP2 Power Up Designation", CommandOptionType.SingleValue)]
-        public (bool HasValue, Gp2Designation Value) Designation { get; set; }
+        [Option("-d", "The GPIO Designation", CommandOptionType.SingleValue)]
+        public (bool HasValue, Gp1Designation Value) Designation { get; set; }
 
         protected override int OnExecute(CommandLineApplication app, IConsole console)
         {
             return ExecuteCommand((device) =>
             {
-                device.ReadGpSettings();
+                device.ReadSramSettings();
 
-                UpdateGpSetting(app, console, device, device.GpSettings.Gp2PowerUpSetting, Designation);
+                UpdateSramGpSetting(app, console, device, device.SramSettings.Gp1Settings, Designation);
 
                 return 0;
             });

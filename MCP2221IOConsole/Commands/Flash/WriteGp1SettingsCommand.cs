@@ -42,21 +42,9 @@ namespace MCP2221IOConsole.Commands.Flash
         {
             return ExecuteCommand((device) =>
             {
-                ApplySettings(device);
+                device.ReadGpSettings();
 
-                if (!(IsInput.HasValue || Value.HasValue || Designation.HasValue))
-                {
-                    console.Error.WriteLine("No update values specified");
-                    app.ShowHelp();
-                }
-                else
-                {
-                    device.GpSettings.Gp1PowerUpSetting.Designation = Designation.Value;
-
-                    device.WriteGpSettings();
-
-                    console.WriteLine("GP1 Settings Updated");
-                }
+                UpdateGpSetting(app, console, device, device.GpSettings.Gp1PowerUpSetting, Designation);
 
                 return 0;
             });

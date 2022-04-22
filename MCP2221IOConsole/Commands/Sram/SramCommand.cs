@@ -30,6 +30,10 @@ namespace MCP2221IOConsole.Commands.Sram
     [Command(Description = "Access Device SRAM Settings")]
     [Subcommand(typeof(ReadSramSettingsCommand))]
     [Subcommand(typeof(WriteSramSettingsCommand))]
+    [Subcommand(typeof(WriteSramGp0SettingsCommand))]
+    [Subcommand(typeof(WriteSramGp1SettingsCommand))]
+    [Subcommand(typeof(WriteSramGp2SettingsCommand))]
+    [Subcommand(typeof(WriteSramGp3SettingsCommand))]
     internal class SramCommand : BaseCommand
     {
         public SramCommand(IServiceProvider serviceProvider) : base(serviceProvider)

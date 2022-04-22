@@ -2,7 +2,7 @@
   "profiles": {
     "MCP2221IOConsole": {
       "commandName": "Project",
-      "commandLineArgs": " gpio write-gpio-settings -p 0 -i 1 "
+      "commandLineArgs": "sram write-sram-gp0-settings"
     }
   }
 }

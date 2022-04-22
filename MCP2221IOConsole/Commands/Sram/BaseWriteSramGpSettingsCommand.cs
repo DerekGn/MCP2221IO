@@ -27,21 +27,21 @@ using MCP2221IO;
 using MCP2221IO.Settings;
 using System;
 
-namespace MCP2221IOConsole.Commands.Flash
+namespace MCP2221IOConsole.Commands.Sram
 {
-    internal abstract class BaseWriteGpSetingsCommand : BaseCommand
+    internal abstract class BaseWriteSramGpSettingsCommand : BaseCommand 
     {
-        protected BaseWriteGpSetingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        protected BaseWriteSramGpSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 
-        [Option("-i", Description = "The GP pin is set as input if set")]
+        [Option("-i", Description = "The GPIO pin is set as input if set")]
         public (bool HasValue, bool Value) IsInput { get; set; }
 
-        [Option("-o", Description = "The output value at power up when pin is set as output")]
+        [Option("-o", Description = "The output value of the GPIO pin if set as output")]
         public (bool HasValue, bool Value) Value { get; set; }
 
-        internal void UpdateGpSetting<T>(CommandLineApplication app, IConsole console, IDevice device, GpSetting<T> gpio, (bool HasValue, T Value) designation) where T : Enum
+        internal void UpdateSramGpSetting<T>(CommandLineApplication app, IConsole console, IDevice device, GpSetting<T> gpio, (bool HasValue, T Value) designation) where T : Enum
         {
             if (!(IsInput.HasValue || Value.HasValue || designation.HasValue))
             {
@@ -65,9 +65,9 @@ namespace MCP2221IOConsole.Commands.Flash
                     gpio.Designation = designation.Value;
                 }
 
-                device.WriteGpSettings();
+                device.WriteSramSettings(false);
 
-                console.WriteLine("GP Settings Updated");
+                console.WriteLine("GP SRAM Settings Updated");
             }
         }
     }

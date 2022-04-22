@@ -22,24 +22,9 @@
 * SOFTWARE.
 */
 
-using McMaster.Extensions.CommandLineUtils;
-using System;
-
 namespace MCP2221IOConsole.Commands.I2C
 {
-    [Command(Description = "Execute Device I2C functions")]
-    [Subcommand(typeof(WriteI2cTransferSpeedCommand))]
-    [Subcommand(typeof(CancelI2cTransferCommand))]
-    [Subcommand(typeof(ScanI2cBusCommand))]
-    [Subcommand(typeof(I2cReadDataCommand))]
-    [Subcommand(typeof(I2cReadDataRepeatStartCommand))]
-    [Subcommand(typeof(I2cWriteDataCommand))]
-    [Subcommand(typeof(I2CWriteDataRepeatStartCommand))]
-    [Subcommand(typeof(I2CWriteDataNoStopCommand))]
-    internal class I2cCommand : BaseCommand
+    internal class I2CWriteDataRepeatStartCommand
     {
-        public I2cCommand(IServiceProvider serviceProvider) : base(serviceProvider)
-        {
-        }
     }
 }

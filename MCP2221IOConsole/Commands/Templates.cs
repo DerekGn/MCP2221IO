@@ -62,5 +62,7 @@ namespace MCP2221IOConsole.Commands
         public const string SramGpIsInput = "-sgi|--sram-gp-is-input";
         public const string SramGpDesignation = "-sgd|--sram-gp-designation";
         public const string UsbManufacturer = "-um|--usb-manufacturer";
+
+        public const string Speed = "-spd|--speed";
     }
 }

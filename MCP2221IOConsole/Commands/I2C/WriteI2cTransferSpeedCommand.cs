@@ -1,4 +1,4 @@
-/*
+﻿/*
 * MIT License
 *
 * Copyright (c) 2022 Derek Goslin https://github.com/DerekGn
@@ -24,23 +24,27 @@
 
 using McMaster.Extensions.CommandLineUtils;
 using System;
+using System.ComponentModel.DataAnnotations;
 
-namespace MCP2221IOConsole.Commands
+namespace MCP2221IOConsole.Commands.I2C
 {
-    [Command(Description = "Read Device Status")]
-    internal class ReadStatusCommand : BaseCommand
+    [Command(Description = "Write I2C Transfer Speed")]
+    internal class WriteI2cTransferSpeedCommand : BaseCommand
     {
-        public ReadStatusCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public WriteI2cTransferSpeedCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
+
+        [Required]
+        [Range(0, 400000)]
+        [Option(Templates.Speed, "The I2C Speed", CommandOptionType.SingleValue)]
+        public int Speed { get; set; }
 
         protected override int OnExecute(CommandLineApplication app, IConsole console)
         {
             return ExecuteCommand((device) =>
             {
-                device.ReadDeviceStatus();
-
-                console.WriteLine(device.Status);
+                device.WriteI2CBusSpeed(Speed);
 
                 return 0;
             });

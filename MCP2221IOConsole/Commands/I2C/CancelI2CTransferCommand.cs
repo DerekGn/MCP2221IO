@@ -1,4 +1,4 @@
-/*
+﻿/*
 * MIT License
 *
 * Copyright (c) 2022 Derek Goslin https://github.com/DerekGn
@@ -21,17 +21,28 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
 */
-#warning TODO
 using McMaster.Extensions.CommandLineUtils;
 using System;
 
-namespace MCP2221IOConsole.Commands
+namespace MCP2221IOConsole.Commands.I2C
 {
-    [Command(Description = "Write Device Status")]
-    internal class WriteStatusCommand : BaseCommand
+    [Command(Description = "Cancel Current I2C transfer")]
+    internal class CancelI2cTransferCommand : BaseCommand
     {
-        public WriteStatusCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public CancelI2cTransferCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
+        }
+
+        protected override int OnExecute(CommandLineApplication app, IConsole console)
+        {
+            return ExecuteCommand((device) =>
+            {
+                device.CancelI2CBusTransfer();
+
+                console.WriteLine($"Transfer State: {device.Status.CancelTransferState}");
+
+                return 0;
+            });
         }
     }
 }

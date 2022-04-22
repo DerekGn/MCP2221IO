@@ -136,7 +136,7 @@ namespace MCP2221IO
         public string FactorySerialNumber => GetFactorySerialNumber();
 
         // <inheritdoc/>
-        public void UnlockFlash(ulong password)
+        public void UnlockFlash(Password password)
         {
             HandleOperationExecution(
                 nameof(Device),
@@ -350,7 +350,7 @@ namespace MCP2221IO
         }
 
         // <inheritdoc/>
-        public void UpdateI2CBusSpeed(int speed)
+        public void WriteI2CBusSpeed(int speed)
         {
             HandleOperationExecution(
                 nameof(Device),

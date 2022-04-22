@@ -98,7 +98,7 @@ namespace MCP2221IO
         /// Unlock the flash
         /// </summary>
         /// <param name="password">The 8 byte password</param>
-        void UnlockFlash(ulong password);
+        void UnlockFlash(Password password);
 
         /// <summary>
         /// Write data to an I2C client device 
@@ -148,9 +148,9 @@ namespace MCP2221IO
         void CancelI2CBusTransfer();
 
         /// <summary>
-        /// Update the I2C bus speed
+        /// Write the I2C bus speed
         /// </summary>
-        void UpdateI2CBusSpeed(int speed);
+        void WriteI2CBusSpeed(int speed);
 
         /// <summary>
         /// Read the <see cref="DeviceStatus"/> from the device

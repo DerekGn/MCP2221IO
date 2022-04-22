@@ -21,13 +21,16 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
 */
-#warning TODO
+
 using McMaster.Extensions.CommandLineUtils;
 using System;
 
 namespace MCP2221IOConsole.Commands.I2C
 {
     [Command(Description = "Execute Device I2C functions")]
+    [Subcommand(typeof(WriteI2cTransferSpeedCommand))]
+    [Subcommand(typeof(CancelI2cTransferCommand))]
+    [Subcommand(typeof(ScanI2cBusCommand))]
     internal class I2cCommand : BaseCommand
     {
         public I2cCommand(IServiceProvider serviceProvider) : base(serviceProvider)

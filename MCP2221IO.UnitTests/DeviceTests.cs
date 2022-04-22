@@ -393,7 +393,7 @@ namespace MCP2221IO.UnitTests
                 .Returns(WriteFlashUnlockResponse());
 
             // Act
-            Action act = () => { _device.UnlockFlash(0xAA55AA55DEADBEEF); };
+            Action act = () => { _device.UnlockFlash(new Password("AA55AA55DEADBEEF")); };
 
             // Assert
             act.Should().NotThrow();
@@ -521,7 +521,7 @@ namespace MCP2221IO.UnitTests
         {
             // Arrange
             _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
-                .Returns(WriteTestStatusSetParametersResponse(0));
+                .Returns(TestPayloads.DeviceStatusResponse);
 
             // Act
             _device.CancelI2CBusTransfer();
@@ -531,14 +531,14 @@ namespace MCP2221IO.UnitTests
         }
 
         [Fact]
-        public void TestUpdateI2CBusSpeed()
+        public void TestSetI2CBusSpeed()
         {
             // Arrange
             _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
-                .Returns(WriteTestStatusSetParametersResponse(0));
+                .Returns(TestPayloads.DeviceStatusResponse);
 
             // Act
-            _device.UpdateI2CBusSpeed(100);
+            _device.WriteI2CBusSpeed(100);
 
             // Assert
             _device.Status.Should().NotBeNull();

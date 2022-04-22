@@ -22,8 +22,10 @@
 * SOFTWARE.
 */
 
+using MCP2221IO.Settings;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace MCP2221IO.Commands
 {
@@ -32,7 +34,7 @@ namespace MCP2221IO.Commands
     /// </summary>
     internal class UnlockFlashCommand : BaseCommand
     {
-        public UnlockFlashCommand(ulong password) : base(CommandCodes.SendFlashAccessPassword)
+        public UnlockFlashCommand(Password password) : base(CommandCodes.SendFlashAccessPassword)
         {
             Password = password;
         }
@@ -40,16 +42,14 @@ namespace MCP2221IO.Commands
         /// <summary>
         /// The unlock password
         /// </summary>
-        public ulong Password { get; }
+        public Password Password { get; }
 
         // <inheritdoc/>
         public override void Serialize(Stream stream)
         {
             base.Serialize(stream);
 
-            var bytes = BitConverter.GetBytes(Password);
-
-            stream.Write(bytes, 0, bytes.Length);
+            stream.Write(Password.Bytes.ToArray());
         }
     }
 }

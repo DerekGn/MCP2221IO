@@ -52,5 +52,20 @@ namespace MCP2221IO.UnitTests
             password.Value.Should().Be("AA55AA55AA55AA55");
             password.Bytes.Should().Contain(bytes);
         }
+
+        [Fact]
+        public void TestStringOk()
+        {
+            // Arrange
+            List<byte> bytes = new List<byte>() { 0xAA, 0x55, 0xAA, 0x55, 0xAA, 0x55, 0xAA, 0x55 };
+            string test = "AA55AA55AA55AA55";
+
+            // Act
+            Password password = new Password(test);
+
+            // Assert
+            password.Value.Should().Be("AA55AA55AA55AA55");
+            password.Bytes.Should().Contain(bytes);
+        }
     }
 }

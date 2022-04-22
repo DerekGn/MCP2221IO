@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -31,6 +32,14 @@ namespace MCP2221IO.Settings
 {
     public class Password
     {
+        public Password(string value)
+        {
+            if(!Parse(value))
+            {
+                throw new ArgumentOutOfRangeException(nameof(value));
+            }
+        }
+
         public Password(IList<byte> bytes)
         {
             if (bytes is null)
@@ -47,9 +56,9 @@ namespace MCP2221IO.Settings
             Value = BitConverter.ToString(bytes.ToArray()).Replace("-", "");
         }
 
-        public string Value { get; }
+        public string Value { get; private set; }
 
-        public IReadOnlyList<byte> Bytes { get; }
+        public IReadOnlyList<byte> Bytes { get; private set; }
 
         public override string ToString()
         {
@@ -59,6 +68,28 @@ namespace MCP2221IO.Settings
         /// <summary>
         /// The default <see cref="Password"/>
         /// </summary>
-        public static Password DefaultPassword => new Password(Encoding.ASCII.GetBytes("00000000"));
+        public static Password DefaultPassword => new Password(new byte[] { 0, 0, 0, 0, 0, 0, 0, 0 });
+
+        private bool Parse(string password)
+        {
+            bool result;
+            ulong value;
+
+            password = password.Replace("0x", string.Empty);
+
+            if (!ulong.TryParse(password, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out value))
+            {
+                result = ulong.TryParse(password, NumberStyles.Integer, CultureInfo.InvariantCulture, out value);
+            }
+            else
+            {
+                result = true;
+            }
+
+            Bytes = BitConverter.GetBytes(value);
+            Value = password;
+
+            return result;
+        }
     }
 }

@@ -21,7 +21,7 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
 */
-#warning TODO
+
 using McMaster.Extensions.CommandLineUtils;
 using MCP2221IO.Settings;
 using System;
@@ -85,6 +85,9 @@ namespace MCP2221IOConsole.Commands.Flash
 
         [Option(Templates.NewVid, "The new USB VID value", CommandOptionType.SingleValue)]
         public (bool HasValue, ushort Value) NewVid { get; set; }
+
+        [Option(Templates.Password, "", CommandOptionType.SingleValue)]
+        public (bool HasValue, string Value) Password { get; set; }
 
         protected override int OnExecute(CommandLineApplication app, IConsole console)
         {
@@ -192,8 +195,16 @@ namespace MCP2221IOConsole.Commands.Flash
 
                 if (modified)
                 {
-#warning TODO
-                    //device.WriteChipSettings(Password);
+
+                    Password password = MCP2221IO.Settings.Password.DefaultPassword;
+
+                    if(Password.HasValue)
+                    {
+                        password = new Password(Password.Value);
+                    }
+             
+                    device.WriteChipSettings(password);
+
                     console.WriteLine("CHIP settings updated");
                 }
                 else

@@ -25,11 +25,10 @@
 using McMaster.Extensions.CommandLineUtils;
 using System;
 
-namespace MCP2221IOConsole.Commands
+namespace MCP2221IOConsole.Commands.Status
 {
     [Command(Description = "Access Device Status Settings")]
     [Subcommand(typeof(ReadStatusCommand))]
-    [Subcommand(typeof(WriteStatusCommand))]
     internal class StatusCommand : BaseCommand
     {
         public StatusCommand(IServiceProvider serviceProvider) : base(serviceProvider)

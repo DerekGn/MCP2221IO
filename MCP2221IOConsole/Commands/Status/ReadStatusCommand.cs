@@ -1,4 +1,4 @@
-﻿/*
+/*
 * MIT License
 *
 * Copyright (c) 2022 Derek Goslin https://github.com/DerekGn
@@ -23,45 +23,26 @@
 */
 
 using McMaster.Extensions.CommandLineUtils;
-using MCP2221IO.Settings;
 using System;
-using System.ComponentModel.DataAnnotations;
-using System.Globalization;
 
-namespace MCP2221IOConsole.Commands
+namespace MCP2221IOConsole.Commands.Status
 {
-    [Command(Description = "Unlock the Device With Password")]
-    internal class WriteAccessPasswordCommand : BaseCommand
+    [Command(Description = "Read Device Status")]
+    internal class ReadStatusCommand : BaseCommand
     {
-        public WriteAccessPasswordCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public ReadStatusCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
-
-        [Required]
-        [Option(Templates.Password, "The 8 byte password value", CommandOptionType.SingleValue)]
-        public string Password { get; set; }
 
         protected override int OnExecute(CommandLineApplication app, IConsole console)
         {
             return ExecuteCommand((device) =>
             {
-                int result = 0;
+                device.ReadDeviceStatus();
 
-                try
-                {
-                    var password = new Password(Password);
+                console.WriteLine(device.Status);
 
-                    device.UnlockFlash(password);
-
-                    console.WriteLine("Flash unlocked");
-                }
-                catch (ArgumentOutOfRangeException)
-                {
-                    console.Error.Write($"Value for {nameof(Password)} [{Password}] is invalid");
-                    result = -1;
-                }
-                
-                return result;
+                return 0;
             });
         }
     }

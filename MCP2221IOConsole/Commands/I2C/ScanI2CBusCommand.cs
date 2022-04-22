@@ -23,46 +23,20 @@
 */
 
 using McMaster.Extensions.CommandLineUtils;
-using MCP2221IO.Settings;
 using System;
-using System.ComponentModel.DataAnnotations;
-using System.Globalization;
 
-namespace MCP2221IOConsole.Commands
+namespace MCP2221IOConsole.Commands.I2C
 {
-    [Command(Description = "Unlock the Device With Password")]
-    internal class WriteAccessPasswordCommand : BaseCommand
+    [Command(Description = "Scan the I2C Bus")]
+    internal class ScanI2cBusCommand : BaseCommand
     {
-        public WriteAccessPasswordCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public ScanI2cBusCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 
-        [Required]
-        [Option(Templates.Password, "The 8 byte password value", CommandOptionType.SingleValue)]
-        public string Password { get; set; }
-
         protected override int OnExecute(CommandLineApplication app, IConsole console)
         {
-            return ExecuteCommand((device) =>
-            {
-                int result = 0;
-
-                try
-                {
-                    var password = new Password(Password);
-
-                    device.UnlockFlash(password);
-
-                    console.WriteLine("Flash unlocked");
-                }
-                catch (ArgumentOutOfRangeException)
-                {
-                    console.Error.Write($"Value for {nameof(Password)} [{Password}] is invalid");
-                    result = -1;
-                }
-                
-                return result;
-            });
+            return base.OnExecute(app, console);
         }
     }
 }

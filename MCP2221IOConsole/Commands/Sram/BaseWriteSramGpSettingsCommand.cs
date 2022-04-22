@@ -35,10 +35,10 @@ namespace MCP2221IOConsole.Commands.Sram
         {
         }
 
-        [Option("-i", Description = "The GPIO pin is set as input if set")]
+        [Option(Templates.SramGpIsInput, "The GP pin is set as input if set", CommandOptionType.SingleValue)]
         public (bool HasValue, bool Value) IsInput { get; set; }
 
-        [Option("-o", Description = "The output value of the GPIO pin if set as output")]
+        [Option(Templates.SramGpValue, "The GP output value of the pin if set as output", CommandOptionType.SingleValue)]
         public (bool HasValue, bool Value) Value { get; set; }
 
         internal void UpdateSramGpSetting<T>(CommandLineApplication app, IConsole console, IDevice device, GpSetting<T> gpio, (bool HasValue, T Value) designation) where T : Enum

@@ -40,13 +40,13 @@ namespace MCP2221IOConsole.Commands
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }
 
-        [Option("--vid", Description = "The VID of the MCP2221")]
+        [Option(Templates.Vid,"The VID of the MCP2221", CommandOptionType.SingleValue)]
         public int Vid { get; set; } = 0x04D8;
 
-        [Option("--pid", Description = "The PID of the MCP2221")]
+        [Option(Templates.Pid, "The PID of the MCP2221", CommandOptionType.SingleValue)]
         public int Pid { get; set; } = 0x00DD;
-        
-        [Option("--sn", Description = "The MCP2221 instance Serial Number")]
+
+        [Option(Templates.SerialNumber, "The MCP2221 instance Serial Number", CommandOptionType.SingleValue)]
         public string Serial { get; set; }
 
         protected int ExecuteCommand(Func<IDevice, int> action)

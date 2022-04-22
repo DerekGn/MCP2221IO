@@ -25,6 +25,7 @@
 using McMaster.Extensions.CommandLineUtils;
 using MCP2221IO.Settings;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace MCP2221IOConsole.Commands.Sram
 {
@@ -35,34 +36,35 @@ namespace MCP2221IOConsole.Commands.Sram
         {
         }
 
-        [Option("-ar", "The ADC reference voltage", CommandOptionType.SingleValue)]
+        [Option(Templates.AdcRef, "The ADC reference voltage", CommandOptionType.SingleValue)]
         public (bool HasValue, AdcRefOption Value) AdcRef { get; set; }
 
-        [Option("-av", "The ADC VRM voltage", CommandOptionType.SingleValue)]
-        public (bool HasValue, VrmRef Value) AdcRefVrm { get; set; }
+        [Option(Templates.AdcVrm, "The ADC VRM voltage", CommandOptionType.SingleValue)]
+        public (bool HasValue, VrmRef Value) AdcVrmRef { get; set; }
 
-        [Option("-cd", "The clock divider setting", CommandOptionType.SingleValue)]
+        [Option(null, "The Clock Divider setting", CommandOptionType.SingleValue)]
         public (bool HasValue, ClockOutDivider Value) ClockDivider { get; set; }
 
-        [Option("-dc", "The clock duty cycle setting", CommandOptionType.SingleValue)]
+        [Option(null, "The Clock Duty Cycle setting", CommandOptionType.SingleValue)]
         public (bool HasValue, ClockDutyCycle Value) DutyCycle { get; set; }
 
-        [Option("-do", "The DAC output value", CommandOptionType.SingleValue)]
+        [Range(0, 15)]
+        [Option(Templates.DacOutput, "The DAC output value", CommandOptionType.SingleValue)]
         public (bool HasValue, byte Value) DacOutput { get; set; }
 
-        [Option("-dr", "The DAC reference value", CommandOptionType.SingleValue)]
+        [Option(Templates.DacRef, "The DAC reference value", CommandOptionType.SingleValue)]
         public (bool HasValue, DacRefOption Value) DacRef { get; set; }
 
-        [Option("-dv", "The DAC VRM voltage", CommandOptionType.SingleValue)]
+        [Option(Templates.DacVrm, "The DAC VRM voltage", CommandOptionType.SingleValue)]
         public (bool HasValue, VrmRef Value) DacRefVrm { get; set; }
 
-        [Option("-in", "Enable Interrupt detection will trigger on negative edges", CommandOptionType.SingleValue)]
+        [Option(Templates.InterruptNegative, "Enable Interrupt detection will trigger on negative edges", CommandOptionType.SingleValue)]
         public (bool HasValue, bool Value) InterruptNegativeEdge { get; set; }
 
-        [Option("-ip", "Enable Interrupt detection will trigger on positive edges", CommandOptionType.SingleValue)]
+        [Option(Templates.InterruptPositive, "Enable Interrupt detection will trigger on positive edges", CommandOptionType.SingleValue)]
         public (bool HasValue, bool Value) InterruptPositiveEdge { get; set; }
 
-        [Option("-ci", "Clear Interrupt", CommandOptionType.SingleValue)]
+        [Option(Templates.ClearInterrupt, "Clear Interrupt", CommandOptionType.SingleValue)]
         public bool ClearInterrupt { get; set; }
 
         protected override int OnExecute(CommandLineApplication app, IConsole console)
@@ -79,55 +81,55 @@ namespace MCP2221IOConsole.Commands.Sram
                     modified = true;
                 }
 
-                if(AdcRefVrm.HasValue)
+                if(AdcVrmRef.HasValue)
                 {
-                    device.SramSettings.AdcRefVrm = AdcRefVrm.Value;
-                    modified = true;
+                    device.SramSettings.AdcRefVrm = AdcVrmRef.Value;
+                    modified |= true;
                 }
 
                 if (ClockDivider.HasValue)
                 {
                     device.SramSettings.ClockDivider = ClockDivider.Value;
-                    modified = true;
+                    modified |= true;
                 }
 
                 if (DutyCycle.HasValue)
                 {
                     device.SramSettings.ClockDutyCycle = DutyCycle.Value;
-                    modified = true;
+                    modified |= true;
                 }
 
                 if (DacOutput.HasValue)
                 {
                     device.SramSettings.DacOutput = DacOutput.Value;
-                    modified = true;
+                    modified |= true;
                 }
 
                 if (DacRef.HasValue)
                 {
                     device.SramSettings.DacRefOption = DacRef.Value;
-                    modified = true;
+                    modified |= true;
                 }
 
                 if (DacRefVrm.HasValue)
                 {
                     device.SramSettings.DacRefVrm = DacRefVrm.Value;
-                    modified = true;
+                    modified |= true;
                 }
 
                 if (InterruptNegativeEdge.HasValue)
                 {
                     device.SramSettings.InterruptNegativeEdge = InterruptNegativeEdge.Value;
-                    modified = true;
+                    modified |= true;
                 }
 
                 if (InterruptPositiveEdge.HasValue)
                 {
                     device.SramSettings.InterruptPositiveEdge = InterruptPositiveEdge.Value;
-                    modified = true;
+                    modified |= true;
                 }
 
-                modified = ClearInterrupt;
+                modified |= ClearInterrupt;
 
                 if (modified)
                 {

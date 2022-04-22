@@ -34,13 +34,13 @@ namespace MCP2221IOConsole.Commands.Flash
         {
         }
 
-        [Option(Description = "The USB Manufacturer String Descriptor")]
+        [Option(Templates.UsbManufacturer, "The USB Manufacturer String Descriptor", CommandOptionType.SingleValue)]
         public (bool HasValue, string Value) Manufacturer { get; set; }
 
-        [Option(Description = "The USB Product String Descriptor")]
+        [Option(Templates.UsbProduct, "The USB Product String Descriptor", CommandOptionType.SingleValue)]
         public (bool HasValue, string Value) Product { get; set; }
 
-        [Option(Description = "The USB Serial Number String Descriptor")]
+        [Option(Templates.UsbSerialNumber, "The USB Serial Number String Descriptor", CommandOptionType.SingleValue)]
         public (bool HasValue, string Value) SerialNumber { get; set; }
 
         protected override int OnExecute(CommandLineApplication app, IConsole console)

@@ -37,7 +37,7 @@ namespace MCP2221IOConsole.Commands
         }
 
         [Required]
-        [Option(Description = "The 8 byte password value")]
+        [Option(Templates.Password, "The 8 byte password value", CommandOptionType.SingleValue)]
         public string Password { get; set; }
 
         protected override int OnExecute(CommandLineApplication app, IConsole console)

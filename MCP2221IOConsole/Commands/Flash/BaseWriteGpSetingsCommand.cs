@@ -35,10 +35,10 @@ namespace MCP2221IOConsole.Commands.Flash
         {
         }
 
-        [Option("-i", Description = "The GP pin is set as input if set")]
+        [Option(Templates.GpIsInput, "The GP pin is set as input if set", CommandOptionType.SingleValue)]
         public (bool HasValue, bool Value) IsInput { get; set; }
 
-        [Option("-o", Description = "The output value at power up when pin is set as output")]
+        [Option(Templates.GpValue, "The GP output value at power up when pin is set as output", CommandOptionType.SingleValue)]
         public (bool HasValue, bool Value) Value { get; set; }
 
         internal void UpdateGpSetting<T>(CommandLineApplication app, IConsole console, IDevice device, GpSetting<T> gpio, (bool HasValue, T Value) designation) where T : Enum

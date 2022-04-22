@@ -28,7 +28,7 @@ namespace MCP2221IO.Settings
 {
     public abstract class BaseSettings
     {
-        private const int MaxUsbMa = 500;
+        internal const int MaxUsbMa = 500;
 
         internal int _powerRequestMa;
 

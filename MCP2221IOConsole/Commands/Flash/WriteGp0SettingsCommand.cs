@@ -35,7 +35,7 @@ namespace MCP2221IOConsole.Commands.Flash
         {
         }
 
-        [Option("-d", "The GP0 Power Up Designation", CommandOptionType.SingleValue)]
+        [Option(Templates.GpDesignation, "The GP0 Power Up Designation", CommandOptionType.SingleValue)]
         public (bool HasValue, Gp0Designation Value) Designation { get; set; }
 
         protected override int OnExecute(CommandLineApplication app, IConsole console)

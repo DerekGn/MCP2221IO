@@ -38,14 +38,14 @@ namespace MCP2221IOConsole.Commands.Gpio
         }
 
         [Range(0, 3)]
-        [Option(Description = "The GPIO Port")]
+        [Option(Templates.GpioPorts, Description = "The GPIO Ports")]
         public int[] Ports { get; set; }
 
-        [Option(Description = "The GP pin is set as input if set")]
+        [Option(Templates.GpioIsInput, Description = "The GPIO pin is set as input if set")]
         public (bool HasValue, bool Value) IsInput { get; set; }
 
-        [Option(Description = "The output value of the GPIO Port")]
-        public (bool HasValue, bool Value) Output { get; set; }
+        [Option(Templates.GpioValue, Description = "The GPIO pin value")]
+        public (bool HasValue, bool Value) Value { get; set; }
 
         protected override int OnExecute(CommandLineApplication app, IConsole console)
         {
@@ -53,7 +53,7 @@ namespace MCP2221IOConsole.Commands.Gpio
             {
                 int result = -1;
 
-                if (Ports != null && (IsInput.HasValue || Output.HasValue))
+                if (Ports != null && (IsInput.HasValue || Value.HasValue))
                 {
                     bool updated = false;
 
@@ -112,9 +112,9 @@ namespace MCP2221IOConsole.Commands.Gpio
                     gpioPort.IsInput = IsInput.Value;
                 }
 
-                if (Output.HasValue)
+                if (Value.HasValue)
                 {
-                    gpioPort.Value = Output.Value;
+                    gpioPort.Value = Value.Value;
                 }
             }
             else

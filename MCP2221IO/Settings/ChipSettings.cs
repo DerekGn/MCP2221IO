@@ -23,6 +23,7 @@
 */
 
 using MCP2221IO.Extensions;
+using System;
 using System.IO;
 using System.Text;
 
@@ -62,6 +63,26 @@ namespace MCP2221IO.Settings
         /// USB Remote Wake-Up Capability
         /// </summary>
         public UsbRemoteWake RemoteWake { get; set; }
+
+        /// <summary>
+        /// The requested mA value during the USB enumeration
+        /// </summary>
+        public new int PowerRequestMa
+        {
+            get
+            {
+                return _powerRequestMa * 2;
+            }
+            set
+            {
+                if (value > MaxUsbMa)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(PowerRequestMa), $"Value must be less than {MaxUsbMa}");
+                }
+
+                _powerRequestMa = value / 2;
+            }
+        }
 
         public override string ToString()
         {

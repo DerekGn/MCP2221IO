@@ -414,7 +414,7 @@ namespace MCP2221IO.UnitTests
             }
 
             // Act
-            _device.I2CWriteData(0xFF, buffer);
+            _device.I2CWriteData(new I2CAddress(0x0A), buffer);
 
             // Assert
             _mockHidDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Exactly(17));
@@ -435,7 +435,7 @@ namespace MCP2221IO.UnitTests
             }
 
             // Act
-            _device.I2CWriteDataNoStop(0xFF, buffer);
+            _device.I2CWriteDataNoStop(new I2CAddress(0x0A), buffer);
 
             // Assert
             _mockHidDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Exactly(17));
@@ -456,7 +456,7 @@ namespace MCP2221IO.UnitTests
             }
 
             // Act
-            _device.I2CWriteDataRepeatStart(0xFF, buffer);
+            _device.I2CWriteDataRepeatStart(new I2CAddress(0x0A), buffer);
 
             // Assert
             _mockHidDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Exactly(17));
@@ -476,7 +476,7 @@ namespace MCP2221IO.UnitTests
                 .Returns(WriteGetI2CDataResponse(CommandCodes.GetI2CData, Math.Min(Device.MaxBlockSize, Math.Abs(DataLength - (blockCount * Device.MaxBlockSize)))));
 
             // Act
-            var buffer = _device.I2CReadData(0xFF, DataLength);
+            var buffer = _device.I2CReadData(new I2CAddress(0x0A), DataLength);
 
             // Assert
             _mockHidDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Exactly(4));
@@ -497,7 +497,7 @@ namespace MCP2221IO.UnitTests
                 .Returns(WriteGetI2CDataResponse(CommandCodes.GetI2CData, Math.Min(Device.MaxBlockSize, Math.Abs(DataLength - (blockCount * Device.MaxBlockSize)))));
 
             // Act
-            var buffer = _device.I2CReadDataRepeatedStart(0xFF, DataLength);
+            var buffer = _device.I2CReadDataRepeatedStart(new I2CAddress(0x0A), DataLength);
 
             // Assert
             _mockHidDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Exactly(4));

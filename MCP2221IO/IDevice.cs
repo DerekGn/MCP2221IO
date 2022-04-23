@@ -105,21 +105,21 @@ namespace MCP2221IO
         /// </summary>
         /// <param name="address">The address of the client device</param>
         /// <param name="data">The data to write to the device</param>
-        void I2CWriteData(byte address, IList<byte> data);
+        void I2CWriteData(I2CAddress address, IList<byte> data);
 
         /// <summary>
         /// Write data to an I2C client device with repeated start
         /// </summary>
         /// <param name="address">The address of the client device</param>
         /// <param name="data">The data to write to the device</param>
-        void I2CWriteDataRepeatStart(byte address, IList<byte> data);
+        void I2CWriteDataRepeatStart(I2CAddress address, IList<byte> data);
 
         /// <summary>
         /// Write data to an I2C client device with no stop
         /// </summary>
         /// <param name="address">The address of the client device</param>
         /// <param name="data">The data to write to the device</param>
-        void I2CWriteDataNoStop(byte address, IList<byte> data);
+        void I2CWriteDataNoStop(I2CAddress address, IList<byte> data);
 
         /// <summary>
         /// Read data from an I2C client device
@@ -127,7 +127,7 @@ namespace MCP2221IO
         /// <param name="address">The address of the client device</param>
         /// <param name="length">The number of bytes to read</param>
         /// <returns>The bytes read from the client device</returns>
-        IList<byte> I2CReadData(byte address, ushort length);
+        IList<byte> I2CReadData(I2CAddress address, ushort length);
 
         /// <summary>
         /// Read data from an I2C client device with repeated start
@@ -135,7 +135,7 @@ namespace MCP2221IO
         /// <param name="address">The address of the client device</param>
         /// <param name="length">The number of bytes to read</param>
         /// <returns>The bytes read from the client device</returns>
-        IList<byte> I2CReadDataRepeatedStart(byte address, ushort length);
+        IList<byte> I2CReadDataRepeatedStart(I2CAddress address, ushort length);
 
         /// <summary>
         /// Reset the device

@@ -147,7 +147,7 @@ namespace MCP2221IO
         }
 
         // <inheritdoc/>
-        public void I2CWriteData(byte address, IList<byte> data)
+        public void I2CWriteData(I2CAddress address, IList<byte> data)
         {
             HandleOperationExecution(
                 nameof(Device),
@@ -158,7 +158,7 @@ namespace MCP2221IO
         }
 
         // <inheritdoc/>
-        public void I2CWriteDataRepeatStart(byte address, IList<byte> data)
+        public void I2CWriteDataRepeatStart(I2CAddress address, IList<byte> data)
         {
             HandleOperationExecution(
                 nameof(Device),
@@ -169,7 +169,7 @@ namespace MCP2221IO
         }
 
         // <inheritdoc/>
-        public void I2CWriteDataNoStop(byte address, IList<byte> data)
+        public void I2CWriteDataNoStop(I2CAddress address, IList<byte> data)
         {
             HandleOperationExecution(
                 nameof(Device),
@@ -180,7 +180,7 @@ namespace MCP2221IO
         }
 
         // <inheritdoc/>
-        public IList<byte> I2CReadData(byte address, ushort length)
+        public IList<byte> I2CReadData(I2CAddress address, ushort length)
         {
             return HandleOperationExecution(
                 nameof(Device),
@@ -191,7 +191,7 @@ namespace MCP2221IO
         }
 
         // <inheritdoc/>
-        public IList<byte> I2CReadDataRepeatedStart(byte address, ushort length)
+        public IList<byte> I2CReadDataRepeatedStart(I2CAddress address, ushort length)
         {
             return HandleOperationExecution(
                 nameof(Device),
@@ -371,43 +371,45 @@ namespace MCP2221IO
         {
             Dispose();
         }
-
-        private IList<byte> I2CReadData<T>(CommandCodes commandCode, byte address, ushort length) where T : IResponse, new()
+#warning check buffer size must be less than 0xFFFF
+        private IList<byte> I2CReadData<T>(CommandCodes commandCode, I2CAddress address, ushort length) where T : IResponse, new()
         {
-            return HandleOperationExecution(
-                nameof(Device),
-                () =>
-                {
-                    List<byte> result = new List<byte>();
+            //return HandleOperationExecution(
+            //    nameof(Device),
+            //    () =>
+            //    {
+            //        List<byte> result = new List<byte>();
 
-                    int blockCount = (length + MaxBlockSize - 1) / MaxBlockSize;
+            //        int blockCount = (length + MaxBlockSize - 1) / MaxBlockSize;
 
-                    ExecuteCommand<T>(new I2CReadDataCommand(commandCode, address, length));
+            //        ExecuteCommand<T>(new I2CReadDataCommand(commandCode, address, length));
 
-                    for (int i = 0; i < blockCount; i++)
-                    {
-                        result.AddRange(ExecuteCommand<GetI2CDataResponse>(new GetI2CDataCommand()).Data);
-                    }
+            //        for (int i = 0; i < blockCount; i++)
+            //        {
+            //            result.AddRange(ExecuteCommand<GetI2CDataResponse>(new GetI2CDataCommand()).Data);
+            //        }
 
-                    return result;
-                });
+            //        return result;
+            //    });
+
+            return new List<byte>();
         }
 
-        private void I2CWriteData<T>(CommandCodes commandCode, byte address, IList<byte> data) where T : IResponse, new()
+        private void I2CWriteData<T>(CommandCodes commandCode, I2CAddress address, IList<byte> data) where T : IResponse, new()
         {
-            HandleOperationExecution(
-                nameof(Device),
-                () =>
-                {
-                    int blockCount = (data.Count + MaxBlockSize - 1) / MaxBlockSize;
+            //HandleOperationExecution(
+            //    nameof(Device),
+            //    () =>
+            //    {
+            //        int blockCount = (data.Count + MaxBlockSize - 1) / MaxBlockSize;
 
-                    for (int i = 0; i < blockCount; i++)
-                    {
-                        int blockSize = Math.Min(MaxBlockSize, Math.Abs(data.Count - (i * MaxBlockSize)));
+            //        for (int i = 0; i < blockCount; i++)
+            //        {
+            //            int blockSize = Math.Min(MaxBlockSize, Math.Abs(data.Count - (i * MaxBlockSize)));
 
-                        ExecuteCommand<T>(new I2CWriteDataCommand(commandCode, address, data.Skip(MaxBlockSize * i).Take(blockSize).ToList()));
-                    }
-                });
+            //            ExecuteCommand<T>(new I2CWriteDataCommand(commandCode, address, data.Skip(MaxBlockSize * i).Take(blockSize).ToList()));
+            //        }
+            //    });
         }
 
         private string GetFactorySerialNumber()

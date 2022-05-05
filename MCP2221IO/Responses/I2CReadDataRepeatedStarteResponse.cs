@@ -29,9 +29,9 @@ namespace MCP2221IO.Responses
     /// <summary>
     /// I2C read data with repeated start response
     /// </summary>
-    internal class I2CReadDataRepeatedStarteResponse : I2CReadDataResponse
+    internal class I2cReadDataRepeatedStarteResponse : I2cReadDataResponse
     {
-        public I2CReadDataRepeatedStarteResponse() : base(CommandCodes.ReadI2CDataRepeatedStart)
+        public I2cReadDataRepeatedStarteResponse() : base(CommandCodes.ReadI2cDataRepeatedStart)
         {
         }
     }

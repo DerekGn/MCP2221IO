@@ -30,11 +30,11 @@ using Xunit.Abstractions;
 
 namespace MCP2221IO.UnitTests
 {
-    public class I2CAddressTests
+    public class I2cAddressTests
     {
         private readonly ITestOutputHelper _output;
 
-        public I2CAddressTests(ITestOutputHelper output)
+        public I2cAddressTests(ITestOutputHelper output)
         {
             _output = output;
         }
@@ -43,10 +43,10 @@ namespace MCP2221IO.UnitTests
         public void TestSevenBitAddress()
         {
             // Arrange Act
-            I2CAddress address = new I2CAddress(0x08);
+            I2cAddress address = new I2cAddress(0x08);
 
             // Assert
-            address.Size.Should().Be(I2CAddressSize.SevenBit);
+            address.Size.Should().Be(I2cAddressSize.SevenBit);
             address.WriteAddress.Should().Equal(new List<byte> { 0x10 });
             address.ReadAddress.Should().Equal(new List<byte> { 0x11 });
         }
@@ -55,7 +55,7 @@ namespace MCP2221IO.UnitTests
         public void TestSevenBitAddressException()
         {
             // Arrange Act
-            Action act = () => { I2CAddress address = new I2CAddress(0x07); };
+            Action act = () => { I2cAddress address = new I2cAddress(0x07); };
 
             // Assert
             act.Should().Throw<ArgumentOutOfRangeException>();
@@ -69,10 +69,10 @@ namespace MCP2221IO.UnitTests
         public void TestTenBitAddress(uint address, byte msb, byte lsb)
         {
             // Arrange Act
-            I2CAddress i2cAddress = new I2CAddress(address, I2CAddressSize.TenBit);
+            I2cAddress i2cAddress = new I2cAddress(address, I2cAddressSize.TenBit);
 
             // Assert
-            i2cAddress.Size.Should().Be(I2CAddressSize.TenBit);
+            i2cAddress.Size.Should().Be(I2cAddressSize.TenBit);
             i2cAddress.WriteAddress.Should().Equal(new List<byte> { msb, lsb });
             i2cAddress.ReadAddress.Should().Equal(new List<byte> { (byte)(msb + 1), lsb });
         }
@@ -81,7 +81,7 @@ namespace MCP2221IO.UnitTests
         public void TestTenBitAddressException()
         {
             // Arrange Act
-            Action act = () => { I2CAddress address = new I2CAddress(0x4FF, I2CAddressSize.TenBit); };
+            Action act = () => { I2cAddress address = new I2cAddress(0x4FF, I2cAddressSize.TenBit); };
 
             // Assert
             act.Should().Throw<ArgumentOutOfRangeException>();

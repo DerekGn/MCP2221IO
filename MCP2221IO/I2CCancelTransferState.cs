@@ -27,7 +27,7 @@ namespace MCP2221IO
     /// <summary>
     /// The I2C transfer cancel state
     /// </summary>
-    public enum I2CCancelTransferState
+    public enum I2cCancelTransferState
     {
         /// <summary>
         /// No special operation (i.e., Cancel current I2C/SMBus transfer)

@@ -25,7 +25,7 @@
 using McMaster.Extensions.CommandLineUtils;
 using System;
 
-namespace MCP2221IOConsole.Commands.I2C
+namespace MCP2221IOConsole.Commands.I2c
 {
     [Command(Description = "Scan the I2C Bus")]
     internal class ScanI2cBusCommand : BaseCommand
@@ -41,12 +41,16 @@ namespace MCP2221IOConsole.Commands.I2C
         {
             return ExecuteCommand((device) =>
             {
-
                 console.WriteLine($"Scanning the I2C bus using 10 Bit Addressing [{TenBitAddressing.HasValue && TenBitAddressing.Value}]");
                 
-                var result = device.I2CScanBus(TenBitAddressing.HasValue && TenBitAddressing.Value);
+                var result = device.I2cScanBus(TenBitAddressing.HasValue && TenBitAddressing.Value);
 
                 console.WriteLine($"Found [{result.Count}] I2C devices");
+
+                foreach (var address in result)
+                {
+                    console.WriteLine($"");
+                }
 
                 return 0;
             });

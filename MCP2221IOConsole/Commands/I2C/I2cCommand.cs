@@ -25,7 +25,7 @@
 using McMaster.Extensions.CommandLineUtils;
 using System;
 
-namespace MCP2221IOConsole.Commands.I2C
+namespace MCP2221IOConsole.Commands.I2c
 {
     [Command(Description = "Execute Device I2C functions")]
     [Subcommand(typeof(WriteI2cTransferSpeedCommand))]

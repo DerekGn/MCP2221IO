@@ -33,7 +33,7 @@ namespace MCP2221IO.Commands
         /// <summary>
         /// Get I2C Data
         /// </summary>
-        GetI2CData = 0x40,
+        GetI2cData = 0x40,
         /// <summary>
         /// Set the GPIO port values
         /// </summary>
@@ -69,22 +69,22 @@ namespace MCP2221IO.Commands
         /// <summary>
         /// Read I2C data from the device
         /// </summary>
-        ReadI2CData = 0x91,
+        ReadI2cData = 0x91,
         /// <summary>
         /// Write I2CData to the device
         /// </summary>
-        WriteI2CData = 0x90,
+        WriteI2cData = 0x90,
         /// <summary>
         /// Write I2CData to the device with repeat start
         /// </summary>
-        WriteI2CDataRepeatedStart = 0x92,
+        WriteI2cDataRepeatedStart = 0x92,
         /// <summary>
         /// Read I2CData to the device with repeat start
         /// </summary>
-        ReadI2CDataRepeatedStart = 0x93,
+        ReadI2cDataRepeatedStart = 0x93,
         /// <summary>
         /// Write I2CData to the device with no stop
         /// </summary>
-        WriteI2CDataNoStop = 0x94,
+        WriteI2cDataNoStop = 0x94,
     }
 }

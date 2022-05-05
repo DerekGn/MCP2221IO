@@ -31,8 +31,8 @@ namespace MCP2221IO
 {
     public interface IDevice : IDisposable
     {
-        const int I2CMaxSpeed = 400000;
-        const int I2CMinSpeed = 46875;
+        const int I2cMaxSpeed = 400000;
+        const int I2cMinSpeed = 46875;
                 
         /// <summary>
         /// Get the device <see cref="DeviceStatus"/>
@@ -108,12 +108,12 @@ namespace MCP2221IO
         /// <summary>
         /// Cancel the active I2C bus transfer
         /// </summary>
-        void CancelI2CBusTransfer();
+        void CancelI2cBusTransfer();
 
         /// <summary>
         /// Write the I2C bus speed
         /// </summary>
-        void WriteI2CBusSpeed(int speed);
+        void WriteI2cBusSpeed(int speed);
 
         /// <summary>
         /// Read the <see cref="DeviceStatus"/> from the device
@@ -177,21 +177,21 @@ namespace MCP2221IO
         /// </summary>
         /// <param name="address">The address of the client device</param>
         /// <param name="data">The data to write to the device</param>
-        void I2CWriteData(I2CAddress address, IList<byte> data);
+        void I2cWriteData(I2cAddress address, IList<byte> data);
 
         /// <summary>
         /// Write data to an I2C client device with repeated start
         /// </summary>
         /// <param name="address">The address of the client device</param>
         /// <param name="data">The data to write to the device</param>
-        void I2CWriteDataRepeatStart(I2CAddress address, IList<byte> data);
+        void I2cWriteDataRepeatStart(I2cAddress address, IList<byte> data);
 
         /// <summary>
         /// Write data to an I2C client device with no stop
         /// </summary>
         /// <param name="address">The address of the client device</param>
         /// <param name="data">The data to write to the device</param>
-        void I2CWriteDataNoStop(I2CAddress address, IList<byte> data);
+        void I2cWriteDataNoStop(I2cAddress address, IList<byte> data);
 
         /// <summary>
         /// Read data from an I2C client device
@@ -199,7 +199,7 @@ namespace MCP2221IO
         /// <param name="address">The address of the client device</param>
         /// <param name="length">The number of bytes to read</param>
         /// <returns>The bytes read from the client device</returns>
-        IList<byte> I2CReadData(I2CAddress address, ushort length);
+        IList<byte> I2cReadData(I2cAddress address, ushort length);
 
         /// <summary>
         /// Read data from an I2C client device with repeated start
@@ -207,13 +207,13 @@ namespace MCP2221IO
         /// <param name="address">The address of the client device</param>
         /// <param name="length">The number of bytes to read</param>
         /// <returns>The bytes read from the client device</returns>
-        IList<byte> I2CReadDataRepeatedStart(I2CAddress address, ushort length);
+        IList<byte> I2cReadDataRepeatedStart(I2cAddress address, ushort length);
 
         /// <summary>
-        /// Scan the I2C bus and return a list of <see cref="I2CAddress"/> of devices found
+        /// Scan the I2C bus and return a list of <see cref="I2cAddress"/> of devices found
         /// </summary>
         /// <param name="useTenBitAddressing">Perform scanning of bus with 10 bit address</param>
-        /// <returns>A <see cref="IList{T}"/> of <see cref="I2CAddress"/> instances</returns>
-        IList<I2CAddress> I2CScanBus(bool useTenBitAddressing);
+        /// <returns>A <see cref="IList{T}"/> of <see cref="I2cAddress"/> instances</returns>
+        IList<I2cAddress> I2cScanBus(bool useTenBitAddressing);
     }
 }

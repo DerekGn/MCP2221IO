@@ -26,7 +26,7 @@ using McMaster.Extensions.CommandLineUtils;
 using MCP2221IOConsole.Commands;
 using MCP2221IOConsole.Commands.Flash;
 using MCP2221IOConsole.Commands.Gpio;
-using MCP2221IOConsole.Commands.I2C;
+using MCP2221IOConsole.Commands.I2c;
 using MCP2221IOConsole.Commands.Sram;
 using MCP2221IOConsole.Commands.Status;
 using Microsoft.Extensions.Configuration;
@@ -34,7 +34,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using System;
 using System.IO;
-using System.Linq;
 
 namespace MCP2221IOConsole
 {

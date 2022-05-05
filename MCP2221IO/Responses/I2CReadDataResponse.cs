@@ -29,13 +29,13 @@ namespace MCP2221IO.Responses
     /// <summary>
     /// Read I2C data response
     /// </summary>
-    internal class I2CReadDataResponse : BaseResponse
+    internal class I2cReadDataResponse : BaseResponse
     {
-        public I2CReadDataResponse() : base(CommandCodes.ReadI2CData)
+        public I2cReadDataResponse() : base(CommandCodes.ReadI2cData)
         {
         }
 
-        protected I2CReadDataResponse(CommandCodes commandCode) : base(commandCode)
+        protected I2cReadDataResponse(CommandCodes commandCode) : base(commandCode)
         {
         }
     }

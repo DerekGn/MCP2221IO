@@ -36,7 +36,7 @@ namespace MCP2221IO.Gp
         /// <summary>
         /// Dedicated function operation (LED_I2C).
         /// </summary>
-        LedI2C = 1,
+        LedI2c = 1,
         /// <summary>
         /// Alternate Function 0 (ADC3).
         /// </summary>

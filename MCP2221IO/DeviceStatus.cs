@@ -34,52 +34,52 @@ namespace MCP2221IO
         /// <summary>
         /// The I2C Transfer state
         /// </summary>
-        public I2CCancelTransferState CancelTransferState { get; private set; }
+        public I2cCancelTransferState CancelTransferState { get; private set; }
 
         /// <summary>
         /// The I2C bus speed
         /// </summary>
-        public I2CSpeedStatus SpeedStatus { get; private set; }
+        public I2cSpeedStatus SpeedStatus { get; private set; }
 
         /// <summary>
         /// The divider value given the command
         /// </summary>
-        public byte I2CLastDivisor { get; private set; }
+        public byte I2cLastDivisor { get; private set; }
 
         /// <summary>
         /// Internal I2C state machine state
         /// </summary>
-        public byte I2CStateMachineState { get; private set; }
+        public byte I2cStateMachineState { get; private set; }
 
         /// <summary>
         /// The requested I2C transfer length
         /// </summary>
-        public ushort I2CTransferLength { get; private set; }
+        public ushort I2cTransferLength { get; private set; }
 
         /// <summary>
         /// The already transferred (through I2C) number of bytes
         /// </summary>
-        public ushort I2CTransferredLength { get; private set; }
+        public ushort I2cTransferredLength { get; private set; }
 
         /// <summary>
         /// Internal I2C data buffer counter
         /// </summary>
-        public byte I2CBufferCounter { get; private set; }
+        public byte I2cBufferCounter { get; private set; }
 
         /// <summary>
         /// Current I2C communication speed divider value
         /// </summary>
-        public byte I2CClockDivisor { get; private set; }
+        public byte I2cClockDivisor { get; private set; }
 
         /// <summary>
         /// Current I2C timeout value
         /// </summary>
-        public byte I2CTimeout { get; private set; }
+        public byte I2cTimeout { get; private set; }
 
         /// <summary>
         /// The I2C address being used
         /// </summary>
-        public ushort I2CAddress { get; private set; }
+        public ushort I2cAddress { get; private set; }
 
         /// <summary>
         /// 
@@ -104,7 +104,7 @@ namespace MCP2221IO
         /// <summary>
         /// I2C Read pending value
         /// </summary>
-        public byte I2CReadPending { get; private set; }
+        public byte I2cReadPending { get; private set; }
 
         /// <summary>
         /// The Hardware revision
@@ -127,19 +127,19 @@ namespace MCP2221IO
 
             stringBuilder.AppendLine($"{nameof(CancelTransferState)}: {CancelTransferState}");
             stringBuilder.AppendLine($"{nameof(SpeedStatus)}: {SpeedStatus}");
-            stringBuilder.AppendLine($"{nameof(I2CLastDivisor)}: 0x{I2CLastDivisor:X}");
-            stringBuilder.AppendLine($"{nameof(I2CStateMachineState)}: 0x{I2CStateMachineState:X}");
-            stringBuilder.AppendLine($"{nameof(I2CTransferLength)}: 0x{I2CTransferLength:X}");
-            stringBuilder.AppendLine($"{nameof(I2CTransferredLength)}: 0x{I2CTransferredLength:X}");
-            stringBuilder.AppendLine($"{nameof(I2CBufferCounter)}: 0x{I2CBufferCounter:X}");
-            stringBuilder.AppendLine($"{nameof(I2CClockDivisor)}: 0x{I2CClockDivisor:X}");
-            stringBuilder.AppendLine($"{nameof(I2CTimeout)}: 0x{I2CTimeout:X}");
-            stringBuilder.AppendLine($"{nameof(I2CAddress)}: 0x{I2CAddress:X}");
+            stringBuilder.AppendLine($"{nameof(I2cLastDivisor)}: 0x{I2cLastDivisor:X}");
+            stringBuilder.AppendLine($"{nameof(I2cStateMachineState)}: 0x{I2cStateMachineState:X}");
+            stringBuilder.AppendLine($"{nameof(I2cTransferLength)}: 0x{I2cTransferLength:X}");
+            stringBuilder.AppendLine($"{nameof(I2cTransferredLength)}: 0x{I2cTransferredLength:X}");
+            stringBuilder.AppendLine($"{nameof(I2cBufferCounter)}: 0x{I2cBufferCounter:X}");
+            stringBuilder.AppendLine($"{nameof(I2cClockDivisor)}: 0x{I2cClockDivisor:X}");
+            stringBuilder.AppendLine($"{nameof(I2cTimeout)}: 0x{I2cTimeout:X}");
+            stringBuilder.AppendLine($"{nameof(I2cAddress)}: 0x{I2cAddress:X}");
             stringBuilder.AppendLine($"{nameof(AckStatus)}: {AckStatus}");
             stringBuilder.AppendLine($"{nameof(SclLineState)}: {SclLineState}");
             stringBuilder.AppendLine($"{nameof(SdaLineState)}: {SdaLineState}");
             stringBuilder.AppendLine($"{nameof(EdgeDetectionState)}: {EdgeDetectionState}");
-            stringBuilder.AppendLine($"{nameof(I2CReadPending)}: 0x{I2CReadPending:X}");
+            stringBuilder.AppendLine($"{nameof(I2cReadPending)}: 0x{I2cReadPending:X}");
             stringBuilder.AppendLine($"{nameof(HardwareRevision)}: {HardwareRevision}");
             stringBuilder.AppendLine($"{nameof(FirmwareRevision)}: {FirmwareRevision}");
 
@@ -150,19 +150,19 @@ namespace MCP2221IO
 
         internal void Deserialize(Stream stream)
         {
-            CancelTransferState = (I2CCancelTransferState)stream.ReadByte();
-            SpeedStatus = (I2CSpeedStatus)stream.ReadByte();
-            I2CLastDivisor = (byte)stream.ReadByte();
+            CancelTransferState = (I2cCancelTransferState)stream.ReadByte();
+            SpeedStatus = (I2cSpeedStatus)stream.ReadByte();
+            I2cLastDivisor = (byte)stream.ReadByte();
 
             stream.Seek(9, SeekOrigin.Begin);
 
-            I2CStateMachineState = (byte)stream.ReadByte();
-            I2CTransferLength = stream.ReadUShort();
-            I2CTransferredLength = stream.ReadUShort();
-            I2CBufferCounter = (byte)stream.ReadByte();
-            I2CClockDivisor = (byte)stream.ReadByte();
-            I2CTimeout = (byte)stream.ReadByte();
-            I2CAddress = stream.ReadUShort();
+            I2cStateMachineState = (byte)stream.ReadByte();
+            I2cTransferLength = stream.ReadUShort();
+            I2cTransferredLength = stream.ReadUShort();
+            I2cBufferCounter = (byte)stream.ReadByte();
+            I2cClockDivisor = (byte)stream.ReadByte();
+            I2cTimeout = (byte)stream.ReadByte();
+            I2cAddress = stream.ReadUShort();
 
             stream.Seek(21, SeekOrigin.Begin);
 
@@ -170,7 +170,7 @@ namespace MCP2221IO
             SclLineState = stream.ReadByte() == 1;
             SdaLineState = stream.ReadByte() == 1;
             EdgeDetectionState = stream.ReadByte() == 1;
-            I2CReadPending = (byte)stream.ReadByte();
+            I2cReadPending = (byte)stream.ReadByte();
 
             stream.Seek(47, SeekOrigin.Begin);
 

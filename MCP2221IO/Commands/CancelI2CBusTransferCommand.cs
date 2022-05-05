@@ -26,9 +26,9 @@ using System.IO;
 
 namespace MCP2221IO.Commands
 {
-    internal class CancelI2CBusTransferCommand : BaseCommand
+    internal class CancelI2cBusTransferCommand : BaseCommand
     {
-        public CancelI2CBusTransferCommand() : base(CommandCodes.StatusSetParameters)
+        public CancelI2cBusTransferCommand() : base(CommandCodes.StatusSetParameters)
         {
         }
 

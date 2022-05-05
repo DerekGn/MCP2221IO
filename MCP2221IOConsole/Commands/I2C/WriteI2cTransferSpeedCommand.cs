@@ -26,7 +26,7 @@ using McMaster.Extensions.CommandLineUtils;
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace MCP2221IOConsole.Commands.I2C
+namespace MCP2221IOConsole.Commands.I2c
 {
     [Command(Description = "Write I2C Transfer Speed")]
     internal class WriteI2cTransferSpeedCommand : BaseCommand
@@ -44,7 +44,7 @@ namespace MCP2221IOConsole.Commands.I2C
         {
             return ExecuteCommand((device) =>
             {
-                device.WriteI2CBusSpeed(Speed);
+                device.WriteI2cBusSpeed(Speed);
 
                 return 0;
             });

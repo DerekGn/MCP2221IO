@@ -31,9 +31,9 @@ namespace MCP2221IO.Commands
     /// <summary>
     /// Read I2C data command
     /// </summary>
-    internal class I2CReadDataCommand : BaseCommand
+    internal class I2cReadDataCommand : BaseCommand
     {
-        public I2CReadDataCommand(CommandCodes commandCode, I2CAddress address, ushort length) : base(commandCode)
+        public I2cReadDataCommand(CommandCodes commandCode, I2cAddress address, ushort length) : base(commandCode)
         {
             Address = address;
             Length = length;
@@ -42,7 +42,7 @@ namespace MCP2221IO.Commands
         /// <summary>
         /// The address of the I2C device to read
         /// </summary>
-        public I2CAddress Address { get; }
+        public I2cAddress Address { get; }
         /// <summary>
         /// The length of data to read
         /// </summary>

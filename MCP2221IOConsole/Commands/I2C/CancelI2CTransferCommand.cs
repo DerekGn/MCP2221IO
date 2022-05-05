@@ -24,7 +24,7 @@
 using McMaster.Extensions.CommandLineUtils;
 using System;
 
-namespace MCP2221IOConsole.Commands.I2C
+namespace MCP2221IOConsole.Commands.I2c
 {
     [Command(Description = "Cancel Current I2C transfer")]
     internal class CancelI2cTransferCommand : BaseCommand
@@ -37,7 +37,7 @@ namespace MCP2221IOConsole.Commands.I2C
         {
             return ExecuteCommand((device) =>
             {
-                device.CancelI2CBusTransfer();
+                device.CancelI2cBusTransfer();
 
                 console.WriteLine($"Transfer State: {device.Status.CancelTransferState}");
 

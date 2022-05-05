@@ -24,7 +24,7 @@
 
 namespace MCP2221IO
 {
-    public enum I2CAddressSize
+    public enum I2cAddressSize
     {
         SevenBit,
         TenBit

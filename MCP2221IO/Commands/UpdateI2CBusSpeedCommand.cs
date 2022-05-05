@@ -26,9 +26,9 @@ using System.IO;
 
 namespace MCP2221IO.Commands
 {
-    internal class UpdateI2CBusSpeedCommand : BaseCommand
+    internal class UpdateI2cBusSpeedCommand : BaseCommand
     {
-        public UpdateI2CBusSpeedCommand(int speed) : base(CommandCodes.StatusSetParameters)
+        public UpdateI2cBusSpeedCommand(int speed) : base(CommandCodes.StatusSetParameters)
         {
             Speed = speed;
         }
@@ -40,7 +40,7 @@ namespace MCP2221IO.Commands
             base.Serialize(stream);
 
             stream.WriteByte(0);    // Don't care
-            stream.WriteByte(0xFF); // Cancel current I2C/SMBus transfer(sub - command) no change
+            stream.WriteByte(0x00); // Cancel current I2C/SMBus transfer(sub - command) no change
             stream.WriteByte(0x20); // Set I2C/SMBus communication speed (sub-command)
 
             stream.WriteByte((byte)((12000000 / Speed) - 2));

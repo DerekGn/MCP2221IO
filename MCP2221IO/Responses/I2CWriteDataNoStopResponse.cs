@@ -29,9 +29,9 @@ namespace MCP2221IO.Responses
     /// <summary>
     /// I2C Write Data No Stop
     /// </summary>
-    internal class I2CWriteDataNoStopResponse : I2CWriteDataResponse
+    internal class I2cWriteDataNoStopResponse : I2cWriteDataResponse
     {
-        public I2CWriteDataNoStopResponse() : base(CommandCodes.WriteI2CDataNoStop)
+        public I2cWriteDataNoStopResponse() : base(CommandCodes.WriteI2cDataNoStop)
         {
         }
     }

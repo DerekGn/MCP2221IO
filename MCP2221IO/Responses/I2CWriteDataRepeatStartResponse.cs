@@ -29,9 +29,9 @@ namespace MCP2221IO.Responses
     /// <summary>
     /// I2C Write Data Repeat Start
     /// </summary>
-    internal class I2CWriteDataRepeatStartResponse : I2CWriteDataResponse
+    internal class I2cWriteDataRepeatStartResponse : I2cWriteDataResponse
     {
-        public I2CWriteDataRepeatStartResponse() : base(CommandCodes.WriteI2CDataRepeatedStart)
+        public I2cWriteDataRepeatStartResponse() : base(CommandCodes.WriteI2cDataRepeatedStart)
         {
         }
     }

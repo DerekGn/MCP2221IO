@@ -400,11 +400,11 @@ namespace MCP2221IO.UnitTests
         }
 
         [Fact]
-        public void TestI2CWriteDataTest()
+        public void TestI2cWriteDataTest()
         {
             // Arrange
             _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
-                .Returns(WriteReponse(CommandCodes.WriteI2CData));
+                .Returns(WriteReponse(CommandCodes.WriteI2cData));
 
             var buffer = new List<byte>() { };
 
@@ -414,18 +414,18 @@ namespace MCP2221IO.UnitTests
             }
 
             // Act
-            _device.I2CWriteData(new I2CAddress(0x0A), buffer);
+            _device.I2cWriteData(new I2cAddress(0x0A), buffer);
 
             // Assert
             _mockHidDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Exactly(17));
         }
 
         [Fact]
-        public void TestI2CWriteDataNoStopTest()
+        public void TestI2cWriteDataNoStopTest()
         {
             // Arrange
             _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
-                .Returns(WriteReponse(CommandCodes.WriteI2CDataNoStop));
+                .Returns(WriteReponse(CommandCodes.WriteI2cDataNoStop));
 
             var buffer = new List<byte>() { };
 
@@ -435,18 +435,18 @@ namespace MCP2221IO.UnitTests
             }
 
             // Act
-            _device.I2CWriteDataNoStop(new I2CAddress(0x0A), buffer);
+            _device.I2cWriteDataNoStop(new I2cAddress(0x0A), buffer);
 
             // Assert
             _mockHidDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Exactly(17));
         }
 
         [Fact]
-        public void TestI2CWriteDataTestRepartStart()
+        public void TestI2cWriteDataTestRepartStart()
         {
             // Arrange
             _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
-                .Returns(WriteReponse(CommandCodes.WriteI2CDataRepeatedStart));
+                .Returns(WriteReponse(CommandCodes.WriteI2cDataRepeatedStart));
 
             var buffer = new List<byte>() { };
 
@@ -456,7 +456,7 @@ namespace MCP2221IO.UnitTests
             }
 
             // Act
-            _device.I2CWriteDataRepeatStart(new I2CAddress(0x0A), buffer);
+            _device.I2cWriteDataRepeatStart(new I2cAddress(0x0A), buffer);
 
             // Assert
             _mockHidDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Exactly(17));
@@ -464,7 +464,7 @@ namespace MCP2221IO.UnitTests
 
 #warning TODO
         [Fact]
-        public void TestI2CRead()
+        public void TestI2cRead()
         {
             //const int DataLength = 130;
             //int blockCount = 0;
@@ -486,7 +486,7 @@ namespace MCP2221IO.UnitTests
 
 #warning TODO
         [Fact]
-        public void TestI2CReadRepeatedStart()
+        public void TestI2cReadRepeatedStart()
         {
             //const int DataLength = 130;
             //int blockCount = 0;
@@ -519,28 +519,28 @@ namespace MCP2221IO.UnitTests
         }
 
         [Fact]
-        public void TestCancelI2CBusTransfer()
+        public void TestCancelI2cBusTransfer()
         {
             // Arrange
             _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
                 .Returns(TestPayloads.DeviceStatusResponse);
 
             // Act
-            _device.CancelI2CBusTransfer();
+            _device.CancelI2cBusTransfer();
 
             // Assert
             _device.Status.Should().NotBeNull();
         }
 
         [Fact]
-        public void TestSetI2CBusSpeed()
+        public void TestSetI2cBusSpeed()
         {
             // Arrange
             _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
                 .Returns(TestPayloads.DeviceStatusResponse);
 
             // Act
-            _device.WriteI2CBusSpeed(100);
+            _device.WriteI2cBusSpeed(100);
 
             // Assert
             _device.Status.Should().NotBeNull();
@@ -562,17 +562,6 @@ namespace MCP2221IO.UnitTests
         {
             MemoryStream stream = GetStream();
             stream.WriteByte((byte)CommandCodes.SetGpioValues);
-
-            return stream.ToArray();
-        }
-
-        private byte[] WriteGetI2CDataResponse(CommandCodes commandCode, int length)
-        {
-            MemoryStream stream = GetStream();
-            stream.WriteByte((byte)commandCode);
-            stream.WriteByte(0);
-            stream.WriteByte((byte)length);
-            stream.Write(new byte[length], 0, length);
 
             return stream.ToArray();
         }
@@ -608,8 +597,8 @@ namespace MCP2221IO.UnitTests
             MemoryStream stream = GetStream();
             stream.WriteByte((byte)CommandCodes.StatusSetParameters);
             stream.WriteByte(status);
-            stream.WriteByte((byte)I2CCancelTransferState.MarkedForCancellation);
-            stream.WriteByte((byte)I2CSpeedStatus.Set);
+            stream.WriteByte((byte)I2cCancelTransferState.MarkedForCancellation);
+            stream.WriteByte((byte)I2cSpeedStatus.Set);
             stream.WriteByte(0x55);
             stream.Write(new byte[3], 0, 3);
             stream.WriteByte(0XFF);

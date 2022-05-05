@@ -27,7 +27,7 @@ namespace MCP2221IO
     /// <summary>
     /// The I2C speed change state
     /// </summary>
-    public enum I2CSpeedStatus
+    public enum I2cSpeedStatus
     {
         /// <summary>
         /// No Set I2C/SMBus communication speed was issued

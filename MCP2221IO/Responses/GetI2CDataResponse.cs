@@ -32,9 +32,9 @@ namespace MCP2221IO.Responses
     /// <summary>
     /// Get I2C data from the device
     /// </summary>
-    internal class GetI2CDataResponse : BaseResponse
+    internal class GetI2cDataResponse : BaseResponse
     {
-        public GetI2CDataResponse() : base(Commands.CommandCodes.GetI2CData)
+        public GetI2cDataResponse() : base(Commands.CommandCodes.GetI2cData)
         {
         }
 

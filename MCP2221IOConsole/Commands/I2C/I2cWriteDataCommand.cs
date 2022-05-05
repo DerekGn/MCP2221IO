@@ -22,7 +22,7 @@
 * SOFTWARE.
 */
 
-namespace MCP2221IOConsole.Commands.I2C
+namespace MCP2221IOConsole.Commands.I2c
 {
     internal class I2cWriteDataCommand
     {

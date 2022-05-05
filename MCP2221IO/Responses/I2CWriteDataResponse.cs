@@ -29,13 +29,13 @@ namespace MCP2221IO.Responses
     /// <summary>
     /// I2C Write Data
     /// </summary>
-    internal class I2CWriteDataResponse : BaseResponse
+    internal class I2cWriteDataResponse : BaseResponse
     {
-        public I2CWriteDataResponse() : base(CommandCodes.WriteI2CData)
+        public I2cWriteDataResponse() : base(CommandCodes.WriteI2cData)
         {
         }
 
-        protected I2CWriteDataResponse(CommandCodes commandCode) : base(commandCode)
+        protected I2cWriteDataResponse(CommandCodes commandCode) : base(commandCode)
         {
         }
     }

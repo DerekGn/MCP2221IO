@@ -387,7 +387,6 @@ namespace MCP2221IO.UnitTests
         public void TestUnlockFlash()
         {
             // Arrange
-            Stream writeStream = null;
 
             _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
                 .Returns(WriteFlashUnlockResponse());

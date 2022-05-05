@@ -41,11 +41,13 @@ namespace MCP2221IOConsole.Commands.I2c
         {
             return ExecuteCommand((device) =>
             {
-                console.WriteLine($"Scanning the I2C Bus 10 Bit Addressing [{TenBitAddressing.HasValue && TenBitAddressing.Value}]");
+                console.WriteLine($"Scanning the I2C Bus");
+                console.WriteLine($"10 Bit Addressing [{TenBitAddressing.HasValue && TenBitAddressing.Value}]");
                 
                 var result = device.I2cScanBus(TenBitAddressing.HasValue && TenBitAddressing.Value);
 
-                console.WriteLine($"Found [{result.Count}] I2C Devices");
+                console.WriteLine($"Found [0x{result.Count:X4}] I2C Device");
+                console.WriteLine("".PadRight(25, '='));
 
                 foreach (var address in result)
                 {

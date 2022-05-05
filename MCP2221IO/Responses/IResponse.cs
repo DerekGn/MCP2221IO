@@ -35,6 +35,11 @@ namespace MCP2221IO.Responses
         CommandCodes CommandCode { get; }
 
         /// <summary>
+        /// The command execution result
+        /// </summary>
+        byte ExecutionResult { get; }
+        
+        /// <summary>
         /// Deserialize the <see cref="IResponse"/> instance data
         /// </summary>
         /// <param name="stream">The <see cref="Stream"/> that contains the instance data</param>

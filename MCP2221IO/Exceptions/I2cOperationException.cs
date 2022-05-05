@@ -22,38 +22,21 @@
 * SOFTWARE.
 */
 
-using MCP2221IO.Extensions;
-using System.IO;
-using System.Linq;
+using System;
 
-namespace MCP2221IO.Commands
+namespace MCP2221IO.Exceptions
 {
-    /// <summary>
-    /// Read I2C data command
-    /// </summary>
-    internal class I2CReadDataCommand : BaseCommand
+
+    [Serializable]
+    public class I2cOperationException : Exception
     {
-        public I2CReadDataCommand(CommandCodes commandCode, I2CAddress address, ushort length) : base(commandCode)
-        {
-            Address = address;
-            Length = length;
-        }
+        public I2cOperationException(byte executionResult) { ExecutionResult = executionResult; }
+        public I2cOperationException(byte executionResult, string message) : base(message) { ExecutionResult = executionResult; }
+        public I2cOperationException(byte executionResult, string message, Exception inner) : base(message, inner) { ExecutionResult = executionResult; }
+        protected I2cOperationException(
+          System.Runtime.Serialization.SerializationInfo info,
+          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
 
-        /// <summary>
-        /// The address of the I2C device to read
-        /// </summary>
-        public I2CAddress Address { get; }
-        /// <summary>
-        /// The length of data to read
-        /// </summary>
-        public ushort Length { get; }
-
-        public override void Serialize(Stream stream)
-        {
-            base.Serialize(stream);
-
-            stream.WriteUShort(Length);
-            stream.Write(Address.ReadAddress.ToArray());
-        }
+        public byte ExecutionResult { get; private set; }
     }
 }

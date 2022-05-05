@@ -64,5 +64,7 @@ namespace MCP2221IOConsole.Commands
         public const string UsbManufacturer = "-um|--usb-manufacturer";
 
         public const string Speed = "-spd|--speed";
+
+        public const string TenBitAddressing = "-tb|--ten-bit-addressing";
     }
 }

@@ -33,7 +33,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace MCP2221IO
@@ -43,12 +42,13 @@ namespace MCP2221IO
     /// </summary>
     public class Device : IDevice
     {
-        internal const int MaxBlockSize = 60;
+        internal const ushort MaxI2CLength = 0xFFFF;
         internal bool _gpioPortsRead = false;
 
         private readonly ILogger<IDevice> _logger;
         private string _factorySerialNumber;
         private IHidDevice _hidDevice;
+        private int _speed = 100000;
 
         public Device(ILogger<IDevice> logger, IHidDevice hidDevice)
         {
@@ -143,61 +143,6 @@ namespace MCP2221IO
                 () =>
                 {
                     ExecuteCommand<UnlockFlashResponse>(new UnlockFlashCommand(password));
-                });
-        }
-
-        // <inheritdoc/>
-        public void I2CWriteData(I2CAddress address, IList<byte> data)
-        {
-            HandleOperationExecution(
-                nameof(Device),
-                () =>
-                {
-                    I2CWriteData<I2CWriteDataResponse>(CommandCodes.WriteI2CData, address, data);
-                });
-        }
-
-        // <inheritdoc/>
-        public void I2CWriteDataRepeatStart(I2CAddress address, IList<byte> data)
-        {
-            HandleOperationExecution(
-                nameof(Device),
-                () =>
-                {
-                    I2CWriteData<I2CWriteDataRepeatStartResponse>(CommandCodes.WriteI2CDataRepeatedStart, address, data);
-                });
-        }
-
-        // <inheritdoc/>
-        public void I2CWriteDataNoStop(I2CAddress address, IList<byte> data)
-        {
-            HandleOperationExecution(
-                nameof(Device),
-                () =>
-                {
-                    I2CWriteData<I2CWriteDataNoStopResponse>(CommandCodes.WriteI2CDataNoStop, address, data);
-                });
-        }
-
-        // <inheritdoc/>
-        public IList<byte> I2CReadData(I2CAddress address, ushort length)
-        {
-            return HandleOperationExecution(
-                nameof(Device),
-                () =>
-                {
-                    return I2CReadData<I2CReadDataResponse>(CommandCodes.ReadI2CData, address, length);
-                });
-        }
-
-        // <inheritdoc/>
-        public IList<byte> I2CReadDataRepeatedStart(I2CAddress address, ushort length)
-        {
-            return HandleOperationExecution(
-                nameof(Device),
-                () =>
-                {
-                    return I2CReadData<I2CReadDataRepeatedStarteResponse>(CommandCodes.ReadI2CDataRepeatedStart, address, length);
                 });
         }
 
@@ -357,6 +302,8 @@ namespace MCP2221IO
                 () =>
                 {
                     Status = ExecuteCommand<StatusSetParametersResponse>(new UpdateI2CBusSpeedCommand(speed)).DeviceStatus;
+
+                    _speed = speed;
                 });
         }
 
@@ -371,45 +318,172 @@ namespace MCP2221IO
         {
             Dispose();
         }
-#warning check buffer size must be less than 0xFFFF
+
+        // <inheritdoc/>
+        public void I2CWriteData(I2CAddress address, IList<byte> data)
+        {
+            HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    I2CWriteData<I2CWriteDataResponse>(CommandCodes.WriteI2CData, address, data);
+                });
+        }
+
+        // <inheritdoc/>
+        public void I2CWriteDataRepeatStart(I2CAddress address, IList<byte> data)
+        {
+            HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    I2CWriteData<I2CWriteDataRepeatStartResponse>(CommandCodes.WriteI2CDataRepeatedStart, address, data);
+                });
+        }
+
+        // <inheritdoc/>
+        public void I2CWriteDataNoStop(I2CAddress address, IList<byte> data)
+        {
+            HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    I2CWriteData<I2CWriteDataNoStopResponse>(CommandCodes.WriteI2CDataNoStop, address, data);
+                });
+        }
+
+        // <inheritdoc/>
+        public IList<byte> I2CReadData(I2CAddress address, ushort length)
+        {
+            return HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    return I2CReadData<I2CReadDataResponse>(CommandCodes.ReadI2CData, address, length);
+                });
+        }
+
+        // <inheritdoc/>
+        public IList<byte> I2CReadDataRepeatedStart(I2CAddress address, ushort length)
+        {
+            return HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    return I2CReadData<I2CReadDataRepeatedStarteResponse>(CommandCodes.ReadI2CDataRepeatedStart, address, length);
+                });
+        }
+
+        // <inheritdoc/>
+        public IList<I2CAddress> I2CScanBus(bool useTenBitAddressing)
+        {
+            List<I2CAddress> result = new List<I2CAddress>();
+
+            uint upperAddress = useTenBitAddressing ? I2CAddress.TenBitRangeUpper : I2CAddress.SevenBitRangeUpper;
+
+            _logger.LogDebug($"Setting I2C Speed: [0x{_speed:X}] [{_speed}]");
+
+            WriteI2CBusSpeed(_speed);
+
+            I2CAddress address = new I2CAddress(0x5B, useTenBitAddressing ? I2CAddressSize.TenBit : I2CAddressSize.SevenBit);
+
+            var response = I2CReadData(address, 1);
+
+            //for (uint i = I2CAddress.SevenBitRangeLower + 1; i < upperAddress; i++)
+            //{
+            //    I2CAddress address = new I2CAddress(i, useTenBitAddressing ? I2CAddressSize.TenBit : I2CAddressSize.SevenBit);
+
+            //    try
+            //    {
+            //        var response = I2CReadData(address, 1);
+            //    }
+            //    catch (I2cOperationException ex)
+            //    {
+            //        _logger.LogWarning(ex, $"Device Address [0x{address.Value:X2}] did not respond");
+            //    }
+            //}
+
+            return result;
+        }
+
         private IList<byte> I2CReadData<T>(CommandCodes commandCode, I2CAddress address, ushort length) where T : IResponse, new()
         {
-            //return HandleOperationExecution(
-            //    nameof(Device),
-            //    () =>
-            //    {
-            //        List<byte> result = new List<byte>();
+            if (address == null)
+            {
+                throw new ArgumentNullException(nameof(address));
+            }
 
-            //        int blockCount = (length + MaxBlockSize - 1) / MaxBlockSize;
+            if (length > MaxI2CLength)
+            {
+                throw new ArgumentOutOfRangeException(nameof(length), length, $"Must be less than  0x{MaxI2CLength:X4}");
+            }
 
-            //        ExecuteCommand<T>(new I2CReadDataCommand(commandCode, address, length));
+            return HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    List<byte> result = new List<byte>();
 
-            //        for (int i = 0; i < blockCount; i++)
-            //        {
-            //            result.AddRange(ExecuteCommand<GetI2CDataResponse>(new GetI2CDataCommand()).Data);
-            //        }
+                    var response = ExecuteCommand<T>(new I2CReadDataCommand(commandCode, address, length), false);
 
-            //        return result;
-            //    });
+                    if (response.ExecutionResult != 0)
+                    {
+                        throw new I2cOperationException(response.ExecutionResult, $"{nameof(I2CReadData)} The read of i2c data failed with execution result code [0x{response.ExecutionResult:x}]");
+                    }
 
-            return new List<byte>();
+                    while (result.Count < length || length == 0)
+                    {
+                        var getResponse = ExecuteCommand<GetI2CDataResponse>(new GetI2CDataCommand());
+
+                        if (response.ExecutionResult != 0)
+                        {
+                            throw new I2cOperationException(response.ExecutionResult, $"{nameof(I2CReadData)} The read of i2c data failed with execution result code [0x{response.ExecutionResult:x}]");
+                        }
+
+                        if (getResponse.Data.Count > 0)
+                        {
+                            result.AddRange(getResponse.Data);
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    
+                    return result;
+                });
         }
 
         private void I2CWriteData<T>(CommandCodes commandCode, I2CAddress address, IList<byte> data) where T : IResponse, new()
         {
-            //HandleOperationExecution(
-            //    nameof(Device),
-            //    () =>
-            //    {
-            //        int blockCount = (data.Count + MaxBlockSize - 1) / MaxBlockSize;
+            if(address == null)
+            {
+                throw new ArgumentNullException(nameof(address));
+            }
 
-            //        for (int i = 0; i < blockCount; i++)
-            //        {
-            //            int blockSize = Math.Min(MaxBlockSize, Math.Abs(data.Count - (i * MaxBlockSize)));
+            if (data == null)
+            {
+                throw new ArgumentNullException(nameof(data));
+            }
 
-            //            ExecuteCommand<T>(new I2CWriteDataCommand(commandCode, address, data.Skip(MaxBlockSize * i).Take(blockSize).ToList()));
-            //        }
-            //    });
+            if (data.Count > MaxI2CLength)
+            {
+                throw new ArgumentOutOfRangeException(nameof(data), data, $"Must be less than  0x{MaxI2CLength:X4}");
+            }
+
+            HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    //int blockCount = (data.Count + MaxBlockSize - 1) / MaxBlockSize;
+
+                    //for (int i = 0; i < blockCount; i++)
+                    //{
+                    //    int blockSize = Math.Min(MaxBlockSize, Math.Abs(data.Count - (i * MaxBlockSize)));
+
+                    //    ExecuteCommand<T>(new I2CWriteDataCommand(commandCode, address, data.Skip(MaxBlockSize * i).Take(blockSize).ToList()));
+                    //}
+                });
         }
 
         private string GetFactorySerialNumber()
@@ -438,7 +512,7 @@ namespace MCP2221IO
             _hidDevice.Write(memoryStream.ToArray());
         }
 
-        private T ExecuteCommand<T>(ICommand command) where T : IResponse, new()
+        private T ExecuteCommand<T>(ICommand command, bool checkResult = true) where T : IResponse, new()
         {
             var outStream = new MemoryStream(new byte[64], true);
             var inStream = new MemoryStream();
@@ -450,6 +524,11 @@ namespace MCP2221IO
             var result = new T();
 
             result.Deserialize(inStream);
+
+            if (checkResult && result.ExecutionResult != 0)
+            {
+                throw new CommandExecutionFailedException($"Unexpected command execution status Expected: [0x00] Actual [0x{result.ExecutionResult:x}]");
+            }
 
             return result;
         }
@@ -470,6 +549,8 @@ namespace MCP2221IO
             catch (Exception ex)
             {
                 _logger.LogError($"An exception occurred executing [{className}].[{memberName}] Reason: [{ex.Message}]");
+                
+                throw;
             }
         }
 
@@ -490,6 +571,8 @@ namespace MCP2221IO
             catch (Exception ex)
             {
                 _logger.LogError($"An exception occurred executing [{className}].[{memberName}] Reason: [{ex.Message}]");
+                
+                throw;
             }
 
             return result;

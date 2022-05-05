@@ -32,10 +32,9 @@ namespace MCP2221IO
     /// </summary>
     public class I2CAddress
     {
-        private const uint sevenBitRangeLower = 0x07;
-        private const uint sevenBitRangeUpper = 0x78;
-        private const uint tenBitRangeUpper = 0x03FF;
-        private const uint tenBitAddressMask = 0xFB00;
+        public const uint SevenBitRangeLower = 0x07;
+        public const uint SevenBitRangeUpper = 0x78;
+        public const uint TenBitRangeUpper = 0x03FF;
 
         public I2CAddress(uint address) : this(address, I2CAddressSize.SevenBit)
         {
@@ -47,21 +46,23 @@ namespace MCP2221IO
             
             if(Size == I2CAddressSize.SevenBit)
             {
-                if ((address <= sevenBitRangeLower) || (address >= sevenBitRangeUpper))
+                if ((address <= SevenBitRangeLower) || (address >= SevenBitRangeUpper))
                 {
-                    throw new ArgumentOutOfRangeException(nameof(address), address, $"{I2CAddressSize.SevenBit} Address must between the range of 0x{sevenBitRangeLower:X2} and 0x{sevenBitRangeUpper:X2}");
+                    throw new ArgumentOutOfRangeException(nameof(address), address, $"{I2CAddressSize.SevenBit} Address must between the range of 0x{SevenBitRangeLower:X2} and 0x{SevenBitRangeUpper:X2}");
                 }
             }
             else
             {
-                if (address > tenBitRangeUpper)
+                if (address > TenBitRangeUpper)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(address), address, $"{I2CAddressSize.TenBit} Address must between the range of 0x00 and 0x{tenBitRangeUpper:X4}");
+                    throw new ArgumentOutOfRangeException(nameof(address), address, $"{I2CAddressSize.TenBit} Address must between the range of 0x00 and 0x{TenBitRangeUpper:X4}");
                 }
             }
 
             CalculateAddress(address, size);
         }
+
+        public uint Value { get; private set; }
 
         public IReadOnlyCollection<byte> ReadAddress { get; private set; }
 
@@ -74,13 +75,18 @@ namespace MCP2221IO
             switch (size)
             {
                 case I2CAddressSize.SevenBit:
+                    Value = address;
+
                     var baseAddress = (byte)(address << 1);
+
                     WriteAddress = new List<byte>() { baseAddress }.AsReadOnly();
                     ReadAddress = new List<byte>() { (byte)(baseAddress + 1) }.AsReadOnly();
                     break;
                 case I2CAddressSize.TenBit:
                     var msb = ((address | 0xF800) & 0xFB00) >> 7;
                     var lsb = address & 0x00FF;
+                    
+                    Value = address;
 
                     WriteAddress = new List<byte>() { (byte)msb, (byte)lsb }.AsReadOnly();
                     ReadAddress = new List<byte>() { (byte)(msb + 1), (byte)lsb }.AsReadOnly();

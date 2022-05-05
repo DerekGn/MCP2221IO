@@ -34,8 +34,8 @@ namespace MCP2221IOConsole.Commands.I2C
     [Subcommand(typeof(I2cReadDataCommand))]
     [Subcommand(typeof(I2cReadDataRepeatStartCommand))]
     [Subcommand(typeof(I2cWriteDataCommand))]
-    [Subcommand(typeof(I2CWriteDataRepeatStartCommand))]
-    [Subcommand(typeof(I2CWriteDataNoStopCommand))]
+    [Subcommand(typeof(I2cWriteDataRepeatStartCommand))]
+    [Subcommand(typeof(I2cWriteDataNoStopCommand))]
     internal class I2cCommand : BaseCommand
     {
         public I2cCommand(IServiceProvider serviceProvider) : base(serviceProvider)

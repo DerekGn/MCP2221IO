@@ -24,7 +24,7 @@
 
 namespace MCP2221IOConsole.Commands.I2C
 {
-    internal class I2CWriteDataRepeatStartCommand
+    internal class I2cWriteDataRepeatStartCommand
     {
     }
 }

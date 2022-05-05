@@ -42,6 +42,8 @@ namespace MCP2221IO.Responses
         // <inheritdoc/>
         public CommandCodes CommandCode { get; }
 
+        public byte ExecutionResult { get; private set; }
+
         // <inheritdoc/>
         public virtual void Deserialize(Stream stream)
         {
@@ -63,11 +65,7 @@ namespace MCP2221IO.Responses
                 throw new InvalidResponseTypeException($"Unexpected response code Expected: [0x{(byte)CommandCode:x}] Actual [0x{responseCode:x}]");
             }
 
-            byte executionResult = (byte)stream.ReadByte();
-            if (executionResult != 0)
-            {
-                throw new CommandExecutionFailedException($"Unexpected command execution status Expected: [0x00] Actual [0x{executionResult:x}]");
-            }
+            ExecutionResult = (byte)stream.ReadByte();
         }
     }
 }

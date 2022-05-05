@@ -2,7 +2,7 @@
   "profiles": {
     "MCP2221IOConsole": {
       "commandName": "Project",
-      "commandLineArgs": "sram write-sram-gp0-settings"
+      "commandLineArgs": "i2c scan-i2c-bus"
     }
   }
 }

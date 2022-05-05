@@ -28,6 +28,7 @@ using MCP2221IOConsole.Commands.Flash;
 using MCP2221IOConsole.Commands.Gpio;
 using MCP2221IOConsole.Commands.I2C;
 using MCP2221IOConsole.Commands.Sram;
+using MCP2221IOConsole.Commands.Status;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -43,6 +44,8 @@ namespace MCP2221IOConsole
     [Subcommand(typeof(I2cCommand))]
     [Subcommand(typeof(ResetCommand))]
     [Subcommand(typeof(SramCommand))]
+    [Subcommand(typeof(StatusCommand))]
+    [Subcommand(typeof(WriteAccessPasswordCommand))]
     class Program
     {
         private static IConfiguration _configuration;

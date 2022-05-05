@@ -26,7 +26,6 @@ using McMaster.Extensions.CommandLineUtils;
 using MCP2221IO.Settings;
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Globalization;
 
 namespace MCP2221IOConsole.Commands
 {

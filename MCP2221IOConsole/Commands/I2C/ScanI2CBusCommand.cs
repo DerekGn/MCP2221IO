@@ -34,9 +34,22 @@ namespace MCP2221IOConsole.Commands.I2C
         {
         }
 
+        [Option(Templates.TenBitAddressing, "Use Ten bit device addressing", CommandOptionType.SingleValue)]
+        public (bool HasValue, bool Value) TenBitAddressing { get; set; }
+
         protected override int OnExecute(CommandLineApplication app, IConsole console)
         {
-            return base.OnExecute(app, console);
+            return ExecuteCommand((device) =>
+            {
+
+                console.WriteLine($"Scanning the I2C bus using 10 Bit Addressing [{TenBitAddressing.HasValue && TenBitAddressing.Value}]");
+                
+                var result = device.I2CScanBus(TenBitAddressing.HasValue && TenBitAddressing.Value);
+
+                console.WriteLine($"Found [{result.Count}] I2C devices");
+
+                return 0;
+            });
         }
     }
 }

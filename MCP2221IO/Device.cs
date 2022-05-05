@@ -399,8 +399,8 @@ namespace MCP2221IO
                     _logger.LogDebug($"Probing Device Address [0x{address.Value:X}]");
 
                     var response = I2cReadData(address, 1);
-                        
-                    if(response.Count > 0)
+
+                    if (response.Count > 0)
                     {
                         _logger.LogDebug($"Read [{response.Count}] byte from Device Address [0x{address.Value:X}]");
                     }
@@ -410,6 +410,8 @@ namespace MCP2221IO
                 catch (I2cOperationException ex)
                 {
                     _logger.LogWarning(ex, $"Device Address [0x{address.Value:X2}] did not respond");
+
+                    CancelI2cBusTransfer();
                 }
             }
 
@@ -445,9 +447,9 @@ namespace MCP2221IO
                     {
                         var getResponse = ExecuteCommand<GetI2cDataResponse>(new GetI2cDataCommand(), false);
 
-                        if (response.ExecutionResult != 0)
+                        if (getResponse.ExecutionResult != 0)
                         {
-                            throw new I2cOperationException(response.ExecutionResult, $"{nameof(I2cReadData)} The read of i2c data failed with execution result code [0x{response.ExecutionResult:x}]");
+                            throw new I2cOperationException(getResponse.ExecutionResult, $"{nameof(I2cReadData)} The read of i2c data failed with execution result code [0x{getResponse.ExecutionResult:x}]");
                         }
 
                         if (getResponse.Data.Count > 0)

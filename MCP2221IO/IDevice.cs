@@ -31,9 +31,21 @@ namespace MCP2221IO
 {
     public interface IDevice : IDisposable
     {
+        /// <summary>
+        /// The maximum supported I2C speed
+        /// </summary>
         const int I2cMaxSpeed = 400000;
+
+        /// <summary>
+        /// The minimum supported I2C speed
+        /// </summary>
         const int I2cMinSpeed = 46875;
-                
+
+        /// <summary>
+        /// The maximum read/write buffer size
+        /// </summary>
+        const ushort MaxI2cLength = 0xFFFF;
+
         /// <summary>
         /// Get the device <see cref="DeviceStatus"/>
         /// </summary>

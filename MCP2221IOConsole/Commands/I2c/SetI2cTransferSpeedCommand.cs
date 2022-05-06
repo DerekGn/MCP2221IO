@@ -22,9 +22,34 @@
 * SOFTWARE.
 */
 
+using McMaster.Extensions.CommandLineUtils;
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
+
 namespace MCP2221IOConsole.Commands.I2c
 {
-    internal class I2cReadDataRepeatStartCommand
+    [Command(Description = "Set the I2C Transfer Speed")]
+    [SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "<Pending>")]
+    internal class SetI2cTransferSpeedCommand : BaseCommand
     {
+        public SetI2cTransferSpeedCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        {
+        }
+
+        [Required]
+        [Range(0, 400000)]
+        [Option(Templates.Speed, "The I2C Speed", CommandOptionType.SingleValue)]
+        public int Speed { get; set; }
+
+        protected override int OnExecute(CommandLineApplication app, IConsole console)
+        {
+            return ExecuteCommand((device) =>
+            {
+                device.WriteI2cBusSpeed(Speed);
+
+                return 0;
+            });
+        }
     }
 }

@@ -42,7 +42,6 @@ namespace MCP2221IO
     /// </summary>
     public class Device : IDevice
     {
-        internal const ushort MaxI2cLength = 0xFFFF;
         internal bool _gpioPortsRead = false;
 
         private readonly ILogger<IDevice> _logger;
@@ -425,9 +424,9 @@ namespace MCP2221IO
                 throw new ArgumentNullException(nameof(address));
             }
 
-            if (length > MaxI2cLength)
+            if (length > IDevice.MaxI2cLength)
             {
-                throw new ArgumentOutOfRangeException(nameof(length), length, $"Must be less than  0x{MaxI2cLength:X4}");
+                throw new ArgumentOutOfRangeException(nameof(length), length, $"Must be less than  0x{IDevice.MaxI2cLength:X4}");
             }
 
             return HandleOperationExecution(
@@ -478,9 +477,9 @@ namespace MCP2221IO
                 throw new ArgumentNullException(nameof(data));
             }
 
-            if (data.Count > MaxI2cLength)
+            if (data.Count > IDevice.MaxI2cLength)
             {
-                throw new ArgumentOutOfRangeException(nameof(data), data, $"Must be less than  0x{MaxI2cLength:X4}");
+                throw new ArgumentOutOfRangeException(nameof(data), data, $"Must be less than  0x{IDevice.MaxI2cLength:X4}");
             }
 
             HandleOperationExecution(

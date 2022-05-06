@@ -22,26 +22,12 @@
 * SOFTWARE.
 */
 
-using McMaster.Extensions.CommandLineUtils;
-using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace MCP2221IOConsole.Commands.I2c
 {
-    [Command(Description = "Execute Device I2C functions")]
-    [Subcommand(typeof(SetI2cTransferSpeedCommand))]
-    [Subcommand(typeof(CancelI2cTransferCommand))]
-    [Subcommand(typeof(ScanI2cBusCommand))]
-    [Subcommand(typeof(ReadI2cDataCommand))]
-    [Subcommand(typeof(ReadI2cDataRepeatStartCommand))]
-    [Subcommand(typeof(WriteI2cDataCommand))]
-    [Subcommand(typeof(WriteI2cDataRepeatStartCommand))]
-    [Subcommand(typeof(WriteI2cDataNoStopCommand))]
     [SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "<Pending>")]
-    internal class I2cCommand : BaseCommand
+    internal class WriteI2cDataCommand
     {
-        public I2cCommand(IServiceProvider serviceProvider) : base(serviceProvider)
-        {
-        }
     }
 }

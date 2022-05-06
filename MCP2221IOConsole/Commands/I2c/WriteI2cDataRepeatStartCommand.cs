@@ -22,9 +22,12 @@
 * SOFTWARE.
 */
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace MCP2221IOConsole.Commands.I2c
 {
-    internal class I2cWriteDataRepeatStartCommand
+    [SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "<Pending>")]
+    internal class WriteI2cDataRepeatStartCommand
     {
     }
 }

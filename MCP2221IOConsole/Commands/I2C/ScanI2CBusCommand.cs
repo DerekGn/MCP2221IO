@@ -24,10 +24,12 @@
 
 using McMaster.Extensions.CommandLineUtils;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace MCP2221IOConsole.Commands.I2c
 {
     [Command(Description = "Scan the I2C Bus")]
+    [SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "<Pending>")]
     internal class ScanI2cBusCommand : BaseCommand
     {
         public ScanI2cBusCommand(IServiceProvider serviceProvider) : base(serviceProvider)

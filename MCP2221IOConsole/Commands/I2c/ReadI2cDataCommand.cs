@@ -23,28 +23,37 @@
 */
 
 using McMaster.Extensions.CommandLineUtils;
+using MCP2221IO;
 using System;
-using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace MCP2221IOConsole.Commands.I2c
 {
-    [Command(Description = "Write I2C Transfer Speed")]
-    internal class WriteI2cTransferSpeedCommand : BaseCommand
+    [Command(Description = "Read Data from a device on the I2C Bus")]
+    [SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "<Pending>")]
+    internal class ReadI2cDataCommand : BaseI2cCommand
     {
-        public WriteI2cTransferSpeedCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public ReadI2cDataCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
-
-        [Required]
-        [Range(0, 400000)]
-        [Option(Templates.Speed, "The I2C Speed", CommandOptionType.SingleValue)]
-        public int Speed { get; set; }
 
         protected override int OnExecute(CommandLineApplication app, IConsole console)
         {
             return ExecuteCommand((device) =>
             {
-                device.WriteI2cBusSpeed(Speed);
+                I2cAddress deviceAddress = new I2cAddress(Address, Address > I2cAddress.SevenBitRangeUpper ? I2cAddressSize.TenBit : I2cAddressSize.SevenBit);
+
+                console.WriteLine($"Reading the I2C Bus Device Address [{deviceAddress}]");
+
+                //var result = device.I2cReadData(deviceAddress, )
+
+                //console.WriteLine($"Found [0x{result.Count:X4}] I2C Device");
+                //console.WriteLine("".PadRight(25, '='));
+
+                //foreach (var address in result)
+                //{
+                //    console.WriteLine($"Device [0x{address.Value:X4}]");
+                //}
 
                 return 0;
             });

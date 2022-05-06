@@ -22,9 +22,29 @@
 * SOFTWARE.
 */
 
+using McMaster.Extensions.CommandLineUtils;
+using MCP2221IO;
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
+
 namespace MCP2221IOConsole.Commands.I2c
 {
-    internal class I2cWriteDataNoStopCommand
+    [SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "<Pending>")]
+    internal abstract class BaseI2cCommand : BaseCommand
     {
+        protected BaseI2cCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        {
+        }
+
+        [Required]
+        [Range(I2cAddress.SevenBitRangeLower, I2cAddress.TenBitRangeUpper)]
+        [Option(Templates.I2cAddress, "The I2C Device Address", CommandOptionType.SingleValue)]
+        public uint Address { get; set; }
+
+        [Required]
+        [Range(0, IDevice.MaxI2cLength)]
+        [Option(Templates.I2cAddress, "The I2C transfer length", CommandOptionType.SingleValue)]
+        public ushort Length{ get; set; }
     }
 }

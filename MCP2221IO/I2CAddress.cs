@@ -24,12 +24,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace MCP2221IO
 {
     /// <summary>
     /// Represents an I2C device address
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "<Pending>")]
     public class I2cAddress
     {
         public const uint SevenBitRangeLower = 0x07;
@@ -69,6 +71,15 @@ namespace MCP2221IO
         public IReadOnlyCollection<byte> WriteAddress { get; private set; }
 
         public I2cAddressSize Size { get; }
+
+        public override string ToString()
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+
+            stringBuilder.Append($"{nameof(Value)}: {Value} {nameof(Size)}: {Size}");
+
+            return stringBuilder.ToString();
+        }
 
         private void CalculateAddress(uint address, I2cAddressSize size)
         {

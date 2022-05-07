@@ -22,10 +22,12 @@
 * SOFTWARE.
 */
 
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 namespace MCP2221IO.Commands
 {
+    [SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "<Pending>")]
     internal class CancelI2cBusTransferCommand : BaseCommand
     {
         public CancelI2cBusTransferCommand() : base(CommandCodes.StatusSetParameters)

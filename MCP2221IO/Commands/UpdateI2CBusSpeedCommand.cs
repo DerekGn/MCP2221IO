@@ -22,13 +22,15 @@
 * SOFTWARE.
 */
 
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 namespace MCP2221IO.Commands
 {
-    internal class UpdateI2cBusSpeedCommand : BaseCommand
+    [SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "<Pending>")]
+    internal class SetI2cBusSpeedCommand : BaseCommand
     {
-        public UpdateI2cBusSpeedCommand(int speed) : base(CommandCodes.StatusSetParameters)
+        public SetI2cBusSpeedCommand(int speed) : base(CommandCodes.StatusSetParameters)
         {
             Speed = speed;
         }

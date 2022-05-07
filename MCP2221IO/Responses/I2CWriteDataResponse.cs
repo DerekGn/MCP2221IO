@@ -23,12 +23,14 @@
 */
 
 using MCP2221IO.Commands;
+using System.Diagnostics.CodeAnalysis;
 
 namespace MCP2221IO.Responses
 {
     /// <summary>
     /// I2C Write Data
     /// </summary>
+    [SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "<Pending>")]
     internal class I2cWriteDataResponse : BaseResponse
     {
         public I2cWriteDataResponse() : base(CommandCodes.WriteI2cData)

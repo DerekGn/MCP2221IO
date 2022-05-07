@@ -48,6 +48,8 @@ namespace MCP2221IOConsole.Commands.I2c
 
                 device.I2cWriteData(address, data);
 
+                console.WriteLine($"Wrote [{data.Count}] Bytes To Device");
+
                 return 0;
             });
         }

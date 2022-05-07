@@ -23,12 +23,14 @@
 */
 
 using MCP2221IO.Commands;
+using System.Diagnostics.CodeAnalysis;
 
 namespace MCP2221IO.Responses
 {
     /// <summary>
     /// I2C read data with repeated start response
     /// </summary>
+    [SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "<Pending>")]
     internal class I2cReadDataRepeatedStarteResponse : I2cReadDataResponse
     {
         public I2cReadDataRepeatedStarteResponse() : base(CommandCodes.ReadI2cDataRepeatedStart)

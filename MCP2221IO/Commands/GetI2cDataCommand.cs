@@ -22,11 +22,14 @@
 * SOFTWARE.
 */
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace MCP2221IO.Commands
 {
     /// <summary>
     /// Get I2C data from the device command
     /// </summary>
+    [SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "<Pending>")]
     internal class GetI2cDataCommand : BaseCommand
     {
         public GetI2cDataCommand() : base(CommandCodes.GetI2cData)

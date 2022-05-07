@@ -310,7 +310,7 @@ namespace MCP2221IO
 
                     do
                     {
-                        Status = ExecuteCommand<StatusSetParametersResponse>(new UpdateI2cBusSpeedCommand(speed)).DeviceStatus;
+                        Status = ExecuteCommand<StatusSetParametersResponse>(new SetI2cBusSpeedCommand(speed)).DeviceStatus;
 
                         retryCount++;
 

@@ -401,8 +401,6 @@ namespace MCP2221IO
 
             uint upperAddress = useTenBitAddressing ? I2cAddress.TenBitRangeUpper : I2cAddress.SevenBitRangeUpper;
 
-            _logger.LogDebug($"Setting I2C Speed: [0x{_speed:X}] [{_speed}]");
-
             for (uint i = I2cAddress.SevenBitRangeLower + 1; i < upperAddress; i++)
             {
                 I2cAddress address = new I2cAddress(i, useTenBitAddressing ? I2cAddressSize.TenBit : I2cAddressSize.SevenBit);
@@ -420,15 +418,24 @@ namespace MCP2221IO
 
                     result.Add(address);
                 }
+                catch(CommandExecutionFailedException ex)
+                {
+                    HandleScanError(address, ex);
+                }
                 catch (I2cOperationException ex)
                 {
-                    _logger.LogWarning(ex, $"Device Address [0x{address.Value:X2}] did not respond");
-
-                    CancelI2cBusTransfer();
+                    HandleScanError(address, ex);
                 }
             }
 
             return result;
+        }
+
+        private void HandleScanError(I2cAddress address, Exception ex)
+        {
+            _logger.LogWarning(ex, $"Device Address [0x{address.Value:X2}] did not respond");
+
+            CancelI2cBusTransfer();
         }
 
         private IList<byte> I2cReadData<T>(CommandCodes commandCode, I2cAddress address, ushort length) where T : IResponse, new()

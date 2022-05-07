@@ -23,7 +23,6 @@
 */
 
 using McMaster.Extensions.CommandLineUtils;
-using MCP2221IO;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
@@ -38,7 +37,7 @@ namespace MCP2221IOConsole.Commands.I2c
         }
 
         [Required]
-        [Range(1, IDevice.MaxI2cLength)]
+        [Range(typeof(ushort), "1", "65535")]
         [Option(Templates.I2cLength, "The I2C read transfer length", CommandOptionType.SingleValue)]
         public ushort Length { get; set; }
     }

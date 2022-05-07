@@ -40,14 +40,13 @@ namespace MCP2221IOConsole.Commands.I2c
         {
             return ExecuteCommand((device) =>
             {
-                var data = ParseData();
                 var address = ParseAddress();
 
-                console.WriteLine($"Writing [{data.Count}] Bytes To Device [{address}]");
+                console.WriteLine($"Writing [{Data.Count}] Bytes To Device [{address}]");
 
-                device.I2cWriteData(address, data);
+                device.I2cWriteData(address, Data);
 
-                console.WriteLine($"Wrote [{data.Count}] Bytes To Device");
+                console.WriteLine($"Wrote [{Data.Count}] Bytes To Device");
 
                 return 0;
             });

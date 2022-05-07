@@ -22,34 +22,38 @@
 * SOFTWARE.
 */
 
-using McMaster.Extensions.CommandLineUtils;
+using McMaster.Extensions.CommandLineUtils.Abstractions;
 using System;
-using System.Diagnostics.CodeAnalysis;
+using System.Collections.Generic;
+using System.Globalization;
 
-namespace MCP2221IOConsole.Commands.I2c
+namespace MCP2221IOConsole.Parsers
 {
-    [Command(Description = "Write Data to a device on the I2C Bus with a Repeated-START")]
-    [SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "<Pending>")]
-    internal class WriteI2cDataRepeatStartCommand : BaseI2cWriteCommand
+    public class ByteListValueParser : IValueParser
     {
-        public WriteI2cDataRepeatStartCommand(IServiceProvider serviceProvider) : base(serviceProvider)
-        {
-        }
+        public Type TargetType => typeof(IList<byte>);
 
-        protected override int OnExecute(CommandLineApplication app, IConsole console)
+        public object Parse(string argName, string value, CultureInfo culture)
         {
-            return ExecuteCommand((device) =>
+            if(value.Length % 2 != 0)
             {
-                var address = ParseAddress();
+                throw new FormatException($"Invalid value specified for {argName}. '{value}' is not multiple of 2");
+            }
 
-                console.WriteLine($"Writing [{Data.Count}] Bytes To Device [{address}]");
+            var data = new List<byte>();
 
-                device.I2cWriteDataRepeatStart(address, Data);
+            for (var i = 0; i < value.Length; i++)
+            {
+                if(!byte.TryParse(value.Substring(i, 2), NumberStyles.HexNumber, CultureInfo.CurrentCulture, out byte parsedValue))
+                {
+                    throw new FormatException($"Invalid value specified for {argName}. '{value}' is an invalid hex string");
+                }
 
-                console.WriteLine($"Wrote [{Data.Count}] Bytes To Device");
+                data.Add(parsedValue);
+                i++;
+            }
 
-                return 0;
-            });
+            return data;
         }
     }
 }

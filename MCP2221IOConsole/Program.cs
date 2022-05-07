@@ -22,7 +22,7 @@
 * SOFTWARE.
 */
 
-// TODO: Allow hex format integer format for input output
+// TODO: Allow hex format integer format for output
 
 using McMaster.Extensions.CommandLineUtils;
 using MCP2221IOConsole.Commands;
@@ -71,6 +71,7 @@ namespace MCP2221IOConsole
 
                 app.ValueParsers.AddOrReplace(new CustomUShortValueParser());
                 app.ValueParsers.AddOrReplace(new CustomUIntValueParser());
+                app.ValueParsers.AddOrReplace(new ByteListValueParser());
 
                 app.Conventions
                     .UseDefaultConventions()

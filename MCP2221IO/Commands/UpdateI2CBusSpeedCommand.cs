@@ -22,6 +22,7 @@
 * SOFTWARE.
 */
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
@@ -32,6 +33,11 @@ namespace MCP2221IO.Commands
     {
         public SetI2cBusSpeedCommand(int speed) : base(CommandCodes.StatusSetParameters)
         {
+            if (speed > IDevice.I2cMaxSpeed)
+            {
+                throw new ArgumentOutOfRangeException(nameof(speed), speed, $"Must be less than {IDevice.I2cMaxSpeed}");
+            }
+
             Speed = speed;
         }
 

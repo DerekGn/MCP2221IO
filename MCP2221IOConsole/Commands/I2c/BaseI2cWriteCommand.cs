@@ -39,19 +39,8 @@ namespace MCP2221IOConsole.Commands.I2c
 
         [Required]
         [Option(Templates.I2cData, "The data to write as a hex string value", CommandOptionType.SingleValue)]
-        public string Data { get; set; }
+        public IList<byte> Data { get; set; }
 
-        internal IList<byte> ParseData()
-        {
-            var data = new List<byte>();
-
-            for (var i = 0; i < Data.Length; i++)
-            {
-                data.Add(Convert.ToByte(Data.Substring(i, 2), 16));
-                i++;
-            }
-
-            return data;
-        }
+        
     }
 }

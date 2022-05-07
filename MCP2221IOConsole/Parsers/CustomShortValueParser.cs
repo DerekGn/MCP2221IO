@@ -22,35 +22,17 @@
 * SOFTWARE.
 */
 
-using McMaster.Extensions.CommandLineUtils;
-using System;
-using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 
-namespace MCP2221IOConsole.Commands.I2c
+namespace MCP2221IOConsole.Parsers
 {
-    [Command(Description = "Write I2C data")]
-    [SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "<Pending>")]
-    internal class WriteI2cDataCommand : BaseI2cWriteCommand
+    internal class CustomUShortValueParser : BaseIntValueParser<ushort>
     {
-        public WriteI2cDataCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        protected override (bool, ushort) ParseFunction(string value, CultureInfo culture, NumberStyles numberStyles)
         {
-        }
+            bool result = ushort.TryParse(value, numberStyles, culture, out ushort parsedValue);
 
-        protected override int OnExecute(CommandLineApplication app, IConsole console)
-        {
-            return ExecuteCommand((device) =>
-            {
-                var data = ParseData();
-                var address = ParseAddress();
-
-                console.WriteLine($"Writing [{data.Count}] Bytes To Device [{address}]");
-
-                device.I2cWriteData(address, data);
-
-                console.WriteLine($"Wrote [{data.Count}] Bytes To Device");
-
-                return 0;
-            });
+            return (result, parsedValue);
         }
     }
 }

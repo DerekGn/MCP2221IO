@@ -38,7 +38,7 @@ namespace MCP2221IOConsole.Commands.I2c
         }
 
         [Required]
-        [Range(I2cAddress.SevenBitRangeLower, I2cAddress.TenBitRangeUpper)]
+        [Range(typeof(uint), "7", "1023")]
         [Option(Templates.I2cAddress, "The I2C Device Address", CommandOptionType.SingleValue)]
         public uint Address { get; set; }
 

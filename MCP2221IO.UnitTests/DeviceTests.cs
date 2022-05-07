@@ -24,6 +24,7 @@
 
 using FluentAssertions;
 using MCP2221IO.Commands;
+using MCP2221IO.Exceptions;
 using MCP2221IO.Gp;
 using MCP2221IO.Gpio;
 using MCP2221IO.Settings;
@@ -441,7 +442,7 @@ namespace MCP2221IO.UnitTests
         }
 
         [Fact]
-        public void TestI2cWriteDataTestRepartStart()
+        public void TestI2cWriteDataTestRepeatStart()
         {
             // Arrange
             _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
@@ -543,6 +544,20 @@ namespace MCP2221IO.UnitTests
 
             // Assert
             _device.Status.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void TestSetI2cBusSpeedTimeout()
+        {
+            // Arrange
+            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+                .Returns(TestPayloads.DeviceStatusSetSpeedFailedResponse);
+
+            // Act
+            Action act = () => { _device.SetI2cBusSpeed(100); };
+
+            // Assert
+            act.Should().Throw<I2cOperationException>();
         }
 
         [Fact]

@@ -31,6 +31,7 @@ using MCP2221IOConsole.Commands.Gpio;
 using MCP2221IOConsole.Commands.I2c;
 using MCP2221IOConsole.Commands.Sram;
 using MCP2221IOConsole.Commands.Status;
+using MCP2221IOConsole.Parsers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -67,6 +68,9 @@ namespace MCP2221IOConsole
                 var serviceProvider = BuildServiceProvider();
 
                 var app = new CommandLineApplication<Program>();
+
+                app.ValueParsers.AddOrReplace(new CustomUShortValueParser());
+                app.ValueParsers.AddOrReplace(new CustomUIntValueParser());
 
                 app.Conventions
                     .UseDefaultConventions()

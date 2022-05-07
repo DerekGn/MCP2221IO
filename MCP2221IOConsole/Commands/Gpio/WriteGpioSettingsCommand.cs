@@ -30,7 +30,7 @@ using System.Linq;
 
 namespace MCP2221IOConsole.Commands.Gpio
 {
-    [Command(Description = "Write device GPIO settings")]
+    [Command(Description = "Write MCP2221 GPIO Settings")]
     internal class WriteGpioSettingsCommand : BaseCommand
     {
         public WriteGpioSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)

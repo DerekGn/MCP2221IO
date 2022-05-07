@@ -28,7 +28,7 @@ using System;
 
 namespace MCP2221IOConsole.Commands.Sram
 {
-    [Command(Description = "Write device SRAM GP 1 settings")]
+    [Command(Description = "Write MCP2221 SRAM GP 1 settings")]
     internal class WriteSramGp1SettingsCommand : BaseWriteSramGpSettingsCommand
     {
         public WriteSramGp1SettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)

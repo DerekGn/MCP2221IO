@@ -27,7 +27,7 @@ using System;
 
 namespace MCP2221IOConsole.Commands.Sram
 {
-    [Command(Description = "Read device SRAM settings")]
+    [Command(Description = "Read MCP2221 SRAM Settings")]
     internal class ReadSramSettingsCommand : BaseCommand
     {
         public ReadSramSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)

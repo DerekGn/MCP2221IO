@@ -27,7 +27,7 @@ using System;
 
 namespace MCP2221IOConsole.Commands
 {
-    [Command(Description = "Reset the device")]
+    [Command(Description = "Reset the MCP2221")]
     internal class ResetCommand : BaseCommand
     {
         public ResetCommand(IServiceProvider serviceProvider) : base(serviceProvider)

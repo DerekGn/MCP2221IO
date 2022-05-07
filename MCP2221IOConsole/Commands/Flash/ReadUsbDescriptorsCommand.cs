@@ -27,7 +27,7 @@ using System;
 
 namespace MCP2221IOConsole.Commands.Flash
 {
-    [Command( Description = "Read device USB descriptors")]
+    [Command( Description = "Read MCP2221 USB Descriptors")]
     internal class ReadUsbDescriptorsCommand : BaseCommand
     {
         public ReadUsbDescriptorsCommand(IServiceProvider serviceProvider) : base(serviceProvider)

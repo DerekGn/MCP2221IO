@@ -27,7 +27,7 @@ using System;
 
 namespace MCP2221IOConsole.Commands.Flash
 {
-    [Command(Description = "Access device flash settings")]
+    [Command(Description = "Access MCP2221 Flash Settings")]
     [Subcommand(typeof(ReadGpSettingsCommand))]
     [Subcommand(typeof(WriteGpSettingsCommand))]
     [Subcommand(typeof(ReadChipSettingsCommand))]

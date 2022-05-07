@@ -29,7 +29,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MCP2221IOConsole.Commands.Flash
 {
-    [Command(Description = "Write device chip settings")]
+    [Command(Description = "Write MCP2221 Chip Settings")]
     internal class WriteChipSettingsCommand : BaseCommand
     {
         public WriteChipSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)

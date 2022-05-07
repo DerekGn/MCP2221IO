@@ -23,13 +23,34 @@
 */
 
 using McMaster.Extensions.CommandLineUtils;
+using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace MCP2221IOConsole.Commands.I2c
 {
-    [Command(Description = "Read I2C data")]
+    [Command(Description = "Read I2C data from a device on the I2C bus with REPEATED-START")]
     [SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "<Pending>")]
-    internal class ReadI2cDataRepeatStartCommand
+    internal class ReadI2cDataRepeatStartCommand : BaseReadI2cDataCommand
     {
+        public ReadI2cDataRepeatStartCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        {
+        }
+
+        protected override int OnExecute(CommandLineApplication app, IConsole console)
+        {
+            return ExecuteCommand((device) =>
+            {
+                var deviceAddress = ParseAddress();
+
+                console.WriteLine($"Reading the I2C bus device address [{deviceAddress}] with REPEATED-START");
+
+                var result = device.I2cReadDataRepeatedStart(deviceAddress, Length);
+
+                console.WriteLine($"Read [{result.Count}] bytes from I2C device. [{BitConverter.ToString(result.ToArray())}]");
+
+                return 0;
+            });
+        }
     }
 }

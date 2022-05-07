@@ -27,7 +27,7 @@ using System;
 
 namespace MCP2221IOConsole.Commands.Status
 {
-    [Command(Description = "Access device status settings")]
+    [Command(Description = "Access MCP2221 Status Settings")]
     [Subcommand(typeof(ReadStatusCommand))]
     internal class StatusCommand : BaseCommand
     {

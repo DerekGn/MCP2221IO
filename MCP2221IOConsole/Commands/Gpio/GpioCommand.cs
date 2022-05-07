@@ -27,7 +27,7 @@ using System;
 
 namespace MCP2221IOConsole.Commands.Gpio
 {
-    [Command(Description = "Access device GPIO settings")]
+    [Command(Description = "Access MCP2221 GPIO Settings")]
     [Subcommand(typeof(ReadGpioSettingsCommand))]
     [Subcommand(typeof(WriteGpioSettingsCommand))]
     internal class GpioCommand : BaseCommand

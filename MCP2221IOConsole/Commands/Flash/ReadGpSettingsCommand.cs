@@ -27,7 +27,7 @@ using System;
 
 namespace MCP2221IOConsole.Commands.Flash
 {
-    [Command(Description = "Read Device GP Settings")]
+    [Command(Description = "Read MCP2221 GP Settings")]
     internal class ReadGpSettingsCommand : BaseCommand
     {
         public ReadGpSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)

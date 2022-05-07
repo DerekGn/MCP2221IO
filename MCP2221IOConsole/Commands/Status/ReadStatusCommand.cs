@@ -27,7 +27,7 @@ using System;
 
 namespace MCP2221IOConsole.Commands.Status
 {
-    [Command(Description = "Read device status")]
+    [Command(Description = "Read MCP2221 Status")]
     internal class ReadStatusCommand : BaseCommand
     {
         public ReadStatusCommand(IServiceProvider serviceProvider) : base(serviceProvider)

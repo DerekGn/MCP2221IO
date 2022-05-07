@@ -22,16 +22,34 @@
 * SOFTWARE.
 */
 
+using McMaster.Extensions.CommandLineUtils;
 using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace MCP2221IOConsole.Commands.I2c
 {
+    [Command(Description = "Write Data to a device on the I2C bus with NO-STOP")]
     [SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "<Pending>")]
     internal class WriteI2cDataNoStopCommand : BaseI2cWriteCommand
     {
         public WriteI2cDataNoStopCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
+        }
+
+        protected override int OnExecute(CommandLineApplication app, IConsole console)
+        {
+            return ExecuteCommand((device) =>
+            {
+                var address = ParseAddress();
+
+                console.WriteLine($"Writing [{Data.Count}] bytes to device [{address}] with NO-STOP");
+
+                device.I2cWriteDataNoStop(address, Data);
+
+                console.WriteLine($"Wrote [{Data.Count}] bytes to device");
+
+                return 0;
+            });
         }
     }
 }

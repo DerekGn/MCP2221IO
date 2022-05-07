@@ -2,7 +2,7 @@
   "profiles": {
     "MCP2221IOConsole": {
       "commandName": "Project",
-      "commandLineArgs": "i2c scan-i2c-bus"
+      "commandLineArgs": " i2c read-i2c-data -il 1 -ia 91"
     }
   }
 }

@@ -24,6 +24,7 @@
 
 using MCP2221IO.Exceptions;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 
@@ -32,6 +33,7 @@ namespace MCP2221IO.Responses
     /// <summary>
     /// Get I2C data from the device
     /// </summary>
+    [SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "<Pending>")]
     internal class GetI2cDataResponse : BaseResponse
     {
         public GetI2cDataResponse() : base(Commands.CommandCodes.GetI2cData)
@@ -43,6 +45,8 @@ namespace MCP2221IO.Responses
         public override void Deserialize(Stream stream)
         {
             base.Deserialize(stream);
+
+            stream.Position++;
 
             int temp = stream.ReadByte();
 
@@ -56,7 +60,7 @@ namespace MCP2221IO.Responses
 
                 stream.Read(buffer);
 
-                Data = buffer.ToList();
+                Data = new List<byte>(buffer);
             }
         }
     }

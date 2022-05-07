@@ -25,31 +25,21 @@
 using McMaster.Extensions.CommandLineUtils;
 using MCP2221IO;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 
 namespace MCP2221IOConsole.Commands.I2c
 {
-    [Command(Description = "Write I2C data")]
     [SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "<Pending>")]
-    internal class WriteI2cDataCommand : BaseI2cWriteCommand
+    internal abstract class BaseReadI2cDataCommand : BaseI2cCommand
     {
-        public WriteI2cDataCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        protected BaseReadI2cDataCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 
-        protected override int OnExecute(CommandLineApplication app, IConsole console)
-        {
-            return ExecuteCommand((device) =>
-            {
-                var data = ParseData();
-                var address = ParseAddress();
-
-                console.WriteLine($"Writing [{data.Count}] Bytes To Device [{address}]");
-
-                device.I2cWriteData(address, data);
-
-                return 0;
-            });
-        }
+        [Required]
+        [Range(1, IDevice.MaxI2cLength)]
+        [Option(Templates.I2cLength, "The I2C read transfer length", CommandOptionType.SingleValue)]
+        public ushort Length { get; set; }
     }
 }

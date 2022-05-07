@@ -24,6 +24,7 @@
 
 using MCP2221IO.Extensions;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 
@@ -32,6 +33,7 @@ namespace MCP2221IO.Commands
     /// <summary>
     /// Write I2C data to a device
     /// </summary>
+    [SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "<Pending>")]
     internal class I2cWriteDataCommand : BaseCommand
     {
         public I2cWriteDataCommand(CommandCodes commandCode, I2cAddress address, IList<byte> data) : base(commandCode)

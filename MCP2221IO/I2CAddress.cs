@@ -76,7 +76,7 @@ namespace MCP2221IO
         {
             StringBuilder stringBuilder = new StringBuilder();
 
-            stringBuilder.Append($"{nameof(Value)}: {Value} {nameof(Size)}: {Size}");
+            stringBuilder.Append($"{nameof(Value)}: 0x{Value:X4} {nameof(Size)}: {Size}");
 
             return stringBuilder.ToString();
         }

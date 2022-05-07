@@ -23,33 +23,35 @@
 */
 
 using McMaster.Extensions.CommandLineUtils;
-using MCP2221IO;
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 
 namespace MCP2221IOConsole.Commands.I2c
 {
-    [Command(Description = "Write I2C data")]
     [SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "<Pending>")]
-    internal class WriteI2cDataCommand : BaseI2cWriteCommand
+    internal class BaseI2cWriteCommand : BaseI2cCommand
     {
-        public WriteI2cDataCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public BaseI2cWriteCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 
-        protected override int OnExecute(CommandLineApplication app, IConsole console)
+        [Required]
+        [Option(Templates.I2cData, "The data to write as a hex string value", CommandOptionType.SingleValue)]
+        public string Data { get; set; }
+
+        internal IList<byte> ParseData()
         {
-            return ExecuteCommand((device) =>
+            var data = new List<byte>();
+
+            for (var i = 0; i < Data.Length; i++)
             {
-                var data = ParseData();
-                var address = ParseAddress();
+                data.Add(Convert.ToByte(Data.Substring(i, 2), 16));
+                i++;
+            }
 
-                console.WriteLine($"Writing [{data.Count}] Bytes To Device [{address}]");
-
-                device.I2cWriteData(address, data);
-
-                return 0;
-            });
+            return data;
         }
     }
 }

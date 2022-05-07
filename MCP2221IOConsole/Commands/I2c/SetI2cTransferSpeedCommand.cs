@@ -46,7 +46,7 @@ namespace MCP2221IOConsole.Commands.I2c
         {
             return ExecuteCommand((device) =>
             {
-                device.WriteI2cBusSpeed(Speed);
+                device.SetI2cBusSpeed(Speed);
 
                 return 0;
             });

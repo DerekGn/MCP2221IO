@@ -539,7 +539,7 @@ namespace MCP2221IO.UnitTests
                 .Returns(TestPayloads.DeviceStatusResponse);
 
             // Act
-            _device.WriteI2cBusSpeed(100);
+            _device.SetI2cBusSpeed(100);
 
             // Assert
             _device.Status.Should().NotBeNull();

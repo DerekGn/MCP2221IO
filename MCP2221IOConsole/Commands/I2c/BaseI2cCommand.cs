@@ -42,9 +42,9 @@ namespace MCP2221IOConsole.Commands.I2c
         [Option(Templates.I2cAddress, "The I2C Device Address", CommandOptionType.SingleValue)]
         public uint Address { get; set; }
 
-        [Required]
-        [Range(0, IDevice.MaxI2cLength)]
-        [Option(Templates.I2cAddress, "The I2C transfer length", CommandOptionType.SingleValue)]
-        public ushort Length{ get; set; }
+        internal I2cAddress ParseAddress()
+        {
+            return new I2cAddress(Address, Address > I2cAddress.SevenBitRangeUpper ? I2cAddressSize.TenBit : I2cAddressSize.SevenBit);
+        }
     }
 }

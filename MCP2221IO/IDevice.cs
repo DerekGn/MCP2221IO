@@ -22,6 +22,8 @@
 * SOFTWARE.
 */
 
+// TODO: Add async operations
+
 using MCP2221IO.Gpio;
 using MCP2221IO.Settings;
 using System;
@@ -123,9 +125,9 @@ namespace MCP2221IO
         void CancelI2cBusTransfer();
 
         /// <summary>
-        /// Write the I2C bus speed
+        /// Set the I2C bus speed
         /// </summary>
-        void WriteI2cBusSpeed(int speed);
+        void SetI2cBusSpeed(int speed);
 
         /// <summary>
         /// Read the <see cref="DeviceStatus"/> from the device

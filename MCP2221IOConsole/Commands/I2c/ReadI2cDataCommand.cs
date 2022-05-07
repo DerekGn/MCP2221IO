@@ -23,15 +23,15 @@
 */
 
 using McMaster.Extensions.CommandLineUtils;
-using MCP2221IO;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
 namespace MCP2221IOConsole.Commands.I2c
 {
     [Command(Description = "Read Data from a device on the I2C Bus")]
     [SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "<Pending>")]
-    internal class ReadI2cDataCommand : BaseI2cCommand
+    internal class ReadI2cDataCommand : BaseReadI2cDataCommand
     {
         public ReadI2cDataCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
@@ -41,19 +41,13 @@ namespace MCP2221IOConsole.Commands.I2c
         {
             return ExecuteCommand((device) =>
             {
-                I2cAddress deviceAddress = new I2cAddress(Address, Address > I2cAddress.SevenBitRangeUpper ? I2cAddressSize.TenBit : I2cAddressSize.SevenBit);
+                var deviceAddress = ParseAddress();
 
                 console.WriteLine($"Reading the I2C Bus Device Address [{deviceAddress}]");
 
-                //var result = device.I2cReadData(deviceAddress, )
+                var result = device.I2cReadData(deviceAddress, Length);
 
-                //console.WriteLine($"Found [0x{result.Count:X4}] I2C Device");
-                //console.WriteLine("".PadRight(25, '='));
-
-                //foreach (var address in result)
-                //{
-                //    console.WriteLine($"Device [0x{address.Value:X4}]");
-                //}
+                console.WriteLine($"Read [{result.Count}] Bytes from I2C Device. [{BitConverter.ToString(result.ToArray())}]");
 
                 return 0;
             });

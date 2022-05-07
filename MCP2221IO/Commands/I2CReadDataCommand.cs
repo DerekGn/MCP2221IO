@@ -23,6 +23,7 @@
 */
 
 using MCP2221IO.Extensions;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 
@@ -31,6 +32,7 @@ namespace MCP2221IO.Commands
     /// <summary>
     /// Read I2C data command
     /// </summary>
+    [SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "<Pending>")]
     internal class I2cReadDataCommand : BaseCommand
     {
         public I2cReadDataCommand(CommandCodes commandCode, I2cAddress address, ushort length) : base(commandCode)

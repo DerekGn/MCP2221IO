@@ -22,6 +22,8 @@
 * SOFTWARE.
 */
 
+// TODO: Allow output format specification for tostring operations
+
 using MCP2221IO.Commands;
 using MCP2221IO.Exceptions;
 using MCP2221IO.Gpio;
@@ -33,6 +35,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace MCP2221IO
@@ -42,13 +45,16 @@ namespace MCP2221IO
     /// </summary>
     public class Device : IDevice
     {
+        internal const int MaxBlockSize = 60;
         internal bool _gpioPortsRead = false;
+
+        private const int MaxRetries = 5;
 
         private readonly ILogger<IDevice> _logger;
         private string _factorySerialNumber;
         private IHidDevice _hidDevice;
         private int _speed = 100000;
-
+        
         public Device(ILogger<IDevice> logger, IHidDevice hidDevice)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -294,20 +300,30 @@ namespace MCP2221IO
         }
 
         // <inheritdoc/>
-        public void WriteI2cBusSpeed(int speed)
+        public void SetI2cBusSpeed(int speed)
         {
             HandleOperationExecution(
                 nameof(Device),
                 () =>
                 {
-                    Status = ExecuteCommand<StatusSetParametersResponse>(new UpdateI2cBusSpeedCommand(speed)).DeviceStatus;
+                    int retryCount = 0;
 
-                    if (Status.SpeedStatus != I2cSpeedStatus.Set)
+                    do
                     {
-                        CancelI2cBusTransfer();
-                    }
+                        Status = ExecuteCommand<StatusSetParametersResponse>(new UpdateI2cBusSpeedCommand(speed)).DeviceStatus;
 
-                    _speed = speed;
+                        retryCount++;
+
+                    } while (Status.SpeedStatus != I2cSpeedStatus.Set && retryCount < MaxRetries);
+
+                    if(retryCount == MaxRetries)
+                    {
+                        throw new I2cOperationException("Unable to set I2C Speed exceeded retry count");
+                    }
+                    else
+                    {
+                        _speed = speed;
+                    }
                 });
         }
 
@@ -386,8 +402,6 @@ namespace MCP2221IO
             uint upperAddress = useTenBitAddressing ? I2cAddress.TenBitRangeUpper : I2cAddress.SevenBitRangeUpper;
 
             _logger.LogDebug($"Setting I2C Speed: [0x{_speed:X}] [{_speed}]");
-
-            WriteI2cBusSpeed(_speed);
 
             for (uint i = I2cAddress.SevenBitRangeLower + 1; i < upperAddress; i++)
             {
@@ -479,21 +493,31 @@ namespace MCP2221IO
 
             if (data.Count > IDevice.MaxI2cLength)
             {
-                throw new ArgumentOutOfRangeException(nameof(data), data, $"Must be less than  0x{IDevice.MaxI2cLength:X4}");
+                throw new ArgumentOutOfRangeException(nameof(data), data, $"Must be less than 0x{IDevice.MaxI2cLength:X4}");
+            }
+
+            if (data.Count == 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(data), data, $"Must be greater than 0");
             }
 
             HandleOperationExecution(
                 nameof(Device),
                 () =>
                 {
-                    //int blockCount = (data.Count + MaxBlockSize - 1) / MaxBlockSize;
+                    int blockCount = (data.Count + MaxBlockSize - 1) / MaxBlockSize;
 
-                    //for (int i = 0; i < blockCount; i++)
-                    //{
-                    //    int blockSize = Math.Min(MaxBlockSize, Math.Abs(data.Count - (i * MaxBlockSize)));
+                    for (int i = 0; i < blockCount; i++)
+                    {
+                        int blockSize = Math.Min(MaxBlockSize, Math.Abs(data.Count - (i * MaxBlockSize)));
 
-                    //    ExecuteCommand<T>(new I2cWriteDataCommand(commandCode, address, data.Skip(MaxBlockSize * i).Take(blockSize).ToList()));
-                    //}
+                        T response = ExecuteCommand<T>(new I2cWriteDataCommand(commandCode, address, data.Skip(MaxBlockSize * i).Take(blockSize).ToList()));
+
+                        if(response.ExecutionResult != 0)
+                        {
+                            throw new I2cOperationException(response.ExecutionResult, $"{nameof(I2cWriteData)} The write of i2c data failed with execution result code [0x{response.ExecutionResult:x}]");
+                        }
+                    }
                 });
         }
 

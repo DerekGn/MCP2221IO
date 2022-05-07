@@ -29,7 +29,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MCP2221IOConsole.Commands.Sram
 {
-    [Command(Description = "Write Device SRAM Settings")]
+    [Command(Description = "Write device SRAM settings")]
     internal class WriteSramSettingsCommand : BaseCommand
     {
         public WriteSramSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)

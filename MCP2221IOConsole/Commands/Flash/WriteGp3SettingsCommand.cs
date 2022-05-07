@@ -5,14 +5,14 @@ using System;
 
 namespace MCP2221IOConsole.Commands.Flash
 {
-    [Command(Description = "Write GP3 Power Up Settings")]
+    [Command(Description = "Write GP3 power up settings")]
     internal class WriteGp3SettingsCommand : BaseWriteGpSetingsCommand
     {
         public WriteGp3SettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 
-        [Option(Templates.GpDesignation, "The GP3 Power Up Designation", CommandOptionType.SingleValue)]
+        [Option(Templates.GpDesignation, "The GP3 power up designation", CommandOptionType.SingleValue)]
         public (bool HasValue, Gp3Designation Value) Designation { get; set; }
 
         protected override int OnExecute(CommandLineApplication app, IConsole console)

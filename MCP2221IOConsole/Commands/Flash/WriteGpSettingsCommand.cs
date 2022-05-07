@@ -27,7 +27,7 @@ using System;
 
 namespace MCP2221IOConsole.Commands.Flash
 {
-    [Command(Description = "Write Device GP Settings")]
+    [Command(Description = "Write device GP settings")]
     [Subcommand(typeof(WriteGp0SettingsCommand))]
     [Subcommand(typeof(WriteGp1SettingsCommand))]
     [Subcommand(typeof(WriteGp2SettingsCommand))]

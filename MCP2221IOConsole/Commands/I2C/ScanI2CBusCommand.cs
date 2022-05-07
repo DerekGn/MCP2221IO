@@ -28,7 +28,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace MCP2221IOConsole.Commands.I2c
 {
-    [Command(Description = "Scan the I2C Bus")]
+    [Command(Description = "Scan the I2C bus")]
     [SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "<Pending>")]
     internal class ScanI2cBusCommand : BaseCommand
     {
@@ -36,19 +36,19 @@ namespace MCP2221IOConsole.Commands.I2c
         {
         }
 
-        [Option(Templates.TenBitAddressing, "Use Ten bit device addressing", CommandOptionType.SingleValue)]
+        [Option(Templates.TenBitAddressing, "Use ten bit device addressing", CommandOptionType.SingleValue)]
         public (bool HasValue, bool Value) TenBitAddressing { get; set; }
 
         protected override int OnExecute(CommandLineApplication app, IConsole console)
         {
             return ExecuteCommand((device) =>
             {
-                console.WriteLine($"Scanning the I2C Bus");
-                console.WriteLine($"10 Bit Addressing [{TenBitAddressing.HasValue && TenBitAddressing.Value}]");
+                console.WriteLine($"Scanning the I2C bus");
+                console.WriteLine($"10 bit addressing [{TenBitAddressing.HasValue && TenBitAddressing.Value}]");
                 
                 var result = device.I2cScanBus(TenBitAddressing.HasValue && TenBitAddressing.Value);
 
-                console.WriteLine($"Found [0x{result.Count:X4}] I2C Device");
+                console.WriteLine($"Found [0x{result.Count:X4}] I2C device");
                 console.WriteLine("".PadRight(25, '='));
 
                 foreach (var address in result)

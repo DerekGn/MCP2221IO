@@ -67,7 +67,7 @@ namespace MCP2221IOConsole.Commands.Flash
 
                 device.WriteGpSettings();
 
-                console.WriteLine("GP Settings Updated");
+                console.WriteLine("GP settings updated");
             }
         }
     }

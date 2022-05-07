@@ -29,7 +29,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace MCP2221IOConsole.Commands.I2c
 {
-    [Command(Description = "Set the I2C Transfer Speed")]
+    [Command(Description = "Set the I2C transfer speed")]
     [SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "<Pending>")]
     internal class SetI2cTransferSpeedCommand : BaseCommand
     {
@@ -39,7 +39,7 @@ namespace MCP2221IOConsole.Commands.I2c
 
         [Required]
         [Range(0, 400000)]
-        [Option(Templates.Speed, "The I2C Speed", CommandOptionType.SingleValue)]
+        [Option(Templates.Speed, "The I2C speed", CommandOptionType.SingleValue)]
         public int Speed { get; set; }
 
         protected override int OnExecute(CommandLineApplication app, IConsole console)

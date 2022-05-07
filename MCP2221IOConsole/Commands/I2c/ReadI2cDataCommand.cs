@@ -29,7 +29,7 @@ using System.Linq;
 
 namespace MCP2221IOConsole.Commands.I2c
 {
-    [Command(Description = "Read Data from a device on the I2C Bus")]
+    [Command(Description = "Read data from a device on the I2C bus")]
     [SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "<Pending>")]
     internal class ReadI2cDataCommand : BaseReadI2cDataCommand
     {
@@ -43,11 +43,11 @@ namespace MCP2221IOConsole.Commands.I2c
             {
                 var deviceAddress = ParseAddress();
 
-                console.WriteLine($"Reading the I2C Bus Device Address [{deviceAddress}]");
+                console.WriteLine($"Reading the I2C bus device address [{deviceAddress}]");
 
                 var result = device.I2cReadData(deviceAddress, Length);
 
-                console.WriteLine($"Read [{result.Count}] Bytes from I2C Device. [{BitConverter.ToString(result.ToArray())}]");
+                console.WriteLine($"Read [{result.Count}] bytes from I2C device. [{BitConverter.ToString(result.ToArray())}]");
 
                 return 0;
             });

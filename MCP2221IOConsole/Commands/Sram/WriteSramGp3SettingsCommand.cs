@@ -28,14 +28,14 @@ using System;
 
 namespace MCP2221IOConsole.Commands.Sram
 {
-    [Command(Description = "Write Device SRAM GP 3 Settings")]
+    [Command(Description = "Write device SRAM GP 3 settings")]
     internal class WriteSramGp3SettingsCommand : BaseWriteSramGpSettingsCommand
     {
         public WriteSramGp3SettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 
-        [Option(Templates.SramGpDesignation, "The GP 3 Designation", CommandOptionType.SingleValue)]
+        [Option(Templates.SramGpDesignation, "The GP 3 designation", CommandOptionType.SingleValue)]
         public (bool HasValue, Gp3Designation Value) Designation { get; set; }
 
         protected override int OnExecute(CommandLineApplication app, IConsole console)

@@ -28,7 +28,6 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace MCP2221IOConsole.Commands.I2c
 {
-    [Command(Description = "Execute Device I2C functions")]
     [Subcommand(typeof(SetI2cTransferSpeedCommand))]
     [Subcommand(typeof(CancelI2cTransferCommand))]
     [Subcommand(typeof(ScanI2cBusCommand))]
@@ -37,6 +36,7 @@ namespace MCP2221IOConsole.Commands.I2c
     [Subcommand(typeof(WriteI2cDataCommand))]
     [Subcommand(typeof(WriteI2cDataRepeatStartCommand))]
     [Subcommand(typeof(WriteI2cDataNoStopCommand))]
+    [Command(Description = "Execute I2C functions")]
     [SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "<Pending>")]
     internal class I2cCommand : BaseCommand
     {

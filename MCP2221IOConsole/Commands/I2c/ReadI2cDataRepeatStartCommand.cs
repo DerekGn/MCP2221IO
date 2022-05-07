@@ -22,10 +22,12 @@
 * SOFTWARE.
 */
 
+using McMaster.Extensions.CommandLineUtils;
 using System.Diagnostics.CodeAnalysis;
 
 namespace MCP2221IOConsole.Commands.I2c
 {
+    [Command(Description = "Read I2C data")]
     [SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "<Pending>")]
     internal class ReadI2cDataRepeatStartCommand
     {

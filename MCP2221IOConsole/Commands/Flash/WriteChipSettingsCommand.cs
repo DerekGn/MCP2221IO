@@ -29,7 +29,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MCP2221IOConsole.Commands.Flash
 {
-    [Command(Description = "Write Device Chip Settings")]
+    [Command(Description = "Write device chip settings")]
     internal class WriteChipSettingsCommand : BaseCommand
     {
         public WriteChipSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
@@ -64,16 +64,16 @@ namespace MCP2221IOConsole.Commands.Flash
         [Option(Templates.DacVrm, Description = "The DAC VRM voltage")]
         public (bool HasValue, VrmRef Value) DacRefVrm { get; set; }
 
-        [Option(Templates.InterruptNegative, "Enable Interrupt detection will trigger on negative edges", CommandOptionType.SingleValue)]
+        [Option(Templates.InterruptNegative, "Enable interrupt detection will trigger on negative edges", CommandOptionType.SingleValue)]
         public (bool HasValue, bool Value) InterruptNegativeEdge { get; set; }
 
-        [Option(Templates.InterruptPositive, "Enable Interrupt detection will trigger on positive edges", CommandOptionType.SingleValue)]
+        [Option(Templates.InterruptPositive, "Enable interrupt detection will trigger on positive edges", CommandOptionType.SingleValue)]
         public (bool HasValue, bool Value) InterruptPositiveEdge { get; set; }
 
-        [Option(null, "USB Remote Wake-Up Capability", CommandOptionType.SingleValue)]
+        [Option(null, "USB Remote Wake-Up capability", CommandOptionType.SingleValue)]
         public (bool HasValue, UsbRemoteWake Value) RemoteWake { get; set; }
 
-        [Option(Templates.SelfPowered, "USB Self powered Capability", CommandOptionType.SingleValue)]
+        [Option(Templates.SelfPowered, "USB Self powered capability", CommandOptionType.SingleValue)]
         public (bool HasValue, UsbSelfPowered Value) SelfPowered { get; set; }
 
         [Range(0, 500)]
@@ -86,7 +86,7 @@ namespace MCP2221IOConsole.Commands.Flash
         [Option(Templates.NewVid, "The new USB VID value", CommandOptionType.SingleValue)]
         public (bool HasValue, ushort Value) NewVid { get; set; }
 
-        [Option(Templates.Password, "", CommandOptionType.SingleValue)]
+        [Option(Templates.Password, "The 8-byte password for Flash modifications protection", CommandOptionType.SingleValue)]
         public (bool HasValue, string Value) Password { get; set; }
 
         protected override int OnExecute(CommandLineApplication app, IConsole console)

@@ -27,7 +27,7 @@ using System;
 
 namespace MCP2221IOConsole.Commands
 {
-    [Command(Description = "Reset the Device")]
+    [Command(Description = "Reset the device")]
     internal class ResetCommand : BaseCommand
     {
         public ResetCommand(IServiceProvider serviceProvider) : base(serviceProvider)
@@ -40,7 +40,7 @@ namespace MCP2221IOConsole.Commands
             {
                 device.Reset();
 
-                console.WriteLine("Device Reset");
+                console.WriteLine("Device reset");
 
                 return 0;
             });

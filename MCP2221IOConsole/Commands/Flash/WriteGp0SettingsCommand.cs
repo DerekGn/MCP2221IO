@@ -28,14 +28,14 @@ using System;
 
 namespace MCP2221IOConsole.Commands.Flash
 {
-    [Command(Description = "Write GP0 Power Up Settings")]
+    [Command(Description = "Write GP0 power up settings")]
     internal class WriteGp0SettingsCommand : BaseWriteGpSetingsCommand
     {
         public WriteGp0SettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 
-        [Option(Templates.GpDesignation, "The GP0 Power Up Designation", CommandOptionType.SingleValue)]
+        [Option(Templates.GpDesignation, "The GP0 power up designation", CommandOptionType.SingleValue)]
         public (bool HasValue, Gp0Designation Value) Designation { get; set; }
 
         protected override int OnExecute(CommandLineApplication app, IConsole console)

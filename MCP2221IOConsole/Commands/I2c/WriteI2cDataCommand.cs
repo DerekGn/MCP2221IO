@@ -42,11 +42,11 @@ namespace MCP2221IOConsole.Commands.I2c
             {
                 var address = ParseAddress();
 
-                console.WriteLine($"Writing [{Data.Count}] Bytes To Device [{address}]");
+                console.WriteLine($"Writing [{Data.Count}] bytes To device [{address}]");
 
                 device.I2cWriteData(address, Data);
 
-                console.WriteLine($"Wrote [{Data.Count}] Bytes To Device");
+                console.WriteLine($"Wrote [{Data.Count}] bytes To device");
 
                 return 0;
             });

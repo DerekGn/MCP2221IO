@@ -27,7 +27,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace MCP2221IOConsole.Commands.I2c
 {
-    [Command(Description = "Cancel Current I2C transfer")]
+    [Command(Description = "Cancel current I2C transfer")]
     [SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "<Pending>")]
     internal class CancelI2cTransferCommand : BaseCommand
     {
@@ -41,7 +41,7 @@ namespace MCP2221IOConsole.Commands.I2c
             {
                 device.CancelI2cBusTransfer();
 
-                console.WriteLine($"Transfer State: {device.Status.CancelTransferState}");
+                console.WriteLine($"Transfer state: {device.Status.CancelTransferState}");
 
                 return 0;
             });

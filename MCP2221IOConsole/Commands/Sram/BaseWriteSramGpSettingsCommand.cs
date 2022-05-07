@@ -67,7 +67,7 @@ namespace MCP2221IOConsole.Commands.Sram
 
                 device.WriteSramSettings(false);
 
-                console.WriteLine("GP SRAM Settings Updated");
+                console.WriteLine("GP SRAM Settings updated");
             }
         }
     }

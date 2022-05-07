@@ -46,7 +46,7 @@ namespace MCP2221IOConsole.Commands
         [Option(Templates.Pid, "The PID of the MCP2221", CommandOptionType.SingleValue)]
         public int Pid { get; set; } = 0x00DD;
 
-        [Option(Templates.SerialNumber, "The MCP2221 instance Serial Number", CommandOptionType.SingleValue)]
+        [Option(Templates.SerialNumber, "The MCP2221 instance serial number", CommandOptionType.SingleValue)]
         public string Serial { get; set; }
 
         protected int ExecuteCommand(Func<IDevice, int> action)

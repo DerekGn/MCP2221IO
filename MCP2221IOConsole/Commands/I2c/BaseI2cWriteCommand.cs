@@ -38,7 +38,7 @@ namespace MCP2221IOConsole.Commands.I2c
         }
 
         [Required]
-        [Option(Templates.I2cData, "The data to write as a hex string value", CommandOptionType.SingleValue)]
+        [Option(Templates.I2cData, "The data to write. Input as a Hex string", CommandOptionType.SingleValue)]
         public IList<byte> Data { get; set; }
 
         

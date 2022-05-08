@@ -72,6 +72,11 @@ namespace MCP2221IO
         public byte I2cClockDivisor { get; private set; }
 
         /// <summary>
+        /// Current I2C communication speed
+        /// </summary>
+        public int I2cSpeed { get; private set; }
+
+        /// <summary>
         /// Current I2C timeout value
         /// </summary>
         public byte I2cTimeout { get; private set; }
@@ -133,6 +138,7 @@ namespace MCP2221IO
             stringBuilder.AppendLine($"{nameof(I2cTransferredLength)}: 0x{I2cTransferredLength:X}");
             stringBuilder.AppendLine($"{nameof(I2cBufferCounter)}: 0x{I2cBufferCounter:X}");
             stringBuilder.AppendLine($"{nameof(I2cClockDivisor)}: 0x{I2cClockDivisor:X}");
+            stringBuilder.AppendLine($"{nameof(I2cSpeed)}: 0x{I2cSpeed:X}");
             stringBuilder.AppendLine($"{nameof(I2cTimeout)}: 0x{I2cTimeout:X}");
             stringBuilder.AppendLine($"{nameof(I2cAddress)}: 0x{I2cAddress:X}");
             stringBuilder.AppendLine($"{nameof(AckStatus)}: {AckStatus}");
@@ -192,6 +198,8 @@ namespace MCP2221IO
             }
 
             Adc = adc.AsReadOnly();
+
+            I2cSpeed = 12000000 / (I2cClockDivisor + 2);
         }
     }
 }

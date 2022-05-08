@@ -63,7 +63,7 @@ namespace MCP2221IOConsole.Commands
         public const string SramGpDesignation = "-sgd|--sram-gp-designation";
         public const string UsbManufacturer = "-um|--usb-manufacturer";
 
-        public const string Speed = "-spd|--speed";
+        public const string Speed = "-is|--i2c-speed";
 
         public const string I2cAddress = "-ia| --i2c-address";
         public const string I2cLength = "-il| --i2c-length";

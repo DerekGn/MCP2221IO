@@ -38,7 +38,7 @@ namespace MCP2221IOConsole.Commands.I2c
         }
 
         [Required]
-        [Range(0, 400000)]
+        [Range(1, 400000)]
         [Option(Templates.Speed, "The I2C speed", CommandOptionType.SingleValue)]
         public int Speed { get; set; }
 

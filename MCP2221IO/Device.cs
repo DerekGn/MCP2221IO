@@ -53,7 +53,6 @@ namespace MCP2221IO
         private readonly ILogger<IDevice> _logger;
         private string _factorySerialNumber;
         private IHidDevice _hidDevice;
-        private int _speed = 100000;
         
         public Device(ILogger<IDevice> logger, IHidDevice hidDevice)
         {
@@ -319,10 +318,6 @@ namespace MCP2221IO
                     if(retryCount == MaxRetries)
                     {
                         throw new I2cOperationException("Unable to set I2C Speed exceeded retry count");
-                    }
-                    else
-                    {
-                        _speed = speed;
                     }
                 });
         }

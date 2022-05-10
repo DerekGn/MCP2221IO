@@ -321,16 +321,6 @@ namespace MCP2221IO
         void SmBusWriteLongCommand(I2cAddress address, byte command, long data, bool pec = false);
 
         /// <summary>
-        /// Execute a process call from the bus
-        /// </summary>
-        /// <param name="address">The <see cref="I2cAddress"/></param>
-        /// <param name="command">The <see cref="byte"/> command</param>
-        /// <param name="data">The <see cref="short"/> data</param>
-        /// <param name="pec">Send data with packet error check</param>
-        /// <returns>The result of the processing</returns>
-        short SmBusProceesCall(I2cAddress address, byte command, short data, bool pec = false);
-
-        /// <summary>
         /// Read a block of bytes from the bus with a command code
         /// </summary>
         /// <param name="address">The <see cref="I2cAddress"/></param>
@@ -346,7 +336,5 @@ namespace MCP2221IO
         /// <param name="command">The <see cref="byte"/> command</param>
         /// <param name="block">The <see cref="IList{T}"/> of <see cref="byte"/></param>
         void SmBusBlockWrite(I2cAddress address, byte command, IList<byte> block);
-
-        // Process block reads/write
     }
 }

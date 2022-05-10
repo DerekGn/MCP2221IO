@@ -105,7 +105,7 @@ namespace MCP2221IO.UnitTests
         {
             // Arrange
             _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
-                .Returns(TestPayloads.SramSettingsResponse);
+                .Returns(TestPayloads.ReadSramSettingsResponse);
 
             // Act
             _device.ReadSramSettings();
@@ -178,7 +178,7 @@ namespace MCP2221IO.UnitTests
         {
             // Arrange
             _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
-                .Returns(WriteFlashWriteResponse(0));
+                .Returns(TestPayloads.WriteSramSettingsResponse);
 
             _device.SramSettings = new SramSettings()
             {

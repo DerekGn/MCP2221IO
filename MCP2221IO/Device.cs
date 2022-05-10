@@ -23,7 +23,6 @@
 */
 
 // TODO: Allow output format specification for tostring operations
-// TODO: Allow zero byte packet write
 
 using MCP2221IO.Commands;
 using MCP2221IO.Exceptions;
@@ -410,11 +409,11 @@ namespace MCP2221IO
 
                     if (write)
                     {
-                        I2cWriteData<I2cWriteDataResponse>(CommandCodes.WriteI2cData, address, new List<byte>());
+                        ExecuteCommand<I2cWriteDataResponse>(new I2cWriteDataCommand(CommandCodes.WriteI2cData, address, new List<byte>()));
                     }
                     else
                     {
-                        I2cReadData<I2cReadDataResponse>(CommandCodes.ReadI2cData, address, 0);
+                        ExecuteCommand<I2cReadDataResponse>(new I2cReadDataCommand(CommandCodes.ReadI2cData, address, 0));
                     }
                 });
         }
@@ -507,13 +506,30 @@ namespace MCP2221IO
         // <inheritdoc/>
         public IList<byte> SmBusBlockRead(I2cAddress address, byte command, byte count)
         {
-            throw new NotImplementedException();
+            return HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    List<byte> writeData = new List<byte>() { command };
+
+                    I2cWriteData<I2cWriteDataNoStopResponse>(CommandCodes.WriteI2cDataNoStop, address, writeData);
+
+                    var result = I2cReadData<I2cReadDataResponse>(CommandCodes.ReadI2cData, address, count);
+
+                    AssertPec(result);
+
+                    return result;
+                });
         }
 
         // <inheritdoc/>
         public void SmBusBlockWrite(I2cAddress address, byte command, IList<byte> block)
         {
-            throw new NotImplementedException();
+            HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                });
         }
 
         internal IList<I2cAddress> I2cScanBusInternal(bool useTenBitAddressing, uint upperAddress)
@@ -595,6 +611,11 @@ namespace MCP2221IO
 
         private void AssertAddress(I2cAddress address)
         {
+            if(address == null)
+            {
+                throw new ArgumentNullException(nameof(address));
+            }
+
             if (address.Size != I2cAddressSize.SevenBit)
             {
                 throw new SmBusInvalidAddressSizeException($"{nameof(I2cAddress)} size must be {I2cAddressSize.SevenBit}");
@@ -619,11 +640,6 @@ namespace MCP2221IO
             if (address == null)
             {
                 throw new ArgumentNullException(nameof(address));
-            }
-
-            if (length > IDevice.MaxI2cLength)
-            {
-                throw new ArgumentOutOfRangeException(nameof(length), length, $"Must be less than  0x{IDevice.MaxI2cLength:X4}");
             }
 
             return HandleOperationExecution(

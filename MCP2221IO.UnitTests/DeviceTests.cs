@@ -214,77 +214,6 @@ namespace MCP2221IO.UnitTests
             _mockHidDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Once);
         }
 
-        //[Fact]
-        //public void TestDeviceStatusInvalidStreamLengthException()
-        //{
-        //    // Arrange
-
-        //    // Act
-        //    Action act = () => { DeviceStatus deviceStatus = _device.Status; };
-
-        //    // Assert
-        //    act.Should().Throw<InvalidStreamLengthException>();
-        //}
-
-        //[Fact]
-        //public void TestDeviceStatusInvalidResponseTypeException()
-        //{
-        //    // Arrange
-        //    _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()))
-        //        .Callback<Stream, Stream>
-        //        (
-        //            (a, b) =>
-        //            {
-        //                b.WriteByte(0xFF);
-        //                b.Write(new byte[63], 0, 63);
-        //            }
-        //        );
-
-        //    // Act
-        //    Action act = () => { DeviceStatus deviceStatus = _device.Status; };
-
-        //    // Assert
-        //    act.Should().Throw<InvalidResponseTypeException>();
-        //}
-
-        //[Fact]
-        //public void TestDeviceStatusOk()
-        //{
-        //    // Arrange
-        //    _mockUsbDevice.Setup(_ => _.WriteRead(It.IsAny<Stream>(), It.IsAny<Stream>()))
-        //        .Callback<Stream, Stream>
-        //        (
-        //            (a, b) =>
-        //            {
-        //                WriteTestStatusSetParametersResponse(b, 0);
-        //            }
-        //        );
-
-        //    // Act
-        //    DeviceStatus deviceStatus = _device.Status;
-
-        //    // Assert
-        //    deviceStatus.Should().NotBeNull();
-
-        //    _output.WriteLine(deviceStatus.ToString());
-        //}
-
-        [Fact]
-        public void TestGetUsbManufacturerDescriptorOk()
-        {
-            // Arrange
-            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
-                .Returns(TestPayloads.ManufacturerDescriptorResponse);
-
-            // Act
-            string descriptor = _device.UsbManufacturerDescriptor;
-
-            // Assert
-            descriptor.Should().NotBeNull();
-
-            _output.WriteLine(descriptor);
-        }
-
         [Fact]
         public void TestSetUsbManufacturerDescriptorOk()
         {
@@ -369,22 +298,6 @@ namespace MCP2221IO.UnitTests
         }
 
         [Fact]
-        public void TestGetFactorySerialNumberOk()
-        {
-            // Arrange
-            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
-                .Returns(TestPayloads.FactorySerialNumberResponse);
-
-            // Act
-            string serialNumber = _device.FactorySerialNumber;
-
-            // Assert
-            serialNumber.Should().NotBeNull();
-
-            _output.WriteLine(serialNumber);
-        }
-
-        [Fact]
         public void TestUnlockFlash()
         {
             // Arrange
@@ -400,7 +313,7 @@ namespace MCP2221IO.UnitTests
         }
 
         [Fact]
-        public void TestI2cWriteDataTest()
+        public void TestI2cWriteData()
         {
             // Arrange
             _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
@@ -421,7 +334,43 @@ namespace MCP2221IO.UnitTests
         }
 
         [Fact]
-        public void TestI2cWriteDataNoStopTest()
+        public void TestI2cWriteDataAddressNull()
+        {
+            // Arrange
+
+            // Act
+            Action act = () => { _device.I2cWriteData(null, new List<byte>()); };
+
+            // Assert
+            act.Should().Throw<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void TestI2cWriteDataDataNull()
+        {
+            // Arrange
+
+            // Act
+            Action act = () => { _device.I2cWriteData(new I2cAddress(0x0A), null); };
+
+            // Assert
+            act.Should().Throw<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void TestI2cWriteDataDataSize()
+        {
+            // Arrange
+
+            // Act
+            Action act = () => { _device.I2cWriteData(new I2cAddress(0x0A), new byte[0xFFFFF]); };
+
+            // Assert
+            act.Should().Throw<ArgumentOutOfRangeException>();
+        }
+
+        [Fact]
+        public void TestI2cWriteDataNoStop()
         {
             // Arrange
             _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
@@ -481,6 +430,18 @@ namespace MCP2221IO.UnitTests
             // Assert
             _mockHidDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Exactly(4));
             buffer.Should().NotBeNullOrEmpty();
+        }
+
+        [Fact]
+        public void TestI2cReadAddressNull()
+        {
+            // Arrange
+
+            // Act
+            Action act = () => { var buffer = _device.I2cReadData(null, 1); };
+
+            // Assert
+            act.Should().Throw<ArgumentNullException>();
         }
 
         [Fact]
@@ -559,7 +520,7 @@ namespace MCP2221IO.UnitTests
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public void SmBusQuickCommand(bool write)
+        public void TestSmBusQuickCommand(bool write)
         {
             // Arrange
             if (write)
@@ -783,6 +744,38 @@ namespace MCP2221IO.UnitTests
 
             // Assert
             _device.Status.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void TestGetFactorySerialNumberOk()
+        {
+            // Arrange
+            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+                .Returns(TestPayloads.FactorySerialNumberResponse);
+
+            // Act
+            string serialNumber = _device.FactorySerialNumber;
+
+            // Assert
+            serialNumber.Should().NotBeNull();
+
+            _output.WriteLine(serialNumber);
+        }
+
+        [Fact]
+        public void TestGetUsbManufacturerDescriptorOk()
+        {
+            // Arrange
+            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+                .Returns(TestPayloads.ManufacturerDescriptorResponse);
+
+            // Act
+            string descriptor = _device.UsbManufacturerDescriptor;
+
+            // Assert
+            descriptor.Should().NotBeNull();
+
+            _output.WriteLine(descriptor);
         }
 
         [Fact]

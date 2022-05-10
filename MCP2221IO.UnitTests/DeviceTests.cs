@@ -606,49 +606,6 @@ namespace MCP2221IO.UnitTests
             return stream.ToArray();
         }
 
-        private byte[] WriteTestStatusSetParametersResponse(byte status)
-        {
-            MemoryStream stream = GetStream();
-            stream.WriteByte((byte)CommandCodes.StatusSetParameters);
-            stream.WriteByte(status);
-            stream.WriteByte((byte)I2cCancelTransferState.MarkedForCancellation);
-            stream.WriteByte((byte)I2cSpeedStatus.Set);
-            stream.WriteByte(0x55);
-            stream.Write(new byte[3], 0, 3);
-            stream.WriteByte(0XFF);
-            stream.WriteByte(0xAF);
-            stream.WriteByte(0xDE);
-            stream.WriteByte(0xED);
-            stream.WriteByte(0xFE);
-            stream.WriteByte(0xAA);
-            stream.WriteByte(0x55);
-            stream.WriteByte(0xFF);
-            stream.WriteByte(0xAD);
-            stream.WriteByte(0xDE);
-
-            stream.Write(new byte[4], 0, 4);
-
-            stream.WriteByte(0x01);
-            stream.WriteByte(0x01);
-            stream.WriteByte(0x01);
-            stream.WriteByte(0x02);
-
-            stream.Write(new byte[19], 0, 19);
-
-            stream.WriteByte((byte)'A');
-            stream.WriteByte((byte)'6');
-            stream.WriteByte((byte)'1');
-            stream.WriteByte((byte)'1');
-            stream.WriteByte(0xAD);
-            stream.WriteByte(0xDE);
-            stream.WriteByte(0xED);
-            stream.WriteByte(0xFE);
-            stream.WriteByte(0xAA);
-            stream.WriteByte(0x55);
-
-            return stream.ToArray();
-        }
-
         private static MemoryStream GetStream()
         {
             MemoryStream stream = new MemoryStream();

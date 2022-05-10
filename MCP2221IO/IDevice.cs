@@ -229,5 +229,124 @@ namespace MCP2221IO
         /// <param name="useTenBitAddressing">Perform scanning of bus with 10 bit address</param>
         /// <returns>A <see cref="IList{T}"/> of <see cref="I2cAddress"/> instances</returns>
         IList<I2cAddress> I2cScanBus(bool useTenBitAddressing);
+
+        /// <summary>
+        /// Send a quick command on the bus
+        /// </summary>
+        /// <param name="address">The <see cref="I2cAddress"/></param>
+        /// <param name="write">Indicates a read or write operation on the bus</param>
+        void SmBusQuickCommand(I2cAddress address, bool write);
+
+        /// <summary>
+        /// Read a byte from the bus
+        /// </summary>
+        /// <param name="address">The <see cref="I2cAddress"/></param>
+        /// <returns>The byte read from the bus</returns>
+        byte SmBusReadByte(I2cAddress address);
+
+        /// <summary>
+        /// Write a byte to the bus
+        /// </summary>
+        /// <param name="address">The <see cref="I2cAddress"/></param>
+        /// <param name="data">The <see cref="byte"/> data to write</param>
+        /// <param name="pec">Send data with packet error check</param>
+        void SmBusWriteByte(I2cAddress address, byte data, bool pec = false);
+
+        /// <summary>
+        /// Read a byte from the bus with a command code
+        /// </summary>
+        /// <param name="address">The <see cref="I2cAddress"/></param>
+        /// <param name="command">The <see cref="byte"/> command</param>
+        /// <returns>The byte read from the bus</returns>
+        byte SmBusReadByteCommand(I2cAddress address, byte command);
+
+        /// <summary>
+        /// Write a byte to the bus with a command code
+        /// </summary>
+        /// <param name="address">The <see cref="I2cAddress"/></param>
+        /// <param name="command">The <see cref="byte"/> command</param>
+        /// <param name="data">The <see cref="byte"/> data</param>
+        /// <param name="pec">Send data with packet error check</param>
+        void SmBusWriteByteCommand(I2cAddress address, byte command, byte data, bool pec = false);
+
+        /// <summary>
+        /// Read a <see cref="short"/> from the bus with a command code
+        /// </summary>
+        /// <param name="address">The <see cref="I2cAddress"/></param>
+        /// <param name="command">The <see cref="byte"/> command</param>
+        /// <returns>The short read from the bus</returns>
+        short SmBusReadWordCommand(I2cAddress address, byte command);
+
+        /// <summary>
+        /// Write a <see cref="short"/> to the bus with a command code
+        /// </summary>
+        /// <param name="address">The <see cref="I2cAddress"/></param>
+        /// <param name="command">The <see cref="byte"/> command</param>
+        /// <param name="data">The <see cref="short"/> data</param>
+        /// <param name="pec">Send data with packet error check</param>
+        void SmBusWriteShortCommand(I2cAddress address, byte command, short data, bool pec = false);
+
+        /// <summary>
+        /// Read a <see cref="int"/> from the bus with a command code
+        /// </summary>
+        /// <param name="address">The <see cref="I2cAddress"/></param>
+        /// <param name="command">The <see cref="byte"/> command</param>
+        /// <returns>Returns an <see cref="int"/> read from the bus</returns>
+        int SmBusReadIntCommand(I2cAddress address, byte command);
+
+        /// <summary>
+        /// Write a <see cref="int"/> to the bus with a command code
+        /// </summary>
+        /// <param name="address">The <see cref="I2cAddress"/></param>
+        /// <param name="command">The <see cref="byte"/> command</param>
+        /// <param name="data">The <see cref="short"/> data</param>
+        /// <param name="pec">Send data with packet error check</param>
+        void SmBusWriteIntCommand(I2cAddress address, byte command, int data, bool pec = false);
+
+        /// <summary>
+        /// Read a <see cref="long"/> from the bus with a command code
+        /// </summary>
+        /// <param name="address">The <see cref="I2cAddress"/></param>
+        /// <param name="command">The <see cref="byte"/> command</param>
+        /// <returns></returns>
+        long SmBusReadLongCommand(I2cAddress address, byte command);
+
+        /// <summary>
+        /// Write a <see cref="long"/> to the bus with a command code
+        /// </summary>
+        /// <param name="address">The <see cref="I2cAddress"/></param>
+        /// <param name="command">The <see cref="byte"/> command</param>
+        /// <param name="data">The <see cref="short"/> data</param>
+        /// <param name="pec">Send data with packet error check</param>
+        void SmBusWriteLongCommand(I2cAddress address, byte command, long data, bool pec = false);
+
+        /// <summary>
+        /// Execute a process call from the bus
+        /// </summary>
+        /// <param name="address">The <see cref="I2cAddress"/></param>
+        /// <param name="command">The <see cref="byte"/> command</param>
+        /// <param name="data">The <see cref="short"/> data</param>
+        /// <param name="pec">Send data with packet error check</param>
+        /// <returns>The result of the processing</returns>
+        short SmBusProceesCall(I2cAddress address, byte command, short data, bool pec = false);
+
+        /// <summary>
+        /// Read a block of bytes from the bus with a command code
+        /// </summary>
+        /// <param name="address">The <see cref="I2cAddress"/></param>
+        /// <param name="command">The <see cref="byte"/> command</param>
+        /// <param name="count"></param>
+        /// <returns>The <see cref="IList{T}"/> of <see cref="byte"/> read from the bus</returns>
+        IList<byte> SmBusBlockRead(I2cAddress address, byte command, byte count);
+
+        /// <summary>
+        /// Write a block of bytes to the bus with a command code
+        /// </summary>
+        /// <param name="address">The <see cref="I2cAddress"/></param>
+        /// <param name="command">The <see cref="byte"/> command</param>
+        /// <param name="block">The <see cref="IList{T}"/> of <see cref="byte"/></param>
+        void SmBusBlockWrite(I2cAddress address, byte command, IList<byte> block);
+
+        // Process block reads/write
     }
 }

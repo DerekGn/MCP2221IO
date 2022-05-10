@@ -53,7 +53,7 @@ namespace MCP2221IO
         private readonly ILogger<IDevice> _logger;
         private string _factorySerialNumber;
         private IHidDevice _hidDevice;
-        
+
         public Device(ILogger<IDevice> logger, IHidDevice hidDevice)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -315,7 +315,7 @@ namespace MCP2221IO
 
                     } while (Status.SpeedStatus != I2cSpeedStatus.Set && retryCount < MaxRetries);
 
-                    if(retryCount == MaxRetries)
+                    if (retryCount == MaxRetries)
                     {
                         throw new I2cOperationException("Unable to set I2C Speed exceeded retry count");
                     }
@@ -413,7 +413,7 @@ namespace MCP2221IO
 
                     result.Add(address);
                 }
-                catch(CommandExecutionFailedException ex)
+                catch (CommandExecutionFailedException ex)
                 {
                     HandleScanError(address, ex);
                 }
@@ -426,11 +426,207 @@ namespace MCP2221IO
             return result;
         }
 
+        // <inheritdoc/>
+        public void SmBusQuickCommand(I2cAddress address, bool write)
+        {
+            HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    if (address.Size == I2cAddressSize.SevenBit)
+                    {
+                        throw new SmBusInvalidAddressSizeException($"{nameof(I2cAddress)} size must be {I2cAddressSize.SevenBit}");
+                    }
+
+                    if (write)
+                    {
+                        I2cWriteData<I2cWriteDataResponse>(CommandCodes.WriteI2cData, address, new List<byte>());
+                    }
+                    else
+                    {
+                        I2cReadData<I2cReadDataResponse>(CommandCodes.ReadI2cData, address, 0);
+                    }
+                });
+        }
+
+        // <inheritdoc/>
+        public byte SmBusReadByte(I2cAddress address)
+        {
+            return HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    if (address.Size == I2cAddressSize.SevenBit)
+                    {
+                        throw new SmBusInvalidAddressSizeException($"{nameof(I2cAddress)} size must be {I2cAddressSize.SevenBit}");
+                    }
+
+                    var result = I2cReadData<I2cReadDataResponse>(CommandCodes.ReadI2cData, address, 1);
+
+                    AssertPec(result);
+
+                    return result[0];
+                });
+        }
+
+        // <inheritdoc/>
+        public void SmBusWriteByte(I2cAddress address, byte data, bool pec = false)
+        {
+            HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    if (address.Size == I2cAddressSize.SevenBit)
+                    {
+                        throw new SmBusInvalidAddressSizeException($"{nameof(I2cAddress)} size must be {I2cAddressSize.SevenBit}");
+                    }
+
+                    List<byte> writeData = new List<byte>() { data };
+
+                    if (pec)
+                    {
+                        writeData.Add(Crc8.ComputeChecksum(new List<byte>() { data }));
+                    }
+
+                    I2cWriteData(address, writeData);
+                });
+        }
+
+        // <inheritdoc/>
+        public byte SmBusReadByteCommand(I2cAddress address, byte command)
+        {
+            return HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    if (address.Size == I2cAddressSize.SevenBit)
+                    {
+                        throw new SmBusInvalidAddressSizeException($"{nameof(I2cAddress)} size must be {I2cAddressSize.SevenBit}");
+                    }
+
+                    var writeData = new List<byte>()
+                    {
+                        command
+                    };
+
+                    I2cWriteData<I2cWriteDataNoStopResponse>(CommandCodes.WriteI2cDataNoStop, address, writeData);
+
+                    var result = I2cReadData<I2cReadDataRepeatedStarteResponse>(CommandCodes.ReadI2cDataRepeatedStart, address, 1);
+
+                    AssertPec(result);
+
+                    return result[0];
+                });
+        }
+
+        // <inheritdoc/>
+        public void SmBusWriteByteCommand(I2cAddress address, byte command, byte data, bool pec = false)
+        {
+            HandleOperationExecution(
+               nameof(Device),
+               () =>
+               {
+                   List<byte> writeData = new List<byte>() { command, data };
+
+                   if (pec)
+                   {
+                       writeData.Add(Crc8.ComputeChecksum(writeData));
+                   }
+
+                   I2cWriteData<I2cWriteDataNoStopResponse>(CommandCodes.WriteI2cData, address, writeData);
+               });
+        }
+
+        // <inheritdoc/>
+        public short SmBusReadWordCommand(I2cAddress address, byte command)
+        {
+            return HandleOperationExecution<short>(
+               nameof(Device),
+               () =>
+               {
+                   List<byte> writeData = new List<byte>() { command };
+
+                   I2cWriteData<I2cWriteDataNoStopResponse>(CommandCodes.WriteI2cData, address, writeData);
+
+                   var result = I2cReadData<I2cReadDataRepeatedStarteResponse>(CommandCodes.ReadI2cDataRepeatedStart, address, 1);
+
+                   AssertPec(result);
+
+                   return (short)(result[0] | result[1] << 8);
+               });
+        }
+
+        // <inheritdoc/>
+        public void SmBusWriteShortCommand(I2cAddress address, byte command, short data, bool pec = false)
+        {
+            HandleOperationExecution(
+               nameof(Device),
+               () =>
+               {
+
+               });
+        }
+
+        // <inheritdoc/>
+        public int SmBusReadIntCommand(I2cAddress address, byte command)
+        {
+            throw new NotImplementedException();
+        }
+
+        // <inheritdoc/>
+        public void SmBusWriteIntCommand(I2cAddress address, byte command, int data, bool pec = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        // <inheritdoc/>
+        public long SmBusReadLongCommand(I2cAddress address, byte command)
+        {
+            throw new NotImplementedException();
+        }
+
+        // <inheritdoc/>
+        public void SmBusWriteLongCommand(I2cAddress address, byte command, long data, bool pec = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        // <inheritdoc/>
+        public short SmBusProceesCall(I2cAddress address, byte command, short data, bool pec = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        // <inheritdoc/>
+        public IList<byte> SmBusBlockRead(I2cAddress address, byte command, byte count)
+        {
+            throw new NotImplementedException();
+        }
+
+        // <inheritdoc/>
+        public void SmBusBlockWrite(I2cAddress address, byte command, IList<byte> block)
+        {
+            throw new NotImplementedException();
+        }
+
         private void HandleScanError(I2cAddress address, Exception ex)
         {
             _logger.LogWarning(ex, $"Device Address [0x{address.Value:X2}] did not respond");
 
             CancelI2cBusTransfer();
+        }
+
+        private static void AssertPec(IList<byte> result)
+        {
+            if (result.Count > 1)
+            {
+                byte expected = Crc8.ComputeChecksum(result.Take(result.Count - 1).ToList());
+
+                if (result[result.Count - 1] != expected)
+                {
+                    throw new SmBusInvalidCrcException(expected, result[result.Count - 1], "PEC does not match");
+                }
+            }
         }
 
         private IList<byte> I2cReadData<T>(CommandCodes commandCode, I2cAddress address, ushort length) where T : IResponse, new()
@@ -476,14 +672,14 @@ namespace MCP2221IO
                             break;
                         }
                     }
-                    
+
                     return result;
                 });
         }
 
         private void I2cWriteData<T>(CommandCodes commandCode, I2cAddress address, IList<byte> data) where T : IResponse, new()
         {
-            if(address == null)
+            if (address == null)
             {
                 throw new ArgumentNullException(nameof(address));
             }
@@ -515,7 +711,7 @@ namespace MCP2221IO
 
                         T response = ExecuteCommand<T>(new I2cWriteDataCommand(commandCode, address, data.Skip(MaxBlockSize * i).Take(blockSize).ToList()));
 
-                        if(response.ExecutionResult != 0)
+                        if (response.ExecutionResult != 0)
                         {
                             throw new I2cOperationException(response.ExecutionResult, $"{nameof(I2cWriteData)} The write of i2c data failed with execution result code [0x{response.ExecutionResult:x}]");
                         }
@@ -586,7 +782,7 @@ namespace MCP2221IO
             catch (Exception ex)
             {
                 _logger.LogError($"An exception occurred executing [{className}].[{memberName}] Reason: [{ex.Message}]");
-                
+
                 throw;
             }
         }
@@ -595,7 +791,7 @@ namespace MCP2221IO
         private T HandleOperationExecution<T>(string className, Func<T> operation, [CallerMemberName] string memberName = "")
         {
             Stopwatch sw = new Stopwatch();
-            T result = default(T);
+            T result;
 
             try
             {
@@ -608,7 +804,7 @@ namespace MCP2221IO
             catch (Exception ex)
             {
                 _logger.LogError($"An exception occurred executing [{className}].[{memberName}] Reason: [{ex.Message}]");
-                
+
                 throw;
             }
 
@@ -637,6 +833,7 @@ namespace MCP2221IO
             Dispose(disposing: true);
             System.GC.SuppressFinalize(this);
         }
+
         #endregion
     }
 }

@@ -201,7 +201,7 @@ namespace MCP2221IO.UnitTests
             // Arrange
             _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
                 .Returns(WriteSetGpioValuesResponse());
-            
+
             _device._gpioPortsRead = true;
             _device.GpioPort0 = new GpioPort();
             _device.GpioPort1 = new GpioPort();
@@ -275,7 +275,7 @@ namespace MCP2221IO.UnitTests
             // Arrange
             _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
                 .Returns(TestPayloads.ManufacturerDescriptorResponse);
-            
+
             // Act
             string descriptor = _device.UsbManufacturerDescriptor;
 
@@ -505,6 +505,261 @@ namespace MCP2221IO.UnitTests
         }
 
         [Fact]
+        public void TestI2cScanBusSevenBitAddress()
+        {
+            // Arrange
+            _mockHidDevice.SetupSequence(_ => _.WriteRead(It.IsAny<byte[]>()))
+                .Returns(WriteReponse(CommandCodes.ReadI2cData))
+                .Returns(WriteGetI2cDataResponse(CommandCodes.GetI2cData, 1));
+
+            // Act
+            var result = _device.I2cScanBusInternal(false, 9);
+
+            // Assert
+            result.Should().NotBeEmpty();
+        }
+
+        [Fact]
+        public void TestI2cScanBusTenBitAddress()
+        {
+            // Arrange
+            _mockHidDevice.SetupSequence(_ => _.WriteRead(It.IsAny<byte[]>()))
+                .Returns(WriteReponse(CommandCodes.ReadI2cData))
+                .Returns(WriteGetI2cDataResponse(CommandCodes.GetI2cData, 1));
+
+            // Act
+            var result = _device.I2cScanBusInternal(true, 9);
+
+            // Assert
+            result.Should().NotBeEmpty();
+        }
+
+        [Fact]
+        public void TestSmBusBlockRead()
+        {
+            // Arrange
+
+            // Act
+            //_device.SmBusBlockRead();
+
+            // Assert
+        }
+
+        [Fact]
+        public void TestSmBusBlockWrite()
+        {
+            // Arrange
+
+            // Act
+            //_device.SmBusBlockWrite();
+
+            // Assert
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void SmBusQuickCommand(bool write)
+        {
+            // Arrange
+            if (write)
+            {
+                _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+                    .Returns(WriteReponse(CommandCodes.WriteI2cData));
+            }
+            else
+            {
+                _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+                    .Returns(WriteReponse(CommandCodes.ReadI2cData));
+            }
+
+            // Act
+            _device.SmBusQuickCommand(new I2cAddress(0x10, I2cAddressSize.SevenBit), write);
+
+            // Assert
+            _mockHidDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Once);
+        }
+
+        [Fact]
+        public void TestSmBusReadByte()
+        {
+            // Arrange
+            _mockHidDevice.SetupSequence(_ => _.WriteRead(It.IsAny<byte[]>()))
+                .Returns(WriteReponse(CommandCodes.ReadI2cData))
+                .Returns(WriteGetI2cDataResponse(CommandCodes.GetI2cData, 1));
+
+            // Act
+            var result = _device.SmBusReadByte(new I2cAddress(10, I2cAddressSize.SevenBit));
+
+            // Assert
+            result.Should().Be(0);
+        }
+
+        [Fact]
+        public void TestSmBusReadByteCommand()
+        {
+            // Arrange
+            _mockHidDevice.SetupSequence(_ => _.WriteRead(It.IsAny<byte[]>()))
+                .Returns(WriteReponse(CommandCodes.WriteI2cDataNoStop))
+                .Returns(WriteGetI2cDataResponse(CommandCodes.ReadI2cDataRepeatedStart, sizeof(byte) + 1))
+                .Returns(WriteGetI2cDataResponse(CommandCodes.GetI2cData, 0x55, 0xAC));
+
+            // Act
+            var result = _device.SmBusReadByteCommand(new I2cAddress(10, I2cAddressSize.SevenBit), 0x55);
+
+            // Assert
+            result.Should().Be(0x55);
+        }
+
+        [Fact]
+        public void TestSmBusReadIntCommand()
+        {
+            // Arrange
+            _mockHidDevice.SetupSequence(_ => _.WriteRead(It.IsAny<byte[]>()))
+                .Returns(WriteReponse(CommandCodes.WriteI2cDataNoStop))
+                .Returns(WriteGetI2cDataResponse(CommandCodes.ReadI2cDataRepeatedStart, sizeof(int) + 1))
+                .Returns(WriteGetI2cDataResponse(CommandCodes.GetI2cData, 0x55, 0x55, 0x55, 0x55, 0xB7));
+
+            // Act
+            var result = _device.SmBusReadIntCommand(new I2cAddress(10, I2cAddressSize.SevenBit), 0x55);
+
+            // Assert
+            result.Should().Be(0x55555555);
+        }
+
+        [Fact]
+        public void TestSmBusReadLongCommand()
+        {
+            // Arrange
+            _mockHidDevice.SetupSequence(_ => _.WriteRead(It.IsAny<byte[]>()))
+                .Returns(WriteReponse(CommandCodes.WriteI2cDataNoStop))
+                .Returns(WriteGetI2cDataResponse(CommandCodes.ReadI2cDataRepeatedStart, sizeof(long) + 1))
+                .Returns(WriteGetI2cDataResponse(CommandCodes.GetI2cData, 0x55, 0x55, 0x55, 0x55, 0xAA, 0xAA, 0xAA, 0xAA, 0x93));
+
+            // Act
+            var result = _device.SmBusReadLongCommand(new I2cAddress(10, I2cAddressSize.SevenBit), 0x55);
+
+            // Assert
+            result.Should().Be(-6148914692668172971L);
+        }
+
+        [Fact]
+        public void TestSmBusReadWordCommand()
+        {
+            // Arrange
+            _mockHidDevice.SetupSequence(_ => _.WriteRead(It.IsAny<byte[]>()))
+                .Returns(WriteReponse(CommandCodes.WriteI2cDataNoStop))
+                .Returns(WriteGetI2cDataResponse(CommandCodes.ReadI2cDataRepeatedStart, sizeof(short) + 1))
+                .Returns(WriteGetI2cDataResponse(CommandCodes.GetI2cData, 0x55, 0xAA, 0x12));
+
+            // Act
+            var result = _device.SmBusReadWordCommand(new I2cAddress(10, I2cAddressSize.SevenBit), 0x55);
+
+            // Assert
+            result.Should().Be(-21931);
+        }
+
+        [Fact]
+        public void TestSmBusWriteByte()
+        {
+            byte[] writeData = null;
+
+            // Arrange
+            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+                .Returns(WriteReponse(CommandCodes.WriteI2cData))
+                .Callback((byte[] b) =>
+                {
+                    writeData = b;
+                });
+
+            // Act
+            _device.SmBusWriteByte(new I2cAddress(10, I2cAddressSize.SevenBit), 0x55, true);
+
+            // Assert
+            writeData.Should().Contain(new List<byte>() { 0x14, 0x55, 0xAC });
+        }
+
+        [Fact]
+        public void TestSmBusWriteByteCommand()
+        {
+            byte[] writeData = null;
+
+            // Arrange
+            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+                .Returns(WriteReponse(CommandCodes.WriteI2cData))
+                .Callback((byte[] b) =>
+                {
+                    writeData = b;
+                });
+
+            // Act
+            _device.SmBusWriteByteCommand(new I2cAddress(10, I2cAddressSize.SevenBit), 0x55, 0xAA, true);
+
+            // Assert
+            writeData.Should().Contain(new List<byte>() { 0x14, 0x55, 0xAA, 0x12 });
+        }
+
+        [Fact]
+        public void TestSmBusWriteIntCommand()
+        {
+            byte[] writeData = null;
+
+            // Arrange
+            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+                .Returns(WriteReponse(CommandCodes.WriteI2cData))
+                .Callback((byte[] b) =>
+                {
+                    writeData = b;
+                });
+
+            // Act
+            _device.SmBusWriteIntCommand(new I2cAddress(10, I2cAddressSize.SevenBit), 0x55, 0xFEED, true);
+
+            // Assert
+            writeData.Should().Contain(new List<byte>() { 0x14, 0x55, 0xED, 0xFE, 0x00 });
+        }
+
+        [Fact]
+        public void TestSmBusWriteLongCommand()
+        {
+            byte[] writeData = null;
+
+            // Arrange
+            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+                .Returns(WriteReponse(CommandCodes.WriteI2cData))
+                .Callback((byte[] b) =>
+                {
+                    writeData = b;
+                });
+
+            // Act
+            _device.SmBusWriteLongCommand(new I2cAddress(10, I2cAddressSize.SevenBit), 0x55, 0xFEED, true);
+
+            // Assert
+            writeData.Should().Contain(new List<byte>() { 0x14, 0x55, 0xED, 0xFE, 0x00 });
+        }
+
+        [Fact]
+        public void TestSmBusWriteShortCommand()
+        {
+            byte[] writeData = null;
+
+            // Arrange
+            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+                .Returns(WriteReponse(CommandCodes.WriteI2cData))
+                .Callback((byte[] b) =>
+                {
+                    writeData = b;
+                });
+
+            // Act
+            _device.SmBusWriteShortCommand(new I2cAddress(10, I2cAddressSize.SevenBit), 0x55, 2000, true);
+
+            // Assert
+            writeData.Should().Contain(new List<byte>() { 0x14, 0x55, 0xD0, 0x07, 0x4B });
+        }
+
+        [Fact]
         public void TestReset()
         {
             // Arrange
@@ -612,6 +867,18 @@ namespace MCP2221IO.UnitTests
             stream.Position = 0;
             stream.WriteByte(0);
             return stream;
+        }
+
+        private byte[] WriteGetI2cDataResponse(CommandCodes commandCode, params byte[] data)
+        {
+            MemoryStream stream = GetStream();
+            stream.WriteByte((byte)commandCode);
+            stream.WriteByte(0);
+            stream.WriteByte(0);
+            stream.WriteByte((byte)data.Length);
+            stream.Write(data);
+
+            return stream.ToArray();
         }
 
         private byte[] WriteGetI2cDataResponse(CommandCodes commandCode, int length)

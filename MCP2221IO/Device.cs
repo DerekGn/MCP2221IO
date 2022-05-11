@@ -22,8 +22,6 @@
 * SOFTWARE.
 */
 
-// TODO: Allow output format specification for tostring operations
-
 using MCP2221IO.Commands;
 using MCP2221IO.Exceptions;
 using MCP2221IO.Gpio;
@@ -471,7 +469,7 @@ namespace MCP2221IO
         }
 
         // <inheritdoc/>
-        public short SmBusReadWordCommand(I2cAddress address, byte command, bool pec = false)
+        public short SmBusReadShortCommand(I2cAddress address, byte command, bool pec = false)
         {
             return BitConverter.ToInt16(SmBusReadCommand(address, command, sizeof(short), pec).Take(sizeof(short)).ToArray());
         }
@@ -537,7 +535,20 @@ namespace MCP2221IO
                 {
                     AssertAddress(address);
 
-                    //I2cWriteData(address, );
+                    if(block.Count > IDevice.MaxSmBusBlockSize)
+                    {
+                        throw new ArgumentOutOfRangeException(nameof(block), $"Must be less than [0x{IDevice.MaxSmBusBlockSize}]");
+                    }
+
+                    List<byte> writeData = new List<byte>() { command, (byte)block.Count };
+                    writeData.AddRange(block);
+
+                    if (pec)
+                    {
+                        writeData.Add(Crc8.ComputeChecksum(writeData));
+                    }
+
+                    I2cWriteData(address, writeData );
                 });
         }
 
@@ -702,9 +713,9 @@ namespace MCP2221IO
                 throw new ArgumentNullException(nameof(data));
             }
 
-            if (data.Count > IDevice.MaxI2cLength)
+            if (data.Count > IDevice.MaxI2cBlockSize)
             {
-                throw new ArgumentOutOfRangeException(nameof(data), data, $"Must be less than 0x{IDevice.MaxI2cLength:X4}");
+                throw new ArgumentOutOfRangeException(nameof(data), data, $"Must be less than 0x{IDevice.MaxI2cBlockSize:X4}");
             }
 
             HandleOperationExecution(

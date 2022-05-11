@@ -524,26 +524,36 @@ namespace MCP2221IO.UnitTests
         public void TestSmBusBlockRead()
         {
             // Arrange
+            _mockHidDevice.SetupSequence(_ => _.WriteRead(It.IsAny<byte[]>()))
+               .Returns(WriteReponse(CommandCodes.WriteI2cDataNoStop))
+               .Returns(WriteGetI2cDataResponse(CommandCodes.ReadI2cDataRepeatedStart, 5))
+               .Returns(WriteGetI2cDataResponse(CommandCodes.GetI2cData, 0x01, 0x02, 0x03, 0x04, 0x5, 0xBC));
 
             // Act
             var result = _device.SmBusBlockRead(new I2cAddress(0x0B), 0x55, 5, true);
 
             // Assert
-
             result.Should().NotBeEmpty();
         }
 
         [Fact]
         public void TestSmBusBlockWrite()
         {
-            // Arrange
             byte[] writeData = null;
+            
+            // Arrange
+            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+                .Returns(WriteReponse(CommandCodes.WriteI2cData))
+                .Callback((byte[] b) =>
+                {
+                    writeData = b;
+                });
 
             // Act
-            _device.SmBusBlockWrite(new I2cAddress(0x0B), 0xAA, new List<byte>() { 0x01, 0x02 }, true);
+            _device.SmBusBlockWrite(new I2cAddress(0x0B), 0xAA, new List<byte>() { 0x01, 0x02, 0x45 }, true);
 
             // Assert
-            writeData.Should().Contain(new List<byte>() { 0x14, 0x55, 0xAC });
+            writeData.Should().Contain(new List<byte>() { 0x16, 0xAA, 0x03, 0x01, 0x02, 0x45, 0x89 });
         }
 
         [Theory]
@@ -643,7 +653,7 @@ namespace MCP2221IO.UnitTests
                 .Returns(WriteGetI2cDataResponse(CommandCodes.GetI2cData, 0x55, 0xAA, 0x12));
 
             // Act
-            var result = _device.SmBusReadWordCommand(new I2cAddress(10, I2cAddressSize.SevenBit), 0x55, true);
+            var result = _device.SmBusReadShortCommand(new I2cAddress(10, I2cAddressSize.SevenBit), 0x55, true);
 
             // Assert
             result.Should().Be(-21931);

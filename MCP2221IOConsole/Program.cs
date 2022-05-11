@@ -22,8 +22,6 @@
 * SOFTWARE.
 */
 
-// TODO: Allow hex format integer format for output
-
 using McMaster.Extensions.CommandLineUtils;
 using MCP2221IOConsole.Commands;
 using MCP2221IOConsole.Commands.Flash;

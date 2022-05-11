@@ -22,8 +22,6 @@
 * SOFTWARE.
 */
 
-// TODO: Add async operations
-
 using MCP2221IO.Gpio;
 using MCP2221IO.Settings;
 using System;
@@ -44,9 +42,14 @@ namespace MCP2221IO
         const int I2cMinSpeed = 46875;
 
         /// <summary>
-        /// The maximum read/write buffer size
+        /// The maximum I2C read/write buffer size
         /// </summary>
-        const ushort MaxI2cLength = 0xFFFF;
+        const ushort MaxI2cBlockSize = 0xFFFF;
+
+        /// <summary>
+        /// The maximum Smbus read/write buffer size
+        /// </summary>
+        const ushort MaxSmBusBlockSize = 0xFF;
 
         /// <summary>
         /// Get the device <see cref="DeviceStatus"/>
@@ -278,7 +281,7 @@ namespace MCP2221IO
         /// <param name="command">The <see cref="byte"/> command</param>
         /// <param name="pec">Read data with packet error check</param>
         /// <returns>The short read from the bus</returns>
-        short SmBusReadWordCommand(I2cAddress address, byte command, bool pec = false);
+        short SmBusReadShortCommand(I2cAddress address, byte command, bool pec = false);
 
         /// <summary>
         /// Write a <see cref="short"/> to the bus with a command code

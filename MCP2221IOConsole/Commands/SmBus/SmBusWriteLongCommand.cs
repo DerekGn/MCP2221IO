@@ -22,23 +22,9 @@
 * SOFTWARE.
 */
 
-using McMaster.Extensions.CommandLineUtils;
-using System;
-
-namespace MCP2221IOConsole.Commands.Flash
+namespace MCP2221IOConsole.Commands.SmBus
 {
-    [Command(Description = "Access MCP2221 Flash Settings")]
-    [Subcommand(typeof(ReadGpSettingsCommand))]
-    [Subcommand(typeof(WriteGpSettingsCommand))]
-    [Subcommand(typeof(ReadChipSettingsCommand))]
-    [Subcommand(typeof(WriteChipSettingsCommand))]
-    [Subcommand(typeof(ReadUsbDescriptorsCommand))]
-    [Subcommand(typeof(WriteUsbDescriptorsCommand))]
-    [Subcommand(typeof(UnlockCommand))]
-    internal class FlashCommand : BaseCommand
+    internal class SmBusWriteLongCommand
     {
-        public FlashCommand(IServiceProvider serviceProvider) : base(serviceProvider)
-        {
-        }
     }
 }

@@ -70,5 +70,7 @@ namespace MCP2221IOConsole.Commands
         public const string I2cData = "-id| --i2c-data";
 
         public const string TenBitAddressing = "-tb|--ten-bit-addressing";
+
+        public const string Write = "-w|--write";
     }
 }

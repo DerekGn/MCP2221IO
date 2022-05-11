@@ -23,22 +23,31 @@
 */
 
 using McMaster.Extensions.CommandLineUtils;
+using MCP2221IO;
 using System;
 
-namespace MCP2221IOConsole.Commands.Flash
+namespace MCP2221IOConsole.Commands.SmBus
 {
-    [Command(Description = "Access MCP2221 Flash Settings")]
-    [Subcommand(typeof(ReadGpSettingsCommand))]
-    [Subcommand(typeof(WriteGpSettingsCommand))]
-    [Subcommand(typeof(ReadChipSettingsCommand))]
-    [Subcommand(typeof(WriteChipSettingsCommand))]
-    [Subcommand(typeof(ReadUsbDescriptorsCommand))]
-    [Subcommand(typeof(WriteUsbDescriptorsCommand))]
-    [Subcommand(typeof(UnlockCommand))]
-    internal class FlashCommand : BaseCommand
+    [Command(Description = "Execute SmBus Quick command")]
+    internal class SmBusQuickCommand : BaseSmBusCommand
     {
-        public FlashCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public SmBusQuickCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
+        }
+
+        [Option(Templates.Write, "A write quick command", CommandOptionType.SingleOrNoValue)]
+        public bool Write { get; set; }
+
+        protected override int OnExecute(CommandLineApplication app, IConsole console)
+        {
+            return ExecuteCommand((device) =>
+            {
+                var deviceAddress = new I2cAddress(Address, I2cAddressSize.SevenBit);
+
+                device.SmBusQuickCommand(deviceAddress, Write);
+
+                return 0;
+            });
         }
     }
 }

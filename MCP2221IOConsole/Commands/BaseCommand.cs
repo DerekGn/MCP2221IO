@@ -55,7 +55,7 @@ namespace MCP2221IOConsole.Commands
 
             try
             {
-                var hidDevice = DeviceList.Local.GetHidDeviceOrNull(Vid, Pid);
+                var hidDevice = DeviceList.Local.GetHidDeviceOrNull(Vid, Pid, null, Serial);
 
                 if (hidDevice != null)
                 {

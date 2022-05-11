@@ -23,21 +23,27 @@
 */
 
 using McMaster.Extensions.CommandLineUtils;
+using MCP2221IO;
 using System;
+using System.ComponentModel.DataAnnotations;
 
-namespace MCP2221IOConsole.Commands.Flash
+namespace MCP2221IOConsole.Commands.SmBus
 {
-    [Command(Description = "Access MCP2221 Flash Settings")]
-    [Subcommand(typeof(ReadGpSettingsCommand))]
-    [Subcommand(typeof(WriteGpSettingsCommand))]
-    [Subcommand(typeof(ReadChipSettingsCommand))]
-    [Subcommand(typeof(WriteChipSettingsCommand))]
-    [Subcommand(typeof(ReadUsbDescriptorsCommand))]
-    [Subcommand(typeof(WriteUsbDescriptorsCommand))]
-    [Subcommand(typeof(UnlockCommand))]
-    internal class FlashCommand : BaseCommand
+    [Command(Name ="smbus", Description = "Execute SmBus functions")]
+    [Subcommand(typeof(SmBusBlockReadCommand))]
+    [Subcommand(typeof(SmBusBlockWriteCommand))]
+    [Subcommand(typeof(SmBusQuickCommand))]
+    [Subcommand(typeof(SmBusReadByteCommand))]
+    [Subcommand(typeof(SmBusReadIntCommand))]
+    [Subcommand(typeof(SmBusReadLongCommand))]
+    [Subcommand(typeof(SmBusReadShortCommand))]
+    [Subcommand(typeof(SmBusWriteByteCommand))]
+    [Subcommand(typeof(SmBusWriteIntCommand))]
+    [Subcommand(typeof(SmBusWriteLongCommand))]
+    [Subcommand(typeof(SmBusWriteShortCommand))]
+    internal class SmBusCommand : BaseCommand
     {
-        public FlashCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public SmBusCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
     }

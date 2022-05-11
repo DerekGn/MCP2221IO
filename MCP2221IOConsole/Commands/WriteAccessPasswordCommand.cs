@@ -30,9 +30,9 @@ using System.ComponentModel.DataAnnotations;
 namespace MCP2221IOConsole.Commands
 {
     [Command(Description = "Unlock the MCP2221 with password")]
-    internal class WriteAccessPasswordCommand : BaseCommand
+    internal class UnlockCommand : BaseCommand
     {
-        public WriteAccessPasswordCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public UnlockCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 

@@ -24,21 +24,19 @@
 
 using McMaster.Extensions.CommandLineUtils;
 using System;
+using System.ComponentModel.DataAnnotations;
 
-namespace MCP2221IOConsole.Commands.Flash
+namespace MCP2221IOConsole.Commands.SmBus
 {
-    [Command(Description = "Access MCP2221 Flash Settings")]
-    [Subcommand(typeof(ReadGpSettingsCommand))]
-    [Subcommand(typeof(WriteGpSettingsCommand))]
-    [Subcommand(typeof(ReadChipSettingsCommand))]
-    [Subcommand(typeof(WriteChipSettingsCommand))]
-    [Subcommand(typeof(ReadUsbDescriptorsCommand))]
-    [Subcommand(typeof(WriteUsbDescriptorsCommand))]
-    [Subcommand(typeof(UnlockCommand))]
-    internal class FlashCommand : BaseCommand
+    internal abstract class BaseSmBusCommand : BaseCommand
     {
-        public FlashCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        protected BaseSmBusCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
+
+        [Required]
+        [Range(typeof(uint), "7", "0x78")]
+        [Option(Templates.I2cAddress, "The SmBus device address", CommandOptionType.SingleValue)]
+        public uint Address { get; set; }
     }
 }

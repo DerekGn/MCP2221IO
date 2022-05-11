@@ -7,6 +7,8 @@ A .Net Core library to interact with Usb [MCP2221](https://www.microchip.com/www
 The following is the list of functions supported by the API.
 
 - [x] Status/Set Parameters
+  - [x] Cancel I2C Transfer
+  - [x] Set I2C Speed
 - [x] Read Flash Data
   - [x] Read Chip Settings
   - [x] Read GP Settings
@@ -30,25 +32,16 @@ The following is the list of functions supported by the API.
   - [x] Read Data
   - [x] Read Data Repeated-Start
 - [x] Set GPIO (Output And Direction)
-  - [x] GPO
-  - [x] GP1
-  - [x] GP2
-  - [x] GP3
+  - [x] GPO, GP1, GP2, GP3
 - [x] Get GPIO (Output And Direction)
-  - [x] GPO
-  - [x] GP1
-  - [x] GP2
-  - [x] GP3
+  - [x] GPO, GP1, GP2, GP3
 - [x] Set SRAM Settings
   - [x] Clock Output Divider Value
   - [x] DAC Voltage Reference
   - [x] Set DAC Output Value
   - [x] ADC Voltage Reference
   - [x] Set Up the Interrupt Detection Mechanism and Clear the Detection Flag
-  - [x] GP0 Settings (Output And Designation)
-  - [x] GP1 Settings (Output And Designation)
-  - [x] GP2 Settings (Output And Designation)
-  - [x] GP3 Settings (Output And Designation)
+  - [x] GP0, GP1, GP2, GP3 Settings (Output And Designation)
 - [x] Get SRAM Settings
   - [x] CDC Serial Number Enumeration Enable
   - [x] Chip Configuration Security Option
@@ -80,3 +73,71 @@ The following is the list of functions supported by the API.
   - [x] SmBusWriteIntCommand
   - [x] SmBusWriteLongCommand
   - [x] SmBusWriteShortCommand
+
+## Example code
+
+The MCP2221A Api contains a mix of Read/Write properties and Read Before Write properties. The intent is to allow the code consuming the MCP 2221A Api to control the read write IO to the USB device.
+
+### Resolve HID Device Instance
+
+```csharp
+var hidDevice = DeviceList.Local.GetHidDeviceOrNull(Vid, Pid, null, Serial);
+
+if (hidDevice != null)
+{
+    using HidSharpHidDevice hidSharpHidDevice = new HidSharpHidDevice((ILogger<IHidDevice>)_serviceProvider.GetService(typeof(ILogger<IHidDevice>)), hidDevice);
+    using MCP2221IO.Device device = new MCP2221IO.Device((ILogger<IDevice>)_serviceProvider.GetService(typeof(ILogger<IDevice>)), hidSharpHidDevice);
+
+    device.Open();
+
+    result = action(device);
+}
+else
+{
+    Console.Error.WriteLine($"Unable to find HID device VID: [0x{Vid:X}] PID: [0x{Vid:X}] SerialNumber: [{Serial}]");
+}
+```
+
+### Read Write Properties
+
+Read write properties can be simply used as any standard property.
+
+```csharp
+Console.WriteLine($"Usb Manufacture Descriptor: [{device.UsbManufacturerDescriptor}]");
+
+device.UsbManufacturerDescriptor = "Updated";
+```
+
+### Read Before Write Methods
+
+To reduce the IO overhead to and from the USB device multiple settings can be set and then applied in a single operation.
+
+```csharp
+// Read the chip settings
+device.ReadChipSettings();
+
+// Update  multiple settings
+device.ChipSettings.AdcRefOption = AdcRef.Value;
+
+Password password = MCP2221IO.Settings.Password.DefaultPassword;
+
+// Write the CHIP Settings
+device.WriteChipSettings(password);
+
+Console.WriteLine("CHIP settings updated");
+```
+
+### Synchronous Methods
+
+There a number of synchronous methods that are used to change state of the device or read write data for example I2C and SmBus operations.
+
+```csharp
+// Cancel the I2C bus transfer
+device.CancelI2cBusTransfer();
+
+// Set the I2C bus speed
+device.SetI2cBusSpeed(int speed);
+```
+
+## MCP2221 Console Application
+

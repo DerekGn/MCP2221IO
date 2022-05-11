@@ -22,29 +22,11 @@
 * SOFTWARE.
 */
 
-using McMaster.Extensions.CommandLineUtils;
-using System;
+// TODO IMPLEMENT
 
 namespace MCP2221IOConsole.Commands.SmBus
 {
-    [Command(Name ="smbus", Description = "Execute SmBus functions")]
-    [Subcommand(typeof(SmBusBlockReadCommand))]
-    [Subcommand(typeof(SmBusBlockWriteCommand))]
-    [Subcommand(typeof(SmBusQuickCommand))]
-    [Subcommand(typeof(SmBusReadCommand))]
-    [Subcommand(typeof(SmBusReadByteCommand))]
-    [Subcommand(typeof(SmBusReadIntCommand))]
-    [Subcommand(typeof(SmBusReadLongCommand))]
-    [Subcommand(typeof(SmBusReadShortCommand))]
-    [Subcommand(typeof(SmBusWriteCommand))]
-    [Subcommand(typeof(SmBusWriteByteCommand))]
-    [Subcommand(typeof(SmBusWriteIntCommand))]
-    [Subcommand(typeof(SmBusWriteLongCommand))]
-    [Subcommand(typeof(SmBusWriteShortCommand))]
-    internal class SmBusCommand : BaseCommand
+    internal class SmBusReadCommand
     {
-        public SmBusCommand(IServiceProvider serviceProvider) : base(serviceProvider)
-        {
-        }
     }
 }

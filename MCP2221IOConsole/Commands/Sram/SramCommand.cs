@@ -28,12 +28,12 @@ using System;
 namespace MCP2221IOConsole.Commands.Sram
 {
     [Command(Description = "Access MCP2221 SRAM Settings")]
-    [Subcommand(typeof(ReadSramSettingsCommand))]
-    [Subcommand(typeof(WriteSramSettingsCommand))]
-    [Subcommand(typeof(WriteSramGp0SettingsCommand))]
-    [Subcommand(typeof(WriteSramGp1SettingsCommand))]
-    [Subcommand(typeof(WriteSramGp2SettingsCommand))]
-    [Subcommand(typeof(WriteSramGp3SettingsCommand))]
+    [Subcommand(typeof(SramReadSettingsCommand))]
+    [Subcommand(typeof(SramWriteSettingsCommand))]
+    [Subcommand(typeof(SramWriteGp0SettingsCommand))]
+    [Subcommand(typeof(SramWriteGp1SettingsCommand))]
+    [Subcommand(typeof(SramWriteGp2SettingsCommand))]
+    [Subcommand(typeof(SramWriteGp3SettingsCommand))]
     internal class SramCommand : BaseCommand
     {
         public SramCommand(IServiceProvider serviceProvider) : base(serviceProvider)

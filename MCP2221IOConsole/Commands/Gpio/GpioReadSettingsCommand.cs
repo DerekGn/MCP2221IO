@@ -21,17 +21,16 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
 */
+
 using McMaster.Extensions.CommandLineUtils;
 using System;
-using System.Diagnostics.CodeAnalysis;
 
-namespace MCP2221IOConsole.Commands.I2c
+namespace MCP2221IOConsole.Commands.Gpio
 {
-    [Command(Description = "Cancel current I2C transfer")]
-    [SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "<Pending>")]
-    internal class CancelI2cTransferCommand : BaseCommand
+    [Command(Name="read-settings", Description = "Read MCP2221 GPIO Settings")]
+    internal class GpioReadSettingsCommand : BaseCommand
     {
-        public CancelI2cTransferCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public GpioReadSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 
@@ -39,9 +38,12 @@ namespace MCP2221IOConsole.Commands.I2c
         {
             return ExecuteCommand((device) =>
             {
-                device.CancelI2cBusTransfer();
+                device.ReadGpioPorts();
 
-                console.WriteLine($"Transfer state: {device.Status.CancelTransferState}");
+                console.WriteLine($"{nameof(device.GpioPort0)}: {device.GpioPort0}");
+                console.WriteLine($"{nameof(device.GpioPort1)}: {device.GpioPort1}");
+                console.WriteLine($"{nameof(device.GpioPort2)}: {device.GpioPort2}");
+                console.WriteLine($"{nameof(device.GpioPort3)}: {device.GpioPort3}");
 
                 return 0;
             });

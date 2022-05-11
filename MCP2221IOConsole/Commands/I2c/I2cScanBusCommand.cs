@@ -23,28 +23,38 @@
 */
 
 using McMaster.Extensions.CommandLineUtils;
-using MCP2221IO.Gp;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
-namespace MCP2221IOConsole.Commands.Sram
+namespace MCP2221IOConsole.Commands.I2c
 {
-    [Command(Description = "Write MCP2221 SRAM GP 1 settings")]
-    internal class WriteSramGp1SettingsCommand : BaseWriteSramGpSettingsCommand
+    [Command(Name = "scan-bus", Description = "Scan the I2C bus")]
+    [SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "<Pending>")]
+    internal class I2cScanBusCommand : BaseCommand
     {
-        public WriteSramGp1SettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public I2cScanBusCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 
-        [Option(Templates.SramGpDesignation, "The GP 1 designation", CommandOptionType.SingleValue)]
-        public (bool HasValue, Gp1Designation Value) Designation { get; set; }
+        [Option(Templates.TenBitAddressing, "Use ten bit device addressing", CommandOptionType.SingleValue)]
+        public (bool HasValue, bool Value) TenBitAddressing { get; set; }
 
         protected override int OnExecute(CommandLineApplication app, IConsole console)
         {
             return ExecuteCommand((device) =>
             {
-                device.ReadSramSettings();
+                console.WriteLine($"Scanning the I2C bus");
+                console.WriteLine($"10 bit addressing [{TenBitAddressing.HasValue && TenBitAddressing.Value}]");
+                
+                var result = device.I2cScanBus(TenBitAddressing.HasValue && TenBitAddressing.Value);
 
-                UpdateSramGpSetting(app, console, device, device.SramSettings.Gp1Settings, Designation);
+                console.WriteLine($"Found [0x{result.Count:X4}] I2C device");
+                console.WriteLine("".PadRight(25, '='));
+
+                foreach (var address in result)
+                {
+                    console.WriteLine($"Device [0x{address.Value:X4}]");
+                }
 
                 return 0;
             });

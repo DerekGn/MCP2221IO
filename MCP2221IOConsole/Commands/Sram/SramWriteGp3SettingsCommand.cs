@@ -28,10 +28,10 @@ using System;
 
 namespace MCP2221IOConsole.Commands.Sram
 {
-    [Command(Description = "Write MCP2221 SRAM GP 3 settings")]
-    internal class WriteSramGp3SettingsCommand : BaseWriteSramGpSettingsCommand
+    [Command(Name = "write-gp3-settings", Description = "Write MCP2221 SRAM GP 3 settings")]
+    internal class SramWriteGp3SettingsCommand : BaseSramWriteGpSettingsCommand
     {
-        public WriteSramGp3SettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public SramWriteGp3SettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 

@@ -24,32 +24,19 @@
 
 using McMaster.Extensions.CommandLineUtils;
 using System;
-using System.Diagnostics.CodeAnalysis;
+using System.ComponentModel.DataAnnotations;
 
-namespace MCP2221IOConsole.Commands.I2c
+namespace MCP2221IOConsole.Commands.SmBus
 {
-    [Command(Description = "Write Data to a device on the I2C bus with REPEATED-START")]
-    [SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "<Pending>")]
-    internal class WriteI2cDataRepeatStartCommand : BaseI2cWriteCommand
+    internal abstract class BaseSmBusReadCommandCommand : BaseSmBusCommandCommand
     {
-        public WriteI2cDataRepeatStartCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        protected BaseSmBusReadCommandCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 
-        protected override int OnExecute(CommandLineApplication app, IConsole console)
-        {
-            return ExecuteCommand((device) =>
-            {
-                var address = ParseAddress();
-
-                console.WriteLine($"Writing [{Data.Count}] bytes to device [{address}]");
-
-                device.I2cWriteDataRepeatStart(address, Data);
-
-                console.WriteLine($"Wrote [{Data.Count}] bytes to device");
-
-                return 0;
-            });
-        }
+        [Required]
+        [Range(typeof(byte), "0", "0xFF")]
+        [Option(Templates.Count, "The SmBus Block Count", CommandOptionType.SingleValue)]
+        public byte Count { get; set; }
     }
 }

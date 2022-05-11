@@ -22,11 +22,32 @@
 * SOFTWARE.
 */
 
-// TODO IMPLEMENT
+using McMaster.Extensions.CommandLineUtils;
+using MCP2221IO.Gp;
+using System;
 
-namespace MCP2221IOConsole.Commands.SmBus
+namespace MCP2221IOConsole.Commands.Sram
 {
-    internal class SmBusReadIntCommand
+    [Command(Name="write-gp0-settings", Description = "Write MCP2221 SRAM GP 0 settings")]
+    internal class SramWriteGp0SettingsCommand : BaseSramWriteGpSettingsCommand
     {
+        public SramWriteGp0SettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        {
+        }
+
+        [Option(Templates.SramGpDesignation, "The GP 0 designation", CommandOptionType.SingleValue)]
+        public (bool HasValue, Gp0Designation Value) Designation { get; set; }
+
+        protected override int OnExecute(CommandLineApplication app, IConsole console)
+        {
+            return ExecuteCommand((device) =>
+            {
+                device.ReadSramSettings();
+
+                UpdateSramGpSetting(app, console, device, device.SramSettings.Gp0Settings, Designation);
+
+                return 0;
+            });
+        }
     }
 }

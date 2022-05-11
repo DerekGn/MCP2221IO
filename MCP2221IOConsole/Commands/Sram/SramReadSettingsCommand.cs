@@ -24,15 +24,13 @@
 
 using McMaster.Extensions.CommandLineUtils;
 using System;
-using System.Diagnostics.CodeAnalysis;
 
-namespace MCP2221IOConsole.Commands.I2c
+namespace MCP2221IOConsole.Commands.Sram
 {
-    [Command(Description = "Write Data to a device on the I2C bus with NO-STOP")]
-    [SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "<Pending>")]
-    internal class WriteI2cDataNoStopCommand : BaseI2cWriteCommand
+    [Command(Name="read-settings", Description = "Read MCP2221 SRAM Settings")]
+    internal class SramReadSettingsCommand : BaseCommand
     {
-        public WriteI2cDataNoStopCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public SramReadSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 
@@ -40,13 +38,9 @@ namespace MCP2221IOConsole.Commands.I2c
         {
             return ExecuteCommand((device) =>
             {
-                var address = ParseAddress();
+                device.ReadSramSettings();
 
-                console.WriteLine($"Writing [{Data.Count}] bytes to device [{address}] with NO-STOP");
-
-                device.I2cWriteDataNoStop(address, Data);
-
-                console.WriteLine($"Wrote [{Data.Count}] bytes to device");
+                console.WriteLine(device.SramSettings);
 
                 return 0;
             });

@@ -28,11 +28,11 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace MCP2221IOConsole.Commands.I2c
 {
-    [Command(Description = "Write I2C data")]
+    [Command(Name = "write-data-no-stop", Description = "Write Data to a device on the I2C bus with NO-STOP")]
     [SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "<Pending>")]
-    internal class WriteI2cDataCommand : BaseI2cWriteCommand
+    internal class I2cWriteDataNoStopCommand : BaseI2cWriteCommand
     {
-        public WriteI2cDataCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public I2cWriteDataNoStopCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 
@@ -42,11 +42,11 @@ namespace MCP2221IOConsole.Commands.I2c
             {
                 var address = ParseAddress();
 
-                console.WriteLine($"Writing [{Data.Count}] bytes To device [{address}]");
+                console.WriteLine($"Writing [{Data.Count}] bytes to device [{address}] with NO-STOP");
 
-                device.I2cWriteData(address, Data);
+                device.I2cWriteDataNoStop(address, Data);
 
-                console.WriteLine($"Wrote [{Data.Count}] bytes To device");
+                console.WriteLine($"Wrote [{Data.Count}] bytes to device");
 
                 return 0;
             });

@@ -23,16 +23,20 @@
 */
 
 using McMaster.Extensions.CommandLineUtils;
+using MCP2221IO.Gp;
 using System;
 
 namespace MCP2221IOConsole.Commands.Sram
 {
-    [Command(Description = "Read MCP2221 SRAM Settings")]
-    internal class ReadSramSettingsCommand : BaseCommand
+    [Command(Name = "write-gp1-settings", Description = "Write MCP2221 SRAM GP 1 settings")]
+    internal class SramWriteGp1SettingsCommand : BaseSramWriteGpSettingsCommand
     {
-        public ReadSramSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public SramWriteGp1SettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
+
+        [Option(Templates.SramGpDesignation, "The GP 1 designation", CommandOptionType.SingleValue)]
+        public (bool HasValue, Gp1Designation Value) Designation { get; set; }
 
         protected override int OnExecute(CommandLineApplication app, IConsole console)
         {
@@ -40,7 +44,7 @@ namespace MCP2221IOConsole.Commands.Sram
             {
                 device.ReadSramSettings();
 
-                console.WriteLine(device.SramSettings);
+                UpdateSramGpSetting(app, console, device, device.SramSettings.Gp1Settings, Designation);
 
                 return 0;
             });

@@ -24,30 +24,29 @@
 
 using McMaster.Extensions.CommandLineUtils;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
 namespace MCP2221IOConsole.Commands.I2c
 {
-    [Command(Description = "Read I2C data from a device on the I2C bus with REPEATED-START")]
+    [Command(Name = "set-transfer-speed", Description = "Set the I2C transfer speed")]
     [SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "<Pending>")]
-    internal class ReadI2cDataRepeatStartCommand : BaseReadI2cDataCommand
+    internal class I2cSetTransferSpeedCommand : BaseCommand
     {
-        public ReadI2cDataRepeatStartCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public I2cSetTransferSpeedCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
+
+        [Required]
+        [Range(1, 400000)]
+        [Option(Templates.Speed, "The I2C speed", CommandOptionType.SingleValue)]
+        public int Speed { get; set; }
 
         protected override int OnExecute(CommandLineApplication app, IConsole console)
         {
             return ExecuteCommand((device) =>
             {
-                var deviceAddress = ParseAddress();
-
-                console.WriteLine($"Reading the I2C bus device address [{deviceAddress}] with REPEATED-START");
-
-                var result = device.I2cReadDataRepeatedStart(deviceAddress, Length);
-
-                console.WriteLine($"Read [{result.Count}] bytes from I2C device. [{BitConverter.ToString(result.ToArray())}]");
+                device.SetI2cBusSpeed(Speed);
 
                 return 0;
             });

@@ -23,27 +23,28 @@
 */
 
 using McMaster.Extensions.CommandLineUtils;
+using MCP2221IO.Gp;
 using System;
 
-namespace MCP2221IOConsole.Commands.Gpio
+namespace MCP2221IOConsole.Commands.Sram
 {
-    [Command(Description = "Read MCP2221 GPIO Settings")]
-    internal class ReadGpioSettingsCommand : BaseCommand
+    [Command(Name = "write-gp2-settings", Description = "Write MCP2221 SRAM GP 2 settings")]
+    internal class SramWriteGp2SettingsCommand : BaseSramWriteGpSettingsCommand
     {
-        public ReadGpioSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public SramWriteGp2SettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
+
+        [Option(Templates.SramGpDesignation, "The GP 2 designation", CommandOptionType.SingleValue)]
+        public (bool HasValue, Gp2Designation Value) Designation { get; set; }
 
         protected override int OnExecute(CommandLineApplication app, IConsole console)
         {
             return ExecuteCommand((device) =>
             {
-                device.ReadGpioPorts();
+                device.ReadSramSettings();
 
-                console.WriteLine($"{nameof(device.GpioPort0)}: {device.GpioPort0}");
-                console.WriteLine($"{nameof(device.GpioPort1)}: {device.GpioPort1}");
-                console.WriteLine($"{nameof(device.GpioPort2)}: {device.GpioPort2}");
-                console.WriteLine($"{nameof(device.GpioPort3)}: {device.GpioPort3}");
+                UpdateSramGpSetting(app, console, device, device.SramSettings.Gp2Settings, Designation);
 
                 return 0;
             });

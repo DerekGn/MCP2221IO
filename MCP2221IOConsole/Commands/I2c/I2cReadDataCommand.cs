@@ -23,28 +23,31 @@
 */
 
 using McMaster.Extensions.CommandLineUtils;
-using MCP2221IO.Gp;
 using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 
-namespace MCP2221IOConsole.Commands.Sram
+namespace MCP2221IOConsole.Commands.I2c
 {
-    [Command(Description = "Write MCP2221 SRAM GP 0 settings")]
-    internal class WriteSramGp0SettingsCommand : BaseWriteSramGpSettingsCommand
+    [Command(Name="read-data", Description = "Read data from a device on the I2C bus")]
+    [SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "<Pending>")]
+    internal class I2cReadDataCommand : BaseReadI2cDataCommand
     {
-        public WriteSramGp0SettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public I2cReadDataCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
-
-        [Option(Templates.SramGpDesignation, "The GP 0 designation", CommandOptionType.SingleValue)]
-        public (bool HasValue, Gp0Designation Value) Designation { get; set; }
 
         protected override int OnExecute(CommandLineApplication app, IConsole console)
         {
             return ExecuteCommand((device) =>
             {
-                device.ReadSramSettings();
+                var deviceAddress = ParseAddress();
 
-                UpdateSramGpSetting(app, console, device, device.SramSettings.Gp0Settings, Designation);
+                console.WriteLine($"Reading the I2C bus device address [{deviceAddress}]");
+
+                var result = device.I2cReadData(deviceAddress, Length);
+
+                console.WriteLine($"Read [{result.Count}] bytes from I2C device. [{BitConverter.ToString(result.ToArray())}]");
 
                 return 0;
             });

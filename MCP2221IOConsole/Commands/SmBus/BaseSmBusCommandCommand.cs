@@ -23,31 +23,24 @@
 */
 
 using McMaster.Extensions.CommandLineUtils;
-using MCP2221IO.Gp;
 using System;
+using System.ComponentModel.DataAnnotations;
 
-namespace MCP2221IOConsole.Commands.Sram
+namespace MCP2221IOConsole.Commands.SmBus
 {
-    [Command(Description = "Write MCP2221 SRAM GP 2 settings")]
-    internal class WriteSramGp2SettingsCommand : BaseWriteSramGpSettingsCommand
+    internal abstract class BaseSmBusCommandCommand : BaseSmBusCommand
     {
-        public WriteSramGp2SettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        protected BaseSmBusCommandCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 
-        [Option(Templates.SramGpDesignation, "The GP 2 designation", CommandOptionType.SingleValue)]
-        public (bool HasValue, Gp2Designation Value) Designation { get; set; }
+        [Required]
+        [Range(typeof(byte), "0", "0xFF")]
+        [Option(Templates.Command, "The SmBus Command", CommandOptionType.SingleValue)]
+        public byte Command { get; set; }
 
-        protected override int OnExecute(CommandLineApplication app, IConsole console)
-        {
-            return ExecuteCommand((device) =>
-            {
-                device.ReadSramSettings();
-
-                UpdateSramGpSetting(app, console, device, device.SramSettings.Gp2Settings, Designation);
-
-                return 0;
-            });
-        }
+        [Required]
+        [Option(Templates.Pec, "Use SmBus Pec", CommandOptionType.SingleValue)]
+        public bool Pec { get; set; }
     }
 }

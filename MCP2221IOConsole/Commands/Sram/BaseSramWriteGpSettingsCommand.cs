@@ -29,9 +29,9 @@ using System;
 
 namespace MCP2221IOConsole.Commands.Sram
 {
-    internal abstract class BaseWriteSramGpSettingsCommand : BaseCommand 
+    internal abstract class BaseSramWriteGpSettingsCommand : BaseCommand 
     {
-        protected BaseWriteSramGpSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        protected BaseSramWriteGpSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 

@@ -22,11 +22,34 @@
 * SOFTWARE.
 */
 
-// TODO IMPLEMENT
+using McMaster.Extensions.CommandLineUtils;
+using System;
+using System.Diagnostics.CodeAnalysis;
 
-namespace MCP2221IOConsole.Commands.SmBus
+namespace MCP2221IOConsole.Commands.I2c
 {
-    internal class SmBusReadIntCommand
+    [Command(Name = "write-data-repeat-start", Description = "Write Data to a device on the I2C bus with REPEATED-START")]
+    [SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "<Pending>")]
+    internal class I2cWriteDataRepeatStartCommand : BaseI2cWriteCommand
     {
+        public I2cWriteDataRepeatStartCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        {
+        }
+
+        protected override int OnExecute(CommandLineApplication app, IConsole console)
+        {
+            return ExecuteCommand((device) =>
+            {
+                var address = ParseAddress();
+
+                console.WriteLine($"Writing [{Data.Count}] bytes to device [{address}]");
+
+                device.I2cWriteDataRepeatStart(address, Data);
+
+                console.WriteLine($"Wrote [{Data.Count}] bytes to device");
+
+                return 0;
+            });
+        }
     }
 }

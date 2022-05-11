@@ -23,9 +23,7 @@
 */
 
 using McMaster.Extensions.CommandLineUtils;
-using MCP2221IO;
 using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace MCP2221IOConsole.Commands.SmBus
 {

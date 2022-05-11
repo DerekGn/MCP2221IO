@@ -1,4 +1,4 @@
-﻿/*
+/*
 * MIT License
 *
 * Copyright (c) 2022 Derek Goslin https://github.com/DerekGn
@@ -24,16 +24,13 @@
 
 using McMaster.Extensions.CommandLineUtils;
 using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
-namespace MCP2221IOConsole.Commands.I2c
+namespace MCP2221IOConsole.Commands.Status
 {
-    [Command(Description = "Read data from a device on the I2C bus")]
-    [SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "<Pending>")]
-    internal class ReadI2cDataCommand : BaseReadI2cDataCommand
+    [Command(Name = "read", Description = "Read MCP2221 Status")]
+    internal class StatusReadCommand : BaseCommand
     {
-        public ReadI2cDataCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public StatusReadCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 
@@ -41,13 +38,9 @@ namespace MCP2221IOConsole.Commands.I2c
         {
             return ExecuteCommand((device) =>
             {
-                var deviceAddress = ParseAddress();
+                device.ReadDeviceStatus();
 
-                console.WriteLine($"Reading the I2C bus device address [{deviceAddress}]");
-
-                var result = device.I2cReadData(deviceAddress, Length);
-
-                console.WriteLine($"Read [{result.Count}] bytes from I2C device. [{BitConverter.ToString(result.ToArray())}]");
+                console.WriteLine(device.Status);
 
                 return 0;
             });

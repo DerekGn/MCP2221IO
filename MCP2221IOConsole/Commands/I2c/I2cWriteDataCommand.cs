@@ -28,33 +28,25 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace MCP2221IOConsole.Commands.I2c
 {
-    [Command(Description = "Scan the I2C bus")]
+    [Command(Name = "write-data", Description = "Write I2C data")]
     [SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "<Pending>")]
-    internal class ScanI2cBusCommand : BaseCommand
+    internal class I2cWriteDataCommand : BaseI2cWriteCommand
     {
-        public ScanI2cBusCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public I2cWriteDataCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
-
-        [Option(Templates.TenBitAddressing, "Use ten bit device addressing", CommandOptionType.SingleValue)]
-        public (bool HasValue, bool Value) TenBitAddressing { get; set; }
 
         protected override int OnExecute(CommandLineApplication app, IConsole console)
         {
             return ExecuteCommand((device) =>
             {
-                console.WriteLine($"Scanning the I2C bus");
-                console.WriteLine($"10 bit addressing [{TenBitAddressing.HasValue && TenBitAddressing.Value}]");
-                
-                var result = device.I2cScanBus(TenBitAddressing.HasValue && TenBitAddressing.Value);
+                var address = ParseAddress();
 
-                console.WriteLine($"Found [0x{result.Count:X4}] I2C device");
-                console.WriteLine("".PadRight(25, '='));
+                console.WriteLine($"Writing [{Data.Count}] bytes To device [{address}]");
 
-                foreach (var address in result)
-                {
-                    console.WriteLine($"Device [0x{address.Value:X4}]");
-                }
+                device.I2cWriteData(address, Data);
+
+                console.WriteLine($"Wrote [{Data.Count}] bytes To device");
 
                 return 0;
             });

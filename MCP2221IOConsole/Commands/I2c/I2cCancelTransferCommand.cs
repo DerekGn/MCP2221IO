@@ -1,4 +1,4 @@
-/*
+﻿/*
 * MIT License
 *
 * Copyright (c) 2022 Derek Goslin https://github.com/DerekGn
@@ -21,16 +21,17 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 * SOFTWARE.
 */
-
 using McMaster.Extensions.CommandLineUtils;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
-namespace MCP2221IOConsole.Commands.Status
+namespace MCP2221IOConsole.Commands.I2c
 {
-    [Command(Description = "Read MCP2221 Status")]
-    internal class ReadStatusCommand : BaseCommand
+    [Command(Name="cancel-transfer", Description = "Cancel current I2C transfer")]
+    [SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "<Pending>")]
+    internal class I2cCancelTransferCommand : BaseCommand
     {
-        public ReadStatusCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public I2cCancelTransferCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 
@@ -38,9 +39,9 @@ namespace MCP2221IOConsole.Commands.Status
         {
             return ExecuteCommand((device) =>
             {
-                device.ReadDeviceStatus();
+                device.CancelI2cBusTransfer();
 
-                console.WriteLine(device.Status);
+                console.WriteLine($"Transfer state: {device.Status.CancelTransferState}");
 
                 return 0;
             });

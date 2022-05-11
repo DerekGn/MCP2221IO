@@ -22,6 +22,8 @@
 * SOFTWARE.
 */
 
+// TODO IMPLEMENT
+
 namespace MCP2221IOConsole.Commands.SmBus
 {
     internal class SmBusWriteLongCommand

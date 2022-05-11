@@ -22,9 +22,34 @@
 * SOFTWARE.
 */
 
+using McMaster.Extensions.CommandLineUtils;
+using MCP2221IO;
+using System;
+using System.Linq;
+
 namespace MCP2221IOConsole.Commands.SmBus
 {
-    internal class SmBusBlockReadCommand
+    [Command(Name = "block-read", Description = "Execute SmBus Block Read command")]
+    internal class SmBusBlockReadCommand : BaseSmBusReadCommandCommand
     {
+        public SmBusBlockReadCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        {
+        }
+
+        protected override int OnExecute(CommandLineApplication app, IConsole console)
+        {
+            return ExecuteCommand((device) =>
+            {
+                var deviceAddress = new I2cAddress(Address, I2cAddressSize.SevenBit);
+
+                console.WriteLine($"Reading the SmBus bus device address [{deviceAddress}]");
+
+                var result = device.SmBusBlockRead(deviceAddress, Command, Count, Pec);
+
+                console.WriteLine($"Read [{result.Count}] bytes from SmBus device. [{BitConverter.ToString(result.ToArray())}]");
+
+                return 0;
+            });
+        }
     }
 }

@@ -419,7 +419,7 @@ namespace MCP2221IO
         }
 
         // <inheritdoc/>
-        public byte SmBusReadByte(I2cAddress address)
+        public byte SmBusReadByte(I2cAddress address, bool pec = false)
         {
             return HandleOperationExecution(
                 nameof(Device),
@@ -429,7 +429,10 @@ namespace MCP2221IO
 
                     var result = I2cReadData<I2cReadDataResponse>(CommandCodes.ReadI2cData, address, sizeof(byte));
 
-                    AssertPec(result);
+                    if (pec)
+                    {
+                        AssertPec(result);
+                    }
 
                     return result[0];
                 });
@@ -456,9 +459,9 @@ namespace MCP2221IO
         }
 
         // <inheritdoc/>
-        public byte SmBusReadByteCommand(I2cAddress address, byte command)
+        public byte SmBusReadByteCommand(I2cAddress address, byte command, bool pec = false)
         {
-            return SmBusReadCommand(address, command, sizeof(byte)).First();
+            return SmBusReadCommand(address, command, sizeof(byte), pec).First();
         }
 
         // <inheritdoc/>
@@ -468,9 +471,9 @@ namespace MCP2221IO
         }
 
         // <inheritdoc/>
-        public short SmBusReadWordCommand(I2cAddress address, byte command)
+        public short SmBusReadWordCommand(I2cAddress address, byte command, bool pec = false)
         {
-            return BitConverter.ToInt16(SmBusReadCommand(address, command, sizeof(short)).Take(sizeof(short)).ToArray());
+            return BitConverter.ToInt16(SmBusReadCommand(address, command, sizeof(short), pec).Take(sizeof(short)).ToArray());
         }
 
         // <inheritdoc/>
@@ -480,9 +483,9 @@ namespace MCP2221IO
         }
 
         // <inheritdoc/>
-        public int SmBusReadIntCommand(I2cAddress address, byte command)
+        public int SmBusReadIntCommand(I2cAddress address, byte command, bool pec = false)
         {
-            return BitConverter.ToInt32(SmBusReadCommand(address, command, sizeof(int)).Take(sizeof(int)).ToArray());
+            return BitConverter.ToInt32(SmBusReadCommand(address, command, sizeof(int), pec).Take(sizeof(int)).ToArray());
         }
 
         // <inheritdoc/>
@@ -492,9 +495,9 @@ namespace MCP2221IO
         }
 
         // <inheritdoc/>
-        public long SmBusReadLongCommand(I2cAddress address, byte command)
+        public long SmBusReadLongCommand(I2cAddress address, byte command, bool pec = false)
         {
-            return BitConverter.ToInt64(SmBusReadCommand(address, command, sizeof(long)).Take(sizeof(long)).ToArray());
+            return BitConverter.ToInt64(SmBusReadCommand(address, command, sizeof(long), pec).Take(sizeof(long)).ToArray());
         }
 
         // <inheritdoc/>
@@ -504,7 +507,7 @@ namespace MCP2221IO
         }
 
         // <inheritdoc/>
-        public IList<byte> SmBusBlockRead(I2cAddress address, byte command, byte count)
+        public IList<byte> SmBusBlockRead(I2cAddress address, byte command, byte count, bool pec = false)
         {
             return HandleOperationExecution(
                 nameof(Device),
@@ -514,21 +517,27 @@ namespace MCP2221IO
 
                     I2cWriteData<I2cWriteDataNoStopResponse>(CommandCodes.WriteI2cDataNoStop, address, writeData);
 
-                    var result = I2cReadData<I2cReadDataResponse>(CommandCodes.ReadI2cData, address, count);
+                    var result = I2cReadData<I2cReadDataRepeatedStarteResponse>(CommandCodes.ReadI2cDataRepeatedStart, address, count);
 
-                    AssertPec(result);
+                    if (pec)
+                    {
+                        AssertPec(result);
+                    }
 
                     return result;
                 });
         }
 
         // <inheritdoc/>
-        public void SmBusBlockWrite(I2cAddress address, byte command, IList<byte> block)
+        public void SmBusBlockWrite(I2cAddress address, byte command, IList<byte> block, bool pec = false)
         {
             HandleOperationExecution(
                 nameof(Device),
                 () =>
                 {
+                    AssertAddress(address);
+
+                    //I2cWriteData(address, );
                 });
         }
 
@@ -566,7 +575,7 @@ namespace MCP2221IO
             return result;
         }
 
-        private IList<byte> SmBusReadCommand(I2cAddress address, byte command, ushort length)
+        private IList<byte> SmBusReadCommand(I2cAddress address, byte command, ushort length, bool pec)
         {
             return HandleOperationExecution(
                 nameof(Device),
@@ -578,7 +587,10 @@ namespace MCP2221IO
 
                     var result = I2cReadData<I2cReadDataRepeatedStarteResponse>(CommandCodes.ReadI2cDataRepeatedStart, address, length);
 
-                    AssertPec(result);
+                    if (pec)
+                    {
+                        AssertPec(result);
+                    }
 
                     return result;
                 });

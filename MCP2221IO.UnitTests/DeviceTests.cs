@@ -33,6 +33,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Xunit;
 using Xunit.Abstractions;
@@ -53,182 +54,49 @@ namespace MCP2221IO.UnitTests
         }
 
         [Fact]
-        public void TestReadDeviceStatus()
+        public void TestCancelI2cBusTransfer()
         {
             // Arrange
             _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
                 .Returns(TestPayloads.DeviceStatusResponse);
 
             // Act
-            _device.ReadDeviceStatus();
+            _device.CancelI2cBusTransfer();
 
             // Assert
             _device.Status.Should().NotBeNull();
-
-            _output.WriteLine(_device.Status.ToString());
         }
 
         [Fact]
-        public void TestReadChipSettings()
+        public void TestGetFactorySerialNumberOk()
         {
             // Arrange
             _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
-                .Returns(TestPayloads.ChipSettingsResponse);
+                .Returns(TestPayloads.FactorySerialNumberResponse);
 
             // Act
-            _device.ReadChipSettings();
+            string serialNumber = _device.FactorySerialNumber;
 
             // Assert
-            _device.ChipSettings.Should().NotBeNull();
+            serialNumber.Should().NotBeNull();
 
-            _output.WriteLine(_device.ChipSettings.ToString());
+            _output.WriteLine(serialNumber);
         }
 
         [Fact]
-        public void TestReadGpSettings()
+        public void TestGetUsbManufacturerDescriptorOk()
         {
             // Arrange
             _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
-                .Returns(TestPayloads.GpSettingsResponse);
+                .Returns(TestPayloads.ManufacturerDescriptorResponse);
 
             // Act
-            _device.ReadGpSettings();
-
-            // Assert
-            _device.GpSettings.Should().NotBeNull();
-
-            _output.WriteLine(_device.GpSettings.ToString());
-        }
-
-        [Fact]
-        public void TestReadSramSettings()
-        {
-            // Arrange
-            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
-                .Returns(TestPayloads.ReadSramSettingsResponse);
-
-            // Act
-            _device.ReadSramSettings();
-
-            // Assert
-            _device.SramSettings.Should().NotBeNull();
-
-            _output.WriteLine(_device.SramSettings.ToString());
-        }
-
-        [Fact]
-        public void TestReadGpioSettings()
-        {
-            // Arrange
-            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
-                .Returns(TestPayloads.GpioSettingsResponse);
-
-            // Act
-            _device.ReadGpioPorts();
-
-            // Assert
-            _mockHidDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Once);
-
-            _output.WriteLine($"GpioPort0: {_device.GpioPort0}");
-            _output.WriteLine($"GpioPort1: {_device.GpioPort1}");
-            _output.WriteLine($"GpioPort2: {_device.GpioPort2}");
-            _output.WriteLine($"GpioPort3: {_device.GpioPort3}");
-        }
-
-        [Fact]
-        public void TestWriteChipSettings()
-        {
-            // Arrange
-            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
-                .Returns(WriteFlashWriteResponse(0));
-
-            _device.ChipSettings = new ChipSettings();
-
-            // Act
-            _device.WriteChipSettings(new Password(new List<byte>()));
-
-            // Assert
-            _mockHidDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Once);
-        }
-
-        [Fact]
-        public void TestWriteGpSettings()
-        {
-            // Arrange
-            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
-                .Returns(WriteFlashWriteResponse(0));
-
-            _device.GpSettings = new GpSettings()
-            {
-                Gp0PowerUpSetting = new GpSetting<Gp0Designation>(),
-                Gp1PowerUpSetting = new GpSetting<Gp1Designation>(),
-                Gp2PowerUpSetting = new GpSetting<Gp2Designation>(),
-                Gp3PowerUpSetting = new GpSetting<Gp3Designation>()
-            };
-
-            // Act
-            _device.WriteGpSettings();
-
-            // Assert
-            _mockHidDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Once);
-        }
-
-        [Fact]
-        public void TestWriteSramSettings()
-        {
-            // Arrange
-            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
-                .Returns(TestPayloads.WriteSramSettingsResponse);
-
-            _device.SramSettings = new SramSettings()
-            {
-                Gp0Settings = new GpSetting<Gp0Designation>(),
-                Gp1Settings = new GpSetting<Gp1Designation>(),
-                Gp2Settings = new GpSetting<Gp2Designation>(),
-                Gp3Settings = new GpSetting<Gp3Designation>()
-            };
-
-            // Act
-            _device.WriteSramSettings(true);
-
-            // Assert
-            _mockHidDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Once);
-        }
-
-        [Fact]
-        public void WriteGpioPorts()
-        {
-            // Arrange
-            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
-                .Returns(WriteSetGpioValuesResponse());
-
-            _device._gpioPortsRead = true;
-            _device.GpioPort0 = new GpioPort();
-            _device.GpioPort1 = new GpioPort();
-            _device.GpioPort2 = new GpioPort();
-            _device.GpioPort3 = new GpioPort();
-            // Act
-            _device.WriteGpioPorts();
-
-            // Assert
-            _mockHidDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Once);
-        }
-
-        [Fact]
-        public void TestSetUsbManufacturerDescriptorOk()
-        {
-            // Arrange
-            byte[] descriptor = null;
-
-            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
-                .Returns(WriteFlashWriteResponse(0))
-                .Callback<byte[]>(b => descriptor = b);
-
-            // Act
-            _device.UsbManufacturerDescriptor = "UPDATED";
+            string descriptor = _device.UsbManufacturerDescriptor;
 
             // Assert
             descriptor.Should().NotBeNull();
+
+            _output.WriteLine(descriptor);
         }
 
         [Fact]
@@ -248,23 +116,6 @@ namespace MCP2221IO.UnitTests
         }
 
         [Fact]
-        public void TestSetUsbProductDescriptorOk()
-        {
-            // Arrange
-            byte[] descriptor = null;
-
-            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
-                .Returns(WriteFlashWriteResponse(0))
-                .Callback<byte[]>(b => descriptor = b);
-
-            // Act
-            _device.UsbProductDescriptor = "UPDATED";
-
-            // Assert
-            descriptor.Should().NotBeNull();
-        }
-
-        [Fact]
         public void TestGetUsbSerialNumberDescriptorOk()
         {
             // Arrange
@@ -281,35 +132,88 @@ namespace MCP2221IO.UnitTests
         }
 
         [Fact]
-        public void TestSetUsbSerialNumberDescriptorOk()
+        public void TestI2cRead()
         {
-            // Arrange
-            byte[] descriptor = null;
+            const int DataLength = 130;
+            int blockCount = 0;
 
-            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
-                .Returns(WriteFlashWriteResponse(0))
-                .Callback<byte[]>(b => descriptor = b);
+            // Arrange
+            _mockHidDevice.SetupSequence(_ => _.WriteRead(It.IsAny<byte[]>()))
+                .Returns(WriteReponse(CommandCodes.ReadI2cData))
+                .Returns(WriteGetI2cDataResponse(CommandCodes.GetI2cData, Math.Min(Device.MaxBlockSize, Math.Abs(DataLength - (blockCount++ * Device.MaxBlockSize)))))
+                .Returns(WriteGetI2cDataResponse(CommandCodes.GetI2cData, Math.Min(Device.MaxBlockSize, Math.Abs(DataLength - (blockCount++ * Device.MaxBlockSize)))))
+                .Returns(WriteGetI2cDataResponse(CommandCodes.GetI2cData, Math.Min(Device.MaxBlockSize, Math.Abs(DataLength - (blockCount * Device.MaxBlockSize)))));
 
             // Act
-            _device.UsbSerialNumberDescriptor = "SERIAL NUMBER";
+            var buffer = _device.I2cReadData(new I2cAddress(0x0A), DataLength);
 
             // Assert
-            descriptor.Should().NotBeNull();
+            _mockHidDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Exactly(4));
+            buffer.Should().NotBeNullOrEmpty();
         }
 
         [Fact]
-        public void TestUnlockFlash()
+        [SuppressMessage("Minor Code Smell", "S1481:Unused local variables should be removed", Justification = "<Pending>")]
+        public void TestI2cReadAddressNull()
         {
             // Arrange
 
-            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
-                .Returns(WriteFlashUnlockResponse());
-
             // Act
-            Action act = () => { _device.UnlockFlash(new Password("AA55AA55DEADBEEF")); };
+            Action act = () => { var buffer = _device.I2cReadData(null, 1); };
 
             // Assert
-            act.Should().NotThrow();
+            act.Should().Throw<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void TestI2cReadRepeatedStart()
+        {
+            const int DataLength = 130;
+            int blockCount = 0;
+
+            // Arrange
+            _mockHidDevice.SetupSequence(_ => _.WriteRead(It.IsAny<byte[]>()))
+                .Returns(WriteReponse(CommandCodes.ReadI2cDataRepeatedStart))
+                .Returns(WriteGetI2cDataResponse(CommandCodes.GetI2cData, Math.Min(Device.MaxBlockSize, Math.Abs(DataLength - (blockCount++ * Device.MaxBlockSize)))))
+                .Returns(WriteGetI2cDataResponse(CommandCodes.GetI2cData, Math.Min(Device.MaxBlockSize, Math.Abs(DataLength - (blockCount++ * Device.MaxBlockSize)))))
+                .Returns(WriteGetI2cDataResponse(CommandCodes.GetI2cData, Math.Min(Device.MaxBlockSize, Math.Abs(DataLength - (blockCount * Device.MaxBlockSize)))));
+
+            // Act
+            var buffer = _device.I2cReadDataRepeatedStart(new I2cAddress(0x0A), DataLength);
+
+            // Assert
+            _mockHidDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Exactly(4));
+            buffer.Should().NotBeNullOrEmpty();
+        }
+
+        [Fact]
+        public void TestI2cScanBusSevenBitAddress()
+        {
+            // Arrange
+            _mockHidDevice.SetupSequence(_ => _.WriteRead(It.IsAny<byte[]>()))
+                .Returns(WriteReponse(CommandCodes.ReadI2cData))
+                .Returns(WriteGetI2cDataResponse(CommandCodes.GetI2cData, 1));
+
+            // Act
+            var result = _device.I2cScanBusInternal(false, 9);
+
+            // Assert
+            result.Should().NotBeEmpty();
+        }
+
+        [Fact]
+        public void TestI2cScanBusTenBitAddress()
+        {
+            // Arrange
+            _mockHidDevice.SetupSequence(_ => _.WriteRead(It.IsAny<byte[]>()))
+                .Returns(WriteReponse(CommandCodes.ReadI2cData))
+                .Returns(WriteGetI2cDataResponse(CommandCodes.GetI2cData, 1));
+
+            // Act
+            var result = _device.I2cScanBusInternal(true, 9);
+
+            // Assert
+            result.Should().NotBeEmpty();
         }
 
         [Fact]
@@ -412,87 +316,208 @@ namespace MCP2221IO.UnitTests
         }
 
         [Fact]
-        public void TestI2cRead()
+        public void TestOpen()
         {
-            const int DataLength = 130;
-            int blockCount = 0;
-
             // Arrange
-            _mockHidDevice.SetupSequence(_ => _.WriteRead(It.IsAny<byte[]>()))
-                .Returns(WriteReponse(CommandCodes.ReadI2cData))
-                .Returns(WriteGetI2cDataResponse(CommandCodes.GetI2cData, Math.Min(Device.MaxBlockSize, Math.Abs(DataLength - (blockCount++ * Device.MaxBlockSize)))))
-                .Returns(WriteGetI2cDataResponse(CommandCodes.GetI2cData, Math.Min(Device.MaxBlockSize, Math.Abs(DataLength - (blockCount++ * Device.MaxBlockSize)))))
-                .Returns(WriteGetI2cDataResponse(CommandCodes.GetI2cData, Math.Min(Device.MaxBlockSize, Math.Abs(DataLength - (blockCount * Device.MaxBlockSize)))));
 
             // Act
-            var buffer = _device.I2cReadData(new I2cAddress(0x0A), DataLength);
+            _device.Open();
 
             // Assert
-            _mockHidDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Exactly(4));
-            buffer.Should().NotBeNullOrEmpty();
+            _mockHidDevice.Verify(_ => _.Open(), Times.Once);
         }
 
         [Fact]
-        public void TestI2cReadAddressNull()
+        public void TestReadChipSettings()
         {
             // Arrange
+            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+                .Returns(TestPayloads.ChipSettingsResponse);
 
             // Act
-            Action act = () => { var buffer = _device.I2cReadData(null, 1); };
+            _device.ReadChipSettings();
 
             // Assert
-            act.Should().Throw<ArgumentNullException>();
+            _device.ChipSettings.Should().NotBeNull();
+
+            _output.WriteLine(_device.ChipSettings.ToString());
         }
 
         [Fact]
-        public void TestI2cReadRepeatedStart()
+        public void TestReadDeviceStatus()
         {
-            const int DataLength = 130;
-            int blockCount = 0;
-
             // Arrange
-            _mockHidDevice.SetupSequence(_ => _.WriteRead(It.IsAny<byte[]>()))
-                .Returns(WriteReponse(CommandCodes.ReadI2cDataRepeatedStart))
-                .Returns(WriteGetI2cDataResponse(CommandCodes.GetI2cData, Math.Min(Device.MaxBlockSize, Math.Abs(DataLength - (blockCount++ * Device.MaxBlockSize)))))
-                .Returns(WriteGetI2cDataResponse(CommandCodes.GetI2cData, Math.Min(Device.MaxBlockSize, Math.Abs(DataLength - (blockCount++ * Device.MaxBlockSize)))))
-                .Returns(WriteGetI2cDataResponse(CommandCodes.GetI2cData, Math.Min(Device.MaxBlockSize, Math.Abs(DataLength - (blockCount * Device.MaxBlockSize)))));
+            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+                .Returns(TestPayloads.DeviceStatusResponse);
 
             // Act
-            var buffer = _device.I2cReadDataRepeatedStart(new I2cAddress(0x0A), DataLength);
+            _device.ReadDeviceStatus();
 
             // Assert
-            _mockHidDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Exactly(4));
-            buffer.Should().NotBeNullOrEmpty();
+            _device.Status.Should().NotBeNull();
+
+            _output.WriteLine(_device.Status.ToString());
         }
 
         [Fact]
-        public void TestI2cScanBusSevenBitAddress()
+        public void TestReadGpioSettings()
         {
             // Arrange
-            _mockHidDevice.SetupSequence(_ => _.WriteRead(It.IsAny<byte[]>()))
-                .Returns(WriteReponse(CommandCodes.ReadI2cData))
-                .Returns(WriteGetI2cDataResponse(CommandCodes.GetI2cData, 1));
+            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+                .Returns(TestPayloads.GpioSettingsResponse);
 
             // Act
-            var result = _device.I2cScanBusInternal(false, 9);
+            _device.ReadGpioPorts();
 
             // Assert
-            result.Should().NotBeEmpty();
+            _mockHidDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Once);
+
+            _output.WriteLine($"GpioPort0: {_device.GpioPort0}");
+            _output.WriteLine($"GpioPort1: {_device.GpioPort1}");
+            _output.WriteLine($"GpioPort2: {_device.GpioPort2}");
+            _output.WriteLine($"GpioPort3: {_device.GpioPort3}");
         }
 
         [Fact]
-        public void TestI2cScanBusTenBitAddress()
+        public void TestReadGpSettings()
         {
             // Arrange
-            _mockHidDevice.SetupSequence(_ => _.WriteRead(It.IsAny<byte[]>()))
-                .Returns(WriteReponse(CommandCodes.ReadI2cData))
-                .Returns(WriteGetI2cDataResponse(CommandCodes.GetI2cData, 1));
+            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+                .Returns(TestPayloads.GpSettingsResponse);
 
             // Act
-            var result = _device.I2cScanBusInternal(true, 9);
+            _device.ReadGpSettings();
 
             // Assert
-            result.Should().NotBeEmpty();
+            _device.GpSettings.Should().NotBeNull();
+
+            _output.WriteLine(_device.GpSettings.ToString());
+        }
+
+        [Fact]
+        public void TestReadSramSettings()
+        {
+            // Arrange
+            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+                .Returns(TestPayloads.ReadSramSettingsResponse);
+
+            // Act
+            _device.ReadSramSettings();
+
+            // Assert
+            _device.SramSettings.Should().NotBeNull();
+
+            _output.WriteLine(_device.SramSettings.ToString());
+        }
+
+        [Fact]
+        public void TestSetUsbManufacturerDescriptorOk()
+        {
+            // Arrange
+            byte[] descriptor = null;
+
+            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+                .Returns(WriteFlashWriteResponse(0))
+                .Callback<byte[]>(b => descriptor = b);
+
+            // Act
+            _device.UsbManufacturerDescriptor = "UPDATED";
+
+            // Assert
+            descriptor.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void TestSetUsbProductDescriptorOk()
+        {
+            // Arrange
+            byte[] descriptor = null;
+
+            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+                .Returns(WriteFlashWriteResponse(0))
+                .Callback<byte[]>(b => descriptor = b);
+
+            // Act
+            _device.UsbProductDescriptor = "UPDATED";
+
+            // Assert
+            descriptor.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void TestSetUsbSerialNumberDescriptorOk()
+        {
+            // Arrange
+            byte[] descriptor = null;
+
+            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+                .Returns(WriteFlashWriteResponse(0))
+                .Callback<byte[]>(b => descriptor = b);
+
+            // Act
+            _device.UsbSerialNumberDescriptor = "SERIAL NUMBER";
+
+            // Assert
+            descriptor.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void WriteGpioPorts()
+        {
+            // Arrange
+            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+                .Returns(WriteSetGpioValuesResponse());
+
+            _device._gpioPortsRead = true;
+            _device.GpioPort0 = new GpioPort();
+            _device.GpioPort1 = new GpioPort();
+            _device.GpioPort2 = new GpioPort();
+            _device.GpioPort3 = new GpioPort();
+            // Act
+            _device.WriteGpioPorts();
+
+            // Assert
+            _mockHidDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Once);
+        }
+
+        [Fact]
+        public void TestReset()
+        {
+            // Arrange
+
+            // Act
+            _device.Reset();
+
+            // Assert
+            _mockHidDevice.Verify(_ => _.Write(It.IsAny<byte[]>()), Times.Once);
+        }
+
+        [Fact]
+        public void TestSetI2cBusSpeed()
+        {
+            // Arrange
+            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+                .Returns(TestPayloads.DeviceStatusResponse);
+
+            // Act
+            _device.SetI2cBusSpeed(100);
+
+            // Assert
+            _device.Status.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void TestSetI2cBusSpeedTimeout()
+        {
+            // Arrange
+            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+                .Returns(TestPayloads.DeviceStatusSetSpeedFailedResponse);
+
+            // Act
+            Action act = () => { _device.SetI2cBusSpeed(100); };
+
+            // Assert
+            act.Should().Throw<I2cOperationException>();
         }
 
         [Fact]
@@ -501,20 +526,24 @@ namespace MCP2221IO.UnitTests
             // Arrange
 
             // Act
-            //_device.SmBusBlockRead();
+            var result = _device.SmBusBlockRead(new I2cAddress(0x0B), 0x55, 5, true);
 
             // Assert
+
+            result.Should().NotBeEmpty();
         }
 
         [Fact]
         public void TestSmBusBlockWrite()
         {
             // Arrange
+            byte[] writeData = null;
 
             // Act
-            //_device.SmBusBlockWrite();
+            _device.SmBusBlockWrite(new I2cAddress(0x0B), 0xAA, new List<byte>() { 0x01, 0x02 }, true);
 
             // Assert
+            writeData.Should().Contain(new List<byte>() { 0x14, 0x55, 0xAC });
         }
 
         [Theory]
@@ -550,7 +579,7 @@ namespace MCP2221IO.UnitTests
                 .Returns(WriteGetI2cDataResponse(CommandCodes.GetI2cData, 1));
 
             // Act
-            var result = _device.SmBusReadByte(new I2cAddress(10, I2cAddressSize.SevenBit));
+            var result = _device.SmBusReadByte(new I2cAddress(10, I2cAddressSize.SevenBit), true);
 
             // Assert
             result.Should().Be(0);
@@ -566,7 +595,7 @@ namespace MCP2221IO.UnitTests
                 .Returns(WriteGetI2cDataResponse(CommandCodes.GetI2cData, 0x55, 0xAC));
 
             // Act
-            var result = _device.SmBusReadByteCommand(new I2cAddress(10, I2cAddressSize.SevenBit), 0x55);
+            var result = _device.SmBusReadByteCommand(new I2cAddress(10, I2cAddressSize.SevenBit), 0x55, true);
 
             // Assert
             result.Should().Be(0x55);
@@ -582,7 +611,7 @@ namespace MCP2221IO.UnitTests
                 .Returns(WriteGetI2cDataResponse(CommandCodes.GetI2cData, 0x55, 0x55, 0x55, 0x55, 0xB7));
 
             // Act
-            var result = _device.SmBusReadIntCommand(new I2cAddress(10, I2cAddressSize.SevenBit), 0x55);
+            var result = _device.SmBusReadIntCommand(new I2cAddress(10, I2cAddressSize.SevenBit), 0x55, true);
 
             // Assert
             result.Should().Be(0x55555555);
@@ -598,7 +627,7 @@ namespace MCP2221IO.UnitTests
                 .Returns(WriteGetI2cDataResponse(CommandCodes.GetI2cData, 0x55, 0x55, 0x55, 0x55, 0xAA, 0xAA, 0xAA, 0xAA, 0x93));
 
             // Act
-            var result = _device.SmBusReadLongCommand(new I2cAddress(10, I2cAddressSize.SevenBit), 0x55);
+            var result = _device.SmBusReadLongCommand(new I2cAddress(10, I2cAddressSize.SevenBit), 0x55, true);
 
             // Assert
             result.Should().Be(-6148914692668172971L);
@@ -614,7 +643,7 @@ namespace MCP2221IO.UnitTests
                 .Returns(WriteGetI2cDataResponse(CommandCodes.GetI2cData, 0x55, 0xAA, 0x12));
 
             // Act
-            var result = _device.SmBusReadWordCommand(new I2cAddress(10, I2cAddressSize.SevenBit), 0x55);
+            var result = _device.SmBusReadWordCommand(new I2cAddress(10, I2cAddressSize.SevenBit), 0x55, true);
 
             // Assert
             result.Should().Be(-21931);
@@ -721,101 +750,78 @@ namespace MCP2221IO.UnitTests
         }
 
         [Fact]
-        public void TestReset()
+        public void TestUnlockFlash()
         {
             // Arrange
 
+            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
+                .Returns(WriteFlashUnlockResponse());
+
             // Act
-            _device.Reset();
+            Action act = () => { _device.UnlockFlash(new Password("AA55AA55DEADBEEF")); };
 
             // Assert
-            _mockHidDevice.Verify(_ => _.Write(It.IsAny<byte[]>()), Times.Once);
+            act.Should().NotThrow();
         }
 
         [Fact]
-        public void TestCancelI2cBusTransfer()
+        public void TestWriteChipSettings()
         {
             // Arrange
             _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
-                .Returns(TestPayloads.DeviceStatusResponse);
+                .Returns(WriteFlashWriteResponse(0));
+
+            _device.ChipSettings = new ChipSettings();
 
             // Act
-            _device.CancelI2cBusTransfer();
+            _device.WriteChipSettings(new Password(new List<byte>()));
 
             // Assert
-            _device.Status.Should().NotBeNull();
+            _mockHidDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Once);
         }
 
         [Fact]
-        public void TestGetFactorySerialNumberOk()
+        public void TestWriteGpSettings()
         {
             // Arrange
             _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
-                .Returns(TestPayloads.FactorySerialNumberResponse);
+                .Returns(WriteFlashWriteResponse(0));
+
+            _device.GpSettings = new GpSettings()
+            {
+                Gp0PowerUpSetting = new GpSetting<Gp0Designation>(),
+                Gp1PowerUpSetting = new GpSetting<Gp1Designation>(),
+                Gp2PowerUpSetting = new GpSetting<Gp2Designation>(),
+                Gp3PowerUpSetting = new GpSetting<Gp3Designation>()
+            };
 
             // Act
-            string serialNumber = _device.FactorySerialNumber;
+            _device.WriteGpSettings();
 
             // Assert
-            serialNumber.Should().NotBeNull();
-
-            _output.WriteLine(serialNumber);
+            _mockHidDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Once);
         }
 
         [Fact]
-        public void TestGetUsbManufacturerDescriptorOk()
+        public void TestWriteSramSettings()
         {
             // Arrange
             _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
-                .Returns(TestPayloads.ManufacturerDescriptorResponse);
+                .Returns(TestPayloads.WriteSramSettingsResponse);
+
+            _device.SramSettings = new SramSettings()
+            {
+                Gp0Settings = new GpSetting<Gp0Designation>(),
+                Gp1Settings = new GpSetting<Gp1Designation>(),
+                Gp2Settings = new GpSetting<Gp2Designation>(),
+                Gp3Settings = new GpSetting<Gp3Designation>()
+            };
 
             // Act
-            string descriptor = _device.UsbManufacturerDescriptor;
+            _device.WriteSramSettings(true);
 
             // Assert
-            descriptor.Should().NotBeNull();
-
-            _output.WriteLine(descriptor);
-        }
-
-        [Fact]
-        public void TestSetI2cBusSpeed()
-        {
-            // Arrange
-            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
-                .Returns(TestPayloads.DeviceStatusResponse);
-
-            // Act
-            _device.SetI2cBusSpeed(100);
-
-            // Assert
-            _device.Status.Should().NotBeNull();
-        }
-
-        [Fact]
-        public void TestSetI2cBusSpeedTimeout()
-        {
-            // Arrange
-            _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
-                .Returns(TestPayloads.DeviceStatusSetSpeedFailedResponse);
-
-            // Act
-            Action act = () => { _device.SetI2cBusSpeed(100); };
-
-            // Assert
-            act.Should().Throw<I2cOperationException>();
-        }
-
-        [Fact]
-        public void TestOpen()
-        {
-            // Arrange
-
-            // Act
-            _device.Open();
-
-            // Assert
-            _mockHidDevice.Verify(_ => _.Open(), Times.Once);
+            _mockHidDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Once);
         }
 
         private byte[] WriteSetGpioValuesResponse()

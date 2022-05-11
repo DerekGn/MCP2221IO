@@ -25,6 +25,7 @@
 using FluentAssertions;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -52,6 +53,7 @@ namespace MCP2221IO.UnitTests
         }
 
         [Fact]
+        [SuppressMessage("Minor Code Smell", "S1481:Unused local variables should be removed", Justification = "<Pending>")]
         public void TestSevenBitAddressException()
         {
             // Arrange Act
@@ -78,6 +80,7 @@ namespace MCP2221IO.UnitTests
         }
 
         [Fact]
+        [SuppressMessage("Minor Code Smell", "S1481:Unused local variables should be removed", Justification = "<Pending>")]
         public void TestTenBitAddressException()
         {
             // Arrange Act

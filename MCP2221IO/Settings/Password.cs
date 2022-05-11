@@ -72,11 +72,10 @@ namespace MCP2221IO.Settings
         private bool Parse(string password)
         {
             bool result;
-            ulong value;
 
             password = password.Replace("0x", string.Empty);
 
-            if (!ulong.TryParse(password, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out value))
+            if (!ulong.TryParse(password, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out ulong value))
             {
                 result = ulong.TryParse(password, NumberStyles.Integer, CultureInfo.InvariantCulture, out value);
             }

@@ -28,6 +28,7 @@ using System;
 
 namespace MCP2221IOConsole.Commands.SmBus
 {
+    [Command(Name = "read-byte-command", Description = "Execute SmBus byte read with command")]
     internal class SmBusReadByteCommand : BaseSmBusCommandCommand
     {
         public SmBusReadByteCommand(IServiceProvider serviceProvider) : base(serviceProvider)
@@ -40,11 +41,11 @@ namespace MCP2221IOConsole.Commands.SmBus
             {
                 var deviceAddress = new I2cAddress(Address, I2cAddressSize.SevenBit);
 
-                console.WriteLine($"Reading a byte from the SmBus bus device address [{deviceAddress}]");
+                console.WriteLine($"Reading a byte from the SmBus device address [{deviceAddress}]");
 
                 var result = device.SmBusReadByteCommand(deviceAddress, Command, Pec);
 
-                console.WriteLine($"Read byte from SmBus device. [0x{result}]");
+                console.WriteLine($"Read [0x{result:X}] from SmBus device");
 
                 return 0;
             });

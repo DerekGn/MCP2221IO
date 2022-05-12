@@ -36,11 +36,11 @@ namespace MCP2221IOConsole.Commands.SmBus
 
         [Required]
         [Range(typeof(byte), "0", "0xFF")]
-        [Option(Templates.Command, "The SmBus Command", CommandOptionType.SingleValue)]
+        [Option(Templates.Command, "The SmBus command", CommandOptionType.SingleValue)]
         public byte Command { get; set; }
 
         [Required]
-        [Option(Templates.Pec, "Use SmBus Pec", CommandOptionType.SingleValue)]
+        [Option(Templates.Pec, "Use SmBus pec", CommandOptionType.SingleValue)]
         public bool Pec { get; set; }
     }
 }

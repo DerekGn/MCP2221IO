@@ -28,9 +28,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MCP2221IOConsole.Commands.SmBus
 {
-    internal abstract class BaseSmBusReadCommandCommand : BaseSmBusCommandCommand
+    internal class BaseSmBusBlockCommandCommand : BaseSmBusCommandCommand
     {
-        protected BaseSmBusReadCommandCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public BaseSmBusBlockCommandCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 

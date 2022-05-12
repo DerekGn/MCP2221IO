@@ -22,11 +22,33 @@
 * SOFTWARE.
 */
 
-// TODO IMPLEMENT
+using McMaster.Extensions.CommandLineUtils;
+using MCP2221IO;
+using System;
 
 namespace MCP2221IOConsole.Commands.SmBus
 {
-    internal class SmBusReadIntCommand
+    [Command(Name = "read-int-command", Description = "Execute SmBus int read with command")]
+    internal class SmBusReadIntCommand : BaseSmBusCommandCommand
     {
+        public SmBusReadIntCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        {
+        }
+
+        protected override int OnExecute(CommandLineApplication app, IConsole console)
+        {
+            return ExecuteCommand((device) =>
+            {
+                var deviceAddress = new I2cAddress(Address, I2cAddressSize.SevenBit);
+
+                console.WriteLine($"Reading an int from the SmBus device address [{deviceAddress}]");
+
+                var result = device.SmBusReadIntCommand(deviceAddress, Command, Pec);
+
+                console.WriteLine($"Read [0x{result:X}] bytes from SmBus device");
+
+                return 0;
+            });
+        }
     }
 }

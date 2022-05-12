@@ -28,7 +28,7 @@ using System;
 
 namespace MCP2221IOConsole.Commands.SmBus
 {
-    [Command(Name = "quick", Description = "Execute SmBus Quick command")]
+    [Command(Name = "quick", Description = "Execute SmBus quick command")]
     internal class SmBusQuickCommand : BaseSmBusCommand
     {
         public SmBusQuickCommand(IServiceProvider serviceProvider) : base(serviceProvider)

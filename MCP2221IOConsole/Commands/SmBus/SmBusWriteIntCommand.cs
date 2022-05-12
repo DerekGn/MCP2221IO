@@ -22,11 +22,38 @@
 * SOFTWARE.
 */
 
-// TODO IMPLEMENT
+using McMaster.Extensions.CommandLineUtils;
+using MCP2221IO;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace MCP2221IOConsole.Commands.SmBus
 {
-    internal class SmBusWriteIntCommand
+    [Command(Name = "write-int-command", Description = "Execute SmBus int write with command")]
+    internal class SmBusWriteIntCommand : BaseSmBusCommandCommand
     {
+        public SmBusWriteIntCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        {
+        }
+
+        [Required]
+        [Option(Templates.Data, "The long value to write", CommandOptionType.SingleOrNoValue)]
+        public int Data { get; set; }
+
+        protected override int OnExecute(CommandLineApplication app, IConsole console)
+        {
+            return ExecuteCommand((device) =>
+            {
+                var deviceAddress = new I2cAddress(Address, I2cAddressSize.SevenBit);
+
+                console.WriteLine($"Writing an int to the SmBus device address [{deviceAddress}]");
+
+                device.SmBusWriteIntCommand(deviceAddress, Command, Data, Pec);
+
+                console.WriteLine($"Int written to SmBus device");
+
+                return 0;
+            });
+        }
     }
 }

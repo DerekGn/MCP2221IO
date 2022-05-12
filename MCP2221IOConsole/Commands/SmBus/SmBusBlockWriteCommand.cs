@@ -22,11 +22,39 @@
 * SOFTWARE.
 */
 
-// TODO IMPLEMENT
+using McMaster.Extensions.CommandLineUtils;
+using MCP2221IO;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace MCP2221IOConsole.Commands.SmBus
 {
-    internal class SmBusBlockWriteCommand
+    [Command(Name = "block-write", Description = "Execute SmBus block write command")]
+    internal class SmBusBlockWriteCommand : BaseSmBusBlockCommandCommand
     {
+        public SmBusBlockWriteCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        {
+        }
+
+        [Required]
+        [Option(Templates.I2cData, "The data to write. Input as a Hex string", CommandOptionType.SingleValue)]
+        public IList<byte> Data { get; set; }
+
+        protected override int OnExecute(CommandLineApplication app, IConsole console)
+        {
+            return ExecuteCommand((device) =>
+            {
+                var deviceAddress = new I2cAddress(Address, I2cAddressSize.SevenBit);
+
+                console.WriteLine($"Writing a block of data to the SmBus device address [{deviceAddress}]");
+
+                device.SmBusBlockWrite(deviceAddress, Command, Data, Pec);
+
+                console.WriteLine($"Write [{Data.Count}] bytes to the SmBus device");
+
+                return 0;
+            });
+        }
     }
 }

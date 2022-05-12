@@ -22,11 +22,42 @@
 * SOFTWARE.
 */
 
-// TODO IMPLEMENT
+using McMaster.Extensions.CommandLineUtils;
+using MCP2221IO;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace MCP2221IOConsole.Commands.SmBus
 {
-    internal class SmBusWriteCommand
+    [Command(Name = "write-btye", Description = "Execute SmBus byte write")]
+    internal class SmBusWriteCommand : BaseSmBusCommand
     {
+        public SmBusWriteCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        {
+        }
+
+        [Required]
+        [Option(Templates.Data, "The byte value to write", CommandOptionType.SingleOrNoValue)]
+        public byte Data { get; set; }
+
+        [Required]
+        [Option(Templates.Pec, "Use SmBus pec", CommandOptionType.SingleValue)]
+        public bool Pec { get; set; }
+
+        protected override int OnExecute(CommandLineApplication app, IConsole console)
+        {
+            return ExecuteCommand((device) =>
+            {
+                var deviceAddress = new I2cAddress(Address, I2cAddressSize.SevenBit);
+
+                console.WriteLine($"Writing a byte to the SmBus device address [{deviceAddress}]");
+
+                device.SmBusWriteByte(deviceAddress, Data, Pec);
+
+                console.WriteLine($"Byte written to SmBus device");
+
+                return 0;
+            });
+        }
     }
 }

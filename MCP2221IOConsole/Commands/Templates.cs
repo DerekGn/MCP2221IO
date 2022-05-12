@@ -74,6 +74,7 @@ namespace MCP2221IOConsole.Commands
         public const string Command = "-c|--command";
         public const string Count = "-ct|--count";
         public const string Write = "-w|--write";
-        public const string Pec = "-p|--pec";
+        public const string Data = "-d|--data";
+        public const string Pec = "-pe|--pec";
     }
 }

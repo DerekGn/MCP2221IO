@@ -25,16 +25,22 @@
 using McMaster.Extensions.CommandLineUtils;
 using MCP2221IO;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace MCP2221IOConsole.Commands.SmBus
 {
-    [Command(Name = "block-read", Description = "Execute SmBus Block Read command")]
-    internal class SmBusBlockReadCommand : BaseSmBusReadCommandCommand
+    [Command(Name = "block-read", Description = "Execute SmBus block read command")]
+    internal class SmBusBlockReadCommand : BaseSmBusCommandCommand
     {
         public SmBusBlockReadCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
+
+        [Required]
+        [Range(typeof(byte), "0", "0xFF")]
+        [Option(Templates.Count, "The SmBus block count", CommandOptionType.SingleValue)]
+        public byte Count { get; set; }
 
         protected override int OnExecute(CommandLineApplication app, IConsole console)
         {
@@ -42,7 +48,7 @@ namespace MCP2221IOConsole.Commands.SmBus
             {
                 var deviceAddress = new I2cAddress(Address, I2cAddressSize.SevenBit);
 
-                console.WriteLine($"Reading the SmBus bus device address [{deviceAddress}]");
+                console.WriteLine($"Reading a block of data from the SmBus device address [{deviceAddress}]");
 
                 var result = device.SmBusBlockRead(deviceAddress, Command, Count, Pec);
 

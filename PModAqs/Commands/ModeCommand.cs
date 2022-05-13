@@ -22,34 +22,17 @@
 * SOFTWARE.
 */
 
-using System.Text;
+using McMaster.Extensions.CommandLineUtils;
+using System;
 
-namespace PModAqs.Sensor
+namespace PModAqs.Commands
 {
-    internal class Mode
+    [Command(Description = "Access the sensors mode")]
+    [Subcommand(typeof(ReadModeCommand))]
+    internal class ModeCommand : BaseCommand
     {
-        public Mode(byte mode)
+        public ModeCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
-            DriveMode = (DriveMode)(mode & 0x70);
-            DataReady = (mode & 0x08) == 0x08;
-            Threshold = (mode & 0x04) == 0x04;
-        }
-
-        public DriveMode DriveMode { get; private set; }
-
-        public bool DataReady { get; private set; }
-
-        public bool Threshold { get; private set; }
-
-        public override string ToString()
-        {
-            StringBuilder stringBuilder = new StringBuilder();
-
-            stringBuilder.AppendLine($"{nameof(DriveMode)}: {DriveMode}");
-            stringBuilder.AppendLine($"{nameof(DataReady)}: {DataReady}");
-            stringBuilder.AppendLine($"{nameof(Threshold)}: {Threshold}");
-
-            return stringBuilder.ToString();
         }
     }
 }

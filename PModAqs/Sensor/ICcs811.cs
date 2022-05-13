@@ -29,5 +29,6 @@ namespace PModAqs.Sensor
     internal interface ICcs811 : IDisposable
     {
         VersionData GetVersion();
+        Mode GetMode();
     }
 }

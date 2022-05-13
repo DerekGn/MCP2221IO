@@ -2,7 +2,7 @@
   "profiles": {
     "PModAqs": {
       "commandName": "Project",
-      "commandLineArgs": "version"
+      "commandLineArgs": "mode read-mode"
     }
   }
 }

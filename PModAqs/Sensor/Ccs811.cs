@@ -26,6 +26,7 @@ using MCP2221IO;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace PModAqs.Sensor
 {
@@ -45,20 +46,27 @@ namespace PModAqs.Sensor
         public VersionData GetVersion()
         {
             List<byte> versionData = new List<byte>();
+            
+            versionData.AddRange(ReadRegister(Registers.HwId, 1));
 
-            _device.I2cWriteData(_i2cAddress, new List<byte>() { (byte)Registers.HwId });
-            versionData.AddRange(_device.I2cReadDataRepeatedStart(_i2cAddress, 1));
+            versionData.AddRange(ReadRegister(Registers.HwVersion, 1));
 
-            _device.I2cWriteData(_i2cAddress, new List<byte>() { (byte)Registers.HwVersion });
-            versionData.AddRange(_device.I2cReadDataRepeatedStart(_i2cAddress, 1));
+            versionData.AddRange(ReadRegister(Registers.FirmwareBootVersion, 2));
 
-            _device.I2cWriteData(_i2cAddress, new List<byte>() { (byte)Registers.FirmwareBootVersion });
-            versionData.AddRange(_device.I2cReadDataRepeatedStart(_i2cAddress, 2));
-
-            _device.I2cWriteData(_i2cAddress, new List<byte>() { (byte)Registers.FirmwareAppVersion });
-            versionData.AddRange(_device.I2cReadDataRepeatedStart(_i2cAddress, 2));
+            versionData.AddRange(ReadRegister(Registers.FirmwareAppVersion, 2));
 
             return new VersionData(versionData);
+        }
+
+        public Mode GetMode()
+        {
+            return new Mode(ReadRegister(Registers.Mode, 1).First());
+        }
+
+        private IList<byte> ReadRegister(Registers register, ushort count)
+        {
+            _device.I2cWriteData(_i2cAddress, new List<byte>() { (byte)register });
+            return _device.I2cReadDataRepeatedStart(_i2cAddress, count);
         }
 
         #region Dispose
@@ -85,6 +93,8 @@ namespace PModAqs.Sensor
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
+
+        
 
         #endregion
     }

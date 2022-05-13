@@ -2,7 +2,7 @@
   "profiles": {
     "PModAqs": {
       "commandName": "Project",
-      "commandLineArgs": "mode write -m Mode4"
+      "commandLineArgs": "data"
     }
   }
 }

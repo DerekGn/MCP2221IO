@@ -118,7 +118,10 @@ namespace PModAqs.Sensor
 
             data[0] |= (byte)mode;
 
-            _device.I2cWriteData(_i2cAddress, data);
+            var writeData = new List<byte>() { (byte)Registers.Mode };
+            writeData.AddRange(data);
+
+            _device.I2cWriteData(_i2cAddress, writeData);
         }
 
         private IList<byte> ReadRegister(Registers register, ushort count)

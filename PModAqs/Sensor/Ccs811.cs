@@ -43,7 +43,8 @@ namespace PModAqs.Sensor
             _device = device ?? throw new ArgumentNullException(nameof(device));
         }
 
-        public VersionData GetVersion()
+        // <inheritdoc/>
+        public VersionInfo GetVersion()
         {
             List<byte> versionData = new List<byte>();
 
@@ -55,27 +56,49 @@ namespace PModAqs.Sensor
 
             versionData.AddRange(ReadRegister(Registers.FirmwareAppVersion, 2));
 
-            return new VersionData(versionData);
+            return new VersionInfo(versionData);
         }
 
+        // <inheritdoc/>
         public Mode GetMode()
         {
             return new Mode(ReadRegister(Registers.Mode, 1).First());
         }
 
+        // <inheritdoc/>
         public SensorData GetData()
         {
             return new SensorData(ReadRegister(Registers.ResultData, 8).ToList());
         }
 
+        // <inheritdoc/>
         public Status GetStatus()
         {
             return (Status)ReadRegister(Registers.Status, 1).First();
         }
 
+        // <inheritdoc/>
         public Error GetError()
         {
             return (Error)ReadRegister(Registers.ErrorId, 1).First();
+        }
+
+        // <inheritdoc/>
+        public void StartApplication()
+        {
+            _device.I2cWriteData(_i2cAddress, new List<byte>() { (byte)Registers.ApplicationStart } );
+        }
+
+        // <inheritdoc/>
+        public void Reset()
+        {
+            _device.I2cWriteData(_i2cAddress, new List<byte>() { 0x11, 0xE5, 0x72, 0x8A });
+        }
+
+        // <inheritdoc/>
+        public double GetTemperature()
+        {
+            throw new NotImplementedException();
         }
 
         private IList<byte> ReadRegister(Registers register, ushort count)

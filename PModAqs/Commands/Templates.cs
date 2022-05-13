@@ -31,5 +31,7 @@ namespace PModAqs.Commands
         public const string Vid = "-v|--vid";
 
         public const string I2cAddress = "-a| --i2c-address";
+
+        public const string Mode = "-m| --mode";
     }
 }

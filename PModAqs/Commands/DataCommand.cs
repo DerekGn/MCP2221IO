@@ -27,7 +27,7 @@ using System;
 
 namespace PModAqs.Commands
 {
-    [Command(Description = "Access the sensors data")]
+    [Command(Description = "Read the sensor data")]
     internal class DataCommand : BaseCommand
     {
         public DataCommand(IServiceProvider serviceProvider) : base(serviceProvider)

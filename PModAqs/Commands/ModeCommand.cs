@@ -27,7 +27,7 @@ using System;
 
 namespace PModAqs.Commands
 {
-    [Command(Description = "Access the sensors mode")]
+    [Command(Description = "Access the sensor mode")]
     [Subcommand(typeof(ReadModeCommand))]
     internal class ModeCommand : BaseCommand
     {

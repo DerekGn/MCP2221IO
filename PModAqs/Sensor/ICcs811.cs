@@ -28,10 +28,48 @@ namespace PModAqs.Sensor
 {
     internal interface ICcs811 : IDisposable
     {
-        VersionData GetVersion();
+        /// <summary>
+        /// Get the sensor <see cref="VersionInfo"/>
+        /// </summary>
+        /// <returns>The sensor <see cref="VersionInfo"/></returns>
+        VersionInfo GetVersion();
+        /// <summary>
+        /// Get the sensor <see cref="Mode"/>
+        /// </summary>
+        /// <returns>The sensor <see cref="Mode"/></returns>
         Mode GetMode();
+        /// <summary>
+        /// Get the sensor <see cref="SensorData"/>
+        /// </summary>
+        /// <returns>The sensor <see cref="SensorData"/></returns>
         SensorData GetData();
+        /// <summary>
+        /// Set the <see cref="DriveMode"/>
+        /// </summary>
+        /// <param name="mode">The <see cref="DriveMode"/> to set</param>
+        void SetMode(DriveMode mode);
+        /// <summary>
+        /// Get the sensor <see cref="Status"/>
+        /// </summary>
+        /// <returns>The sensor <see cref="Status"/></returns>
         Status GetStatus();
+        /// <summary>
+        /// Get the sensor <see cref="Error"/>
+        /// </summary>
+        /// <returns>The sensor <see cref="Error"/></returns>
         Error GetError();
+        /// <summary>
+        /// Start the application
+        /// </summary>
+        void StartApplication();
+        /// <summary>
+        /// Reset the sensor
+        /// </summary>
+        void Reset();
+        /// <summary>
+        /// Read the internal temperature sensor
+        /// </summary>
+        /// <returns>The temperature value</returns>
+        double GetTemperature();
     }
 }

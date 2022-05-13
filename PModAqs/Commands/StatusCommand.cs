@@ -27,7 +27,7 @@ using System;
 
 namespace PModAqs.Commands
 {
-    [Command(Description = "Access the sensors status")]
+    [Command(Description = "Read the sensor status")]
     internal class StatusCommand : BaseCommand
     {
         public StatusCommand(IServiceProvider serviceProvider) : base(serviceProvider)

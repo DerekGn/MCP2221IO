@@ -29,9 +29,9 @@ using System.Text;
 
 namespace PModAqs.Sensor
 {
-    internal class VersionData
+    internal class VersionInfo
     {
-        public VersionData(IList<byte> data)
+        public VersionInfo(IList<byte> data)
         {
             if (data == null)
             {

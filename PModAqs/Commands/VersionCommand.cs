@@ -27,7 +27,7 @@ using System;
 
 namespace PModAqs.Commands
 {
-    [Command(Description = "Get the sensor Version")]
+    [Command(Description = "Read the sensor version")]
     internal class VersionCommand : BaseCommand
     {
         public VersionCommand(IServiceProvider serviceProvider) : base(serviceProvider)

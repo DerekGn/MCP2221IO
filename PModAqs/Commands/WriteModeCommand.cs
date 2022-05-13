@@ -23,24 +23,31 @@
 */
 
 using McMaster.Extensions.CommandLineUtils;
+using PModAqs.Sensor;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace PModAqs.Commands
 {
-    [Command(Description = "Read the sensor error state")]
-    internal class ErrorCommand : BaseCommand
+    [Command(Description = "Write the sensor mode")]
+    internal class WriteModeCommand : BaseCommand
     {
-        public ErrorCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public WriteModeCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
+
+        [Required]
+        [Range(DriveMode.Mode0, DriveMode.Mode4)]
+        [Option(Templates.Mode, "The sensor drive mode", CommandOptionType.SingleValue)]
+        public DriveMode Mode { get; set; }
 
         protected override int OnExecute(CommandLineApplication app, IConsole console)
         {
             return ExecuteCommand((sensor) =>
             {
-                var error = sensor.GetError();
+                sensor.WriteMode(mode);
 
-                Console.WriteLine($"Error: {error} [0x{(byte)error:X2}]");
+                Console.WriteLine("Wrote mode");
 
                 return 0;
             });

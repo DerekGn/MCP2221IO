@@ -51,6 +51,10 @@ namespace PModAqs.Sensor
         /// </summary>
         EnvironmentData = 0x05,
         /// <summary>
+        /// The NTC internal resistor
+        /// </summary>
+        Ntc = 0x06,
+        /// <summary>
         /// Thresholds for operation when interrupts are only
         /// generated when eCO2 ppm crosses a threshold
         /// </summary>

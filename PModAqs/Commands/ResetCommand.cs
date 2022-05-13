@@ -27,10 +27,10 @@ using System;
 
 namespace PModAqs.Commands
 {
-    [Command(Description = "Read the sensor error state")]
-    internal class ErrorCommand : BaseCommand
+    [Command(Description = "Reset the sensor")]
+    internal class ResetCommand : BaseCommand
     {
-        public ErrorCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public ResetCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 
@@ -38,9 +38,9 @@ namespace PModAqs.Commands
         {
             return ExecuteCommand((sensor) =>
             {
-                var error = sensor.GetError();
+                sensor.Reset();
 
-                Console.WriteLine($"Error: {error} [0x{(byte)error:X2}]");
+                console.WriteLine("Reset the sensor");
 
                 return 0;
             });

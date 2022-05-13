@@ -22,24 +22,27 @@
 * SOFTWARE.
 */
 
-using System.Collections.Generic;
+using McMaster.Extensions.CommandLineUtils;
+using System;
 
-namespace PModAqs.Sensor
+namespace PModAqs.Commands
 {
-    internal class ResultData
+    internal class ErrorCommand : BaseCommand
     {
-        public ResultData()
+        public ErrorCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 
-        public ushort Co2 { get; }
+        protected override int OnExecute(CommandLineApplication app, IConsole console)
+        {
+            return ExecuteCommand((sensor) =>
+            {
+                var error = sensor.GetError();
 
-        public ushort TVOC { get; }
+                Console.WriteLine($"Error: {error} [0x{(byte)error:X2}]");
 
-        public Status Status { get; }
-
-        public Error Error { get; }
-
-        public IReadOnlyList<byte> RawData { get; }
+                return 0;
+            });
+        }
     }
 }

@@ -46,7 +46,7 @@ namespace PModAqs.Sensor
         public VersionData GetVersion()
         {
             List<byte> versionData = new List<byte>();
-            
+
             versionData.AddRange(ReadRegister(Registers.HwId, 1));
 
             versionData.AddRange(ReadRegister(Registers.HwVersion, 1));
@@ -63,9 +63,24 @@ namespace PModAqs.Sensor
             return new Mode(ReadRegister(Registers.Mode, 1).First());
         }
 
+        public SensorData GetData()
+        {
+            return new SensorData(ReadRegister(Registers.ResultData, 8).ToList());
+        }
+
+        public Status GetStatus()
+        {
+            return (Status)ReadRegister(Registers.Status, 1).First();
+        }
+
+        public Error GetError()
+        {
+            return (Error)ReadRegister(Registers.ErrorId, 1).First();
+        }
+
         private IList<byte> ReadRegister(Registers register, ushort count)
         {
-            _device.I2cWriteData(_i2cAddress, new List<byte>() { (byte)register });
+            _device.I2cWriteDataNoStop(_i2cAddress, new List<byte>() { (byte)register });
             return _device.I2cReadDataRepeatedStart(_i2cAddress, count);
         }
 
@@ -93,9 +108,6 @@ namespace PModAqs.Sensor
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
-
-        
-
         #endregion
     }
 }

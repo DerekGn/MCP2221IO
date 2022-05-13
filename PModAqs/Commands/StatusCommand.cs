@@ -22,16 +22,28 @@
 * SOFTWARE.
 */
 
+using McMaster.Extensions.CommandLineUtils;
 using System;
 
-namespace PModAqs.Sensor
+namespace PModAqs.Commands
 {
-    internal interface ICcs811 : IDisposable
+    [Command(Description = "Access the sensors status")]
+    internal class StatusCommand : BaseCommand
     {
-        VersionData GetVersion();
-        Mode GetMode();
-        SensorData GetData();
-        Status GetStatus();
-        Error GetError();
+        public StatusCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        {
+        }
+
+        protected override int OnExecute(CommandLineApplication app, IConsole console)
+        {
+            return ExecuteCommand((sensor) =>
+            {
+                var status = sensor.GetStatus();
+
+                Console.WriteLine($"Status: {status} [0x{(byte)status:X2}]");
+
+                return 0;
+            });
+        }
     }
 }

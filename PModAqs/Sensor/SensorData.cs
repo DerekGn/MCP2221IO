@@ -22,36 +22,58 @@
 * SOFTWARE.
 */
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace PModAqs.Sensor
 {
-    internal class Mode
+    internal class SensorData
     {
-        public Mode(byte mode)
+        public SensorData(IList<byte> data)
         {
-            Raw = mode;
-            DriveMode = (DriveMode)(mode & 0x70);
-            DataReady = (mode & 0x08) == 0x08;
-            Threshold = (mode & 0x04) == 0x04;
+            if (data == null)
+            {
+                throw new ArgumentNullException(nameof(data));
+            }
+
+            if (data.Count < 8)
+            {
+                throw new ArgumentOutOfRangeException(nameof(data), "Must contain 6 bytes");
+            }
+
+            Co2 = (ushort)(data[0] << 8);
+            Co2 += data[1];
+
+            TVOC = (ushort)(data[2] << 8);
+            TVOC += data[3];
+
+            Status = (Status)data[4];
+            Error = (Error)data[5];
+
+            RawData = new RawData(data.Skip(6).Take(2).ToList());
         }
 
-        public byte Raw { get; private set; }
+        public ushort Co2 { get; }
 
-        public DriveMode DriveMode { get; private set; }
+        public ushort TVOC { get; }
 
-        public bool DataReady { get; private set; }
+        public Status Status { get; }
 
-        public bool Threshold { get; private set; }
+        public Error Error { get; }
+
+        public RawData RawData { get; }
 
         public override string ToString()
         {
             StringBuilder stringBuilder = new StringBuilder();
 
-            stringBuilder.AppendLine($"{nameof(Raw)}: [0x{Raw:X2}]");
-            stringBuilder.AppendLine($"{nameof(DriveMode)}: {DriveMode}");
-            stringBuilder.AppendLine($"{nameof(DataReady)}: {DataReady}");
-            stringBuilder.AppendLine($"{nameof(Threshold)}: {Threshold}");
+            stringBuilder.AppendLine($"{nameof(Co2)}: {Co2}");
+            stringBuilder.AppendLine($"{nameof(TVOC)}: {TVOC}");
+            stringBuilder.AppendLine($"{nameof(Status)}: {Status}");
+            stringBuilder.AppendLine($"{nameof(Error)}: {Error}");
+            stringBuilder.AppendLine($"{nameof(RawData)}: {RawData}");
 
             return stringBuilder.ToString();
         }

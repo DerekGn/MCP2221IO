@@ -23,15 +23,23 @@
 */
 
 using System;
+using System.Collections.Generic;
 
 namespace PModAqs.Sensor
 {
-    internal interface ICcs811 : IDisposable
+    public class RawData
     {
-        VersionData GetVersion();
-        Mode GetMode();
-        SensorData GetData();
-        Status GetStatus();
-        Error GetError();
+        public RawData(IList<byte> data)
+        {
+            if (data == null)
+            {
+                throw new ArgumentNullException(nameof(data));
+            }
+
+            if (data.Count < 2)
+            {
+                throw new ArgumentOutOfRangeException(nameof(data), "Must contain 6 bytes");
+            }
+        }
     }
 }

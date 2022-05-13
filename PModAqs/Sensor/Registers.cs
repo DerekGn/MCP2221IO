@@ -88,6 +88,10 @@ namespace PModAqs.Sensor
         /// </summary>
         ErrorId = 0xE0,
         /// <summary>
+        /// The application 
+        /// </summary>
+        ApplicationStart = 0xF4,
+        /// <summary>
         /// If the correct 4 bytes (0x11 0xE5 0x72 0x8A) are written
         /// to this register in a single sequence the device will reset
         /// and return to BOOT mode

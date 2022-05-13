@@ -30,9 +30,9 @@ namespace PModAqs.Sensor
     internal enum Status
     {
         FwMode = 0x80,
-        AppErase = 0x40,
-        AppVerify = 0x20,
-        AppValid = 0x10,
+        ApplicationErase = 0x40,
+        ApplicationVerify = 0x20,
+        ApplicationValid = 0x10,
         DataReady = 0x08,
         Error = 0x01
     }

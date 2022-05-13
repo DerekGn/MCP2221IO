@@ -34,7 +34,10 @@ namespace PModAqs
 {
     [Command(Description = "A console application for accessing a PMod AQS device")]
     [Subcommand(typeof(VersionCommand))]
+    [Subcommand(typeof(StatusCommand))]
     [Subcommand(typeof(ModeCommand))]
+    [Subcommand(typeof(DataCommand))]
+    [Subcommand(typeof(ErrorCommand))]
     class Program
     {
         private static IConfiguration _configuration;

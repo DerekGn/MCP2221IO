@@ -22,16 +22,25 @@
 * SOFTWARE.
 */
 
+using McMaster.Extensions.CommandLineUtils;
 using System;
 
-namespace PModAqs.Sensor
+namespace PModAqs.Commands
 {
-    internal interface ICcs811 : IDisposable
+    [Command(Description = "Access the sensors data")]
+    internal class DataCommand : BaseCommand
     {
-        VersionData GetVersion();
-        Mode GetMode();
-        SensorData GetData();
-        Status GetStatus();
-        Error GetError();
+        public DataCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        {
+        }
+
+        protected override int OnExecute(CommandLineApplication app, IConsole console)
+        {
+            return ExecuteCommand((sensor) =>
+            {
+                sensor.GetData();
+                return 0;
+            });
+        }
     }
 }

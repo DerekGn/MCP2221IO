@@ -22,9 +22,12 @@
 * SOFTWARE.
 */
 
-namespace PModAqs
+using System;
+
+namespace PModAqs.Sensor
 {
-    class Error
+    internal interface ICcs811 : IDisposable
     {
+        SensorVersion GetVersion();
     }
 }

@@ -27,9 +27,10 @@ using McMaster.Extensions.CommandLineUtils;
 using MCP2221IO;
 using MCP2221IO.Usb;
 using Microsoft.Extensions.Logging;
+using PModAqs.Sensor;
 using System;
 
-namespace MCP2221IOConsole.Commands
+namespace PModAqs.Commands
 {
     internal abstract class BaseCommand
     {
@@ -49,7 +50,7 @@ namespace MCP2221IOConsole.Commands
         [Option(Templates.SerialNumber, "The MCP2221 instance serial number", CommandOptionType.SingleValue)]
         public string Serial { get; set; }
 
-        protected int ExecuteCommand(Func<IDevice, int> action)
+        protected int ExecuteCommand(Func<ICcs811, int> action)
         {
             int result = -1;
 
@@ -64,7 +65,8 @@ namespace MCP2221IOConsole.Commands
 
                     device.Open();
 
-                    result = action(device);
+                    using Ccs811 sensor = new Ccs811((ILogger<ICcs811>)_serviceProvider.GetService(typeof(ILogger<ICcs811>)), device);
+                    result = action(sensor);
                 }
                 else
                 {

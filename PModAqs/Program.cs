@@ -23,27 +23,21 @@
 */
 
 using McMaster.Extensions.CommandLineUtils;
-using MCP2221IO;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using PModAqs.Commands;
 using Serilog;
 using System;
 using System.IO;
 
 namespace PModAqs
 {
-    //[Command(Description = "A console application for accessing a PMod AQS device")]
+    [Command(Description = "A console application for accessing a PMod AQS device")]
+    [Subcommand(typeof(VersionCommand))]
     class Program
     {
         private static IConfiguration _configuration;
-        private readonly IConsole _console;
-        private readonly IDevice _device;
-
-        public Program(IConsole console, IDevice device)
-        {
-            console.WriteLine("SSSSS");
-        }
-
+        
         public static int Main(string[] args)
         {
             int result = -1;

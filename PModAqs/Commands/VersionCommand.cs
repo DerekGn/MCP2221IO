@@ -22,24 +22,28 @@
 * SOFTWARE.
 */
 
-using System.Collections.Generic;
+using McMaster.Extensions.CommandLineUtils;
+using System;
 
-namespace PModAqs
+namespace PModAqs.Commands
 {
-    internal class ResultData
+    [Command(Description = "Get the sensor Version")]
+    internal class VersionCommand : BaseCommand
     {
-        public ResultData()
+        public VersionCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 
-        public ushort Co2 { get; }
+        protected override int OnExecute(CommandLineApplication app, IConsole console)
+        {
+            return ExecuteCommand((sensor) =>
+            {
+                var version = sensor.GetVersion();
 
-        public ushort TVOC { get; }
+                console.WriteLine(version.ToString());
 
-        public Status Status { get; }
-
-        public Error Error { get; }
-
-        public IReadOnlyList<byte> RawData { get; }
+                return 0;
+            });
+        }
     }
 }

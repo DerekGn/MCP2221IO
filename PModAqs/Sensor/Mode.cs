@@ -22,12 +22,20 @@
 * SOFTWARE.
 */
 
-namespace PModAqs
+using System;
+
+namespace PModAqs.Sensor
 {
-    internal static class Templates
+    [Flags]
+    internal enum Mode
     {
-        public const string SerialNumber = "-s|--serial-number";
-        public const string Pid = "-p|--pid";
-        public const string Vid = "-v|--vid";
+        ModeReserverd = 0x70,
+        Mode4 = 0x40,
+        Mode3 = 0x30,
+        Mode2 = 0x20,
+        Mode1 = 0x10,
+        Mode0 = 0x00,
+        DataReady = 0x08,
+        Threshold = 0x02
     }
 }

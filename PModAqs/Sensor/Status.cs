@@ -22,12 +22,18 @@
 * SOFTWARE.
 */
 
-namespace PModAqs.Commands
+using System;
+
+namespace PModAqs.Sensor
 {
-    internal static class Templates
+    [Flags]
+    internal enum Status
     {
-        public const string SerialNumber = "-s|--serial-number";
-        public const string Pid = "-p|--pid";
-        public const string Vid = "-v|--vid";
+        FwMode = 0x80,
+        AppErase = 0x40,
+        AppVerify = 0x20,
+        AppValid = 0x10,
+        DataReady = 0x08,
+        Error = 0x01
     }
 }

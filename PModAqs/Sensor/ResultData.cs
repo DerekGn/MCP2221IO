@@ -22,12 +22,24 @@
 * SOFTWARE.
 */
 
-namespace PModAqs.Commands
+using System.Collections.Generic;
+
+namespace PModAqs.Sensor
 {
-    internal static class Templates
+    internal class ResultData
     {
-        public const string SerialNumber = "-s|--serial-number";
-        public const string Pid = "-p|--pid";
-        public const string Vid = "-v|--vid";
+        public ResultData()
+        {
+        }
+
+        public ushort Co2 { get; }
+
+        public ushort TVOC { get; }
+
+        public Status Status { get; }
+
+        public Error Error { get; }
+
+        public IReadOnlyList<byte> RawData { get; }
     }
 }

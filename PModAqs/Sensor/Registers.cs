@@ -22,7 +22,7 @@
 * SOFTWARE.
 */
 
-namespace PModAqs
+namespace PModAqs.Sensor
 {
     internal enum Registers
     {

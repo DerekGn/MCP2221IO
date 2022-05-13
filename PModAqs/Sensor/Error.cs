@@ -24,16 +24,39 @@
 
 using System;
 
-namespace PModAqs
+namespace PModAqs.Sensor
 {
     [Flags]
-    internal enum Status
+    internal enum Error
     {
-        FwMode = 0x80,
-        AppErase = 0x40,
-        AppVerify = 0x20,
-        AppValid = 0x10,
-        DataReady = 0x08,
-        Error = 0x01
+        /// <summary>
+        /// The CCS811 received an I²C write request 
+        /// addressed to this station but with
+        /// invalid register address ID
+        /// </summary>
+        WriteRegInvalid = 0x01,
+        /// <summary>
+        /// The CCS811 received an I²C read request
+        /// to a mailbox ID that is invalid
+        /// </summary>
+        ReadRegInvalid = 0x02,
+        /// <summary>
+        /// The CCS811 received an I²C request
+        /// to write an unsupported mode to MEAS_MODE
+        /// </summary>
+        MeasureModeInvalid = 0x04,
+        /// <summary>
+        /// The sensor resistance measurement 
+        /// has reached or exceeded the maximum range
+        /// </summary>
+        MaxResistance = 0x08,
+        /// <summary>
+        /// The Heater current in the CCS811 is not in range
+        /// </summary>
+        HeaterFault = 0x10,
+        /// <summary>
+        /// The Heater voltage is not being applied correctly
+        /// </summary>
+        HeaterSupply = 0x10
     }
 }

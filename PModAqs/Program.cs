@@ -23,34 +23,26 @@
 */
 
 using McMaster.Extensions.CommandLineUtils;
-using MCP2221IOConsole.Commands;
-using MCP2221IOConsole.Commands.Flash;
-using MCP2221IOConsole.Commands.Gpio;
-using MCP2221IOConsole.Commands.I2c;
-using MCP2221IOConsole.Commands.SmBus;
-using MCP2221IOConsole.Commands.Sram;
-using MCP2221IOConsole.Commands.Status;
-using MCP2221IOConsole.Parsers;
+using MCP2221IO;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using System;
 using System.IO;
 
-namespace MCP2221IOConsole
+namespace PModAqs
 {
-    [Command(Description = "A console application for accessing a MCP2221 device")]
-    [Subcommand(typeof(FlashCommand))]
-    [Subcommand(typeof(GpioCommand))]
-    [Subcommand(typeof(I2cCommand))]
-    [Subcommand(typeof(ResetCommand))]
-    [Subcommand(typeof(SramCommand))]
-    [Subcommand(typeof(SmBusCommand))]
-    [Subcommand(typeof(StatusCommand))]
-    [Subcommand(typeof(UnlockCommand))]
+    //[Command(Description = "A console application for accessing a PMod AQS device")]
     class Program
     {
         private static IConfiguration _configuration;
+        private readonly IConsole _console;
+        private readonly IDevice _device;
+
+        public Program(IConsole console, IDevice device)
+        {
+            console.WriteLine("SSSSS");
+        }
 
         public static int Main(string[] args)
         {
@@ -68,10 +60,6 @@ namespace MCP2221IOConsole
                 var serviceProvider = BuildServiceProvider();
 
                 var app = new CommandLineApplication<Program>();
-
-                app.ValueParsers.AddOrReplace(new CustomUShortValueParser());
-                app.ValueParsers.AddOrReplace(new CustomUIntValueParser());
-                app.ValueParsers.AddOrReplace(new ByteListValueParser());
 
                 app.Conventions
                     .UseDefaultConventions()

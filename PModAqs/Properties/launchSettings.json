@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "PModAqs": {
+      "commandName": "Project",
+      "commandLineArgs": "version"
+    }
+  }
+}

@@ -40,7 +40,7 @@ namespace PModAqs.Commands
             {
                 var version = sensor.GetVersion();
 
-                console.WriteLine(version.ToString());
+                console.WriteLine($"Version:\r\n{version}");
 
                 return 0;
             });

@@ -29,5 +29,7 @@ namespace PModAqs.Commands
         public const string SerialNumber = "-s|--serial-number";
         public const string Pid = "-p|--pid";
         public const string Vid = "-v|--vid";
+
+        public const string I2cAddress = "-a| --i2c-address";
     }
 }

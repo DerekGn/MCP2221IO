@@ -28,6 +28,6 @@ namespace PModAqs.Sensor
 {
     internal interface ICcs811 : IDisposable
     {
-        SensorVersion GetVersion();
+        VersionData GetVersion();
     }
 }

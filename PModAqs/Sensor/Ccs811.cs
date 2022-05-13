@@ -25,23 +25,40 @@
 using MCP2221IO;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 
 namespace PModAqs.Sensor
 {
     internal class Ccs811 : ICcs811
     {
         private readonly ILogger<ICcs811> _logger;
+        private readonly I2cAddress _i2cAddress;
         private IDevice _device;
 
-        public Ccs811(ILogger<ICcs811> logger, IDevice device)
+        public Ccs811(ILogger<ICcs811> logger, I2cAddress i2cAddress, IDevice device)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _i2cAddress = i2cAddress ?? throw new ArgumentNullException(nameof(i2cAddress));
             _device = device ?? throw new ArgumentNullException(nameof(device));
         }
 
-        public SensorVersion GetVersion()
+        public VersionData GetVersion()
         {
-            throw new NotImplementedException();
+            List<byte> versionData = new List<byte>();
+
+            _device.I2cWriteData(_i2cAddress, new List<byte>() { (byte)Registers.HwId });
+            versionData.AddRange(_device.I2cReadDataRepeatedStart(_i2cAddress, 1));
+
+            _device.I2cWriteData(_i2cAddress, new List<byte>() { (byte)Registers.HwVersion });
+            versionData.AddRange(_device.I2cReadDataRepeatedStart(_i2cAddress, 1));
+
+            _device.I2cWriteData(_i2cAddress, new List<byte>() { (byte)Registers.FirmwareBootVersion });
+            versionData.AddRange(_device.I2cReadDataRepeatedStart(_i2cAddress, 2));
+
+            _device.I2cWriteData(_i2cAddress, new List<byte>() { (byte)Registers.FirmwareAppVersion });
+            versionData.AddRange(_device.I2cReadDataRepeatedStart(_i2cAddress, 2));
+
+            return new VersionData(versionData);
         }
 
         #region Dispose

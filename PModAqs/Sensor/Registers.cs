@@ -24,7 +24,7 @@
 
 namespace PModAqs.Sensor
 {
-    internal enum Registers
+    internal enum Registers : byte
     {
         /// <summary>
         /// Status register

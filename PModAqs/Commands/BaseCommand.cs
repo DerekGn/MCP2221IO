@@ -29,6 +29,7 @@ using MCP2221IO.Usb;
 using Microsoft.Extensions.Logging;
 using PModAqs.Sensor;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace PModAqs.Commands
 {
@@ -50,6 +51,11 @@ namespace PModAqs.Commands
         [Option(Templates.SerialNumber, "The MCP2221 instance serial number", CommandOptionType.SingleValue)]
         public string Serial { get; set; }
 
+        [Required]
+        [Range(typeof(uint), "0x07", "0x78")]
+        [Option(Templates.I2cAddress, "The I2C device address", CommandOptionType.SingleValue)]
+        public uint Address { get; set; } = 0x5B;
+
         protected int ExecuteCommand(Func<ICcs811, int> action)
         {
             int result = -1;
@@ -65,7 +71,8 @@ namespace PModAqs.Commands
 
                     device.Open();
 
-                    using Ccs811 sensor = new Ccs811((ILogger<ICcs811>)_serviceProvider.GetService(typeof(ILogger<ICcs811>)), device);
+                    using Ccs811 sensor = new Ccs811((ILogger<ICcs811>)_serviceProvider.GetService(typeof(ILogger<ICcs811>)), ParseAddress(), device);
+
                     result = action(sensor);
                 }
                 else
@@ -87,6 +94,11 @@ namespace PModAqs.Commands
             app.ShowHelp();
 
             return 0;
+        }
+
+        internal I2cAddress ParseAddress()
+        {
+            return new I2cAddress(Address, Address > I2cAddress.SevenBitRangeUpper ? I2cAddressSize.TenBit : I2cAddressSize.SevenBit);
         }
     }
 }

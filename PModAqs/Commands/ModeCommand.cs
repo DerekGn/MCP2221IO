@@ -29,6 +29,7 @@ namespace PModAqs.Commands
 {
     [Command(Description = "Access the sensor mode")]
     [Subcommand(typeof(ReadModeCommand))]
+    [Subcommand(typeof(WriteModeCommand))]
     internal class ModeCommand : BaseCommand
     {
         public ModeCommand(IServiceProvider serviceProvider) : base(serviceProvider)

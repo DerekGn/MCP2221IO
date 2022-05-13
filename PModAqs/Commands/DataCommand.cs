@@ -23,6 +23,7 @@
 */
 
 using McMaster.Extensions.CommandLineUtils;
+using PModAqs.Sensor;
 using System;
 
 namespace PModAqs.Commands
@@ -38,7 +39,11 @@ namespace PModAqs.Commands
         {
             return ExecuteCommand((sensor) =>
             {
-                sensor.GetData();
+                SensorData data = sensor.GetData();
+
+                console.WriteLine($"Sensor Data =>");
+                console.WriteLine(data);
+
                 return 0;
             });
         }

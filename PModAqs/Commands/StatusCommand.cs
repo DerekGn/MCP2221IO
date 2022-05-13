@@ -40,7 +40,7 @@ namespace PModAqs.Commands
             {
                 var status = sensor.GetStatus();
 
-                Console.WriteLine($"Status: {status} [0x{(byte)status:X2}]");
+                console.WriteLine($"Status => [0x{(byte)status:X2}] {status}");
 
                 return 0;
             });

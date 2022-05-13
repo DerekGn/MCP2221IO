@@ -92,7 +92,19 @@ namespace PModAqs.Sensor
         /// </summary>
         ErrorId = 0xE0,
         /// <summary>
-        /// The application 
+        /// To prevent accidental APP_ERASE a sequence of four bytes must be
+        /// written to this register in a single I²C sequence: 0xE7, 0xA7,
+        /// 0xE6, 0x09
+        /// </summary>
+        ApplicationErase = 0xF1,
+        /// <summary>
+        /// Nine byte, write only register for sending small chunks of
+        /// application data which will be written in order to the CCS811 flash code
+        /// </summary>
+        ApplicationData = 0xF2,
+        /// <summary>
+        /// To change the mode of the CCS811 from Boot mode to running the
+        /// application, a single byte write of 0xF4 is required.
         /// </summary>
         ApplicationStart = 0xF4,
         /// <summary>

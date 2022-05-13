@@ -27,7 +27,7 @@ using System;
 
 namespace PModAqs.Commands
 {
-    [Command("read", "Read the sensor mode")]
+    [Command("read", Description = "Read the sensor mode")]
     internal class ReadModeCommand : BaseCommand
     {
         public ReadModeCommand(IServiceProvider serviceProvider) : base(serviceProvider)

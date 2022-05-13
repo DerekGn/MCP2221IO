@@ -38,6 +38,13 @@ namespace PModAqs.Sensor
         /// </summary>
         /// <returns>The sensor <see cref="Mode"/></returns>
         Mode GetMode();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        RawData GetRawData();
+
         /// <summary>
         /// Get the sensor <see cref="SensorData"/>
         /// </summary>

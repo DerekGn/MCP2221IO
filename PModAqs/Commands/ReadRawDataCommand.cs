@@ -27,10 +27,10 @@ using System;
 
 namespace PModAqs.Commands
 {
-    [Command(Description = "Read the sensor version")]
-    internal class VersionCommand : BaseCommand
+    [Command("raw", Description = "Read the raw data")]
+    internal class ReadRawDataCommand : BaseCommand
     {
-        public VersionCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        public ReadRawDataCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 
@@ -38,10 +38,9 @@ namespace PModAqs.Commands
         {
             return ExecuteCommand((sensor) =>
             {
-                var version = sensor.GetVersion();
-
-                console.WriteLine("Version =>");
-                console.WriteLine($"{version}");
+                var data = sensor.GetRawData();
+                console.WriteLine("Raw Data =>");
+                console.WriteLine($"{data}");
 
                 return 0;
             });

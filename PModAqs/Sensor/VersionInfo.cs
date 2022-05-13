@@ -61,10 +61,10 @@ namespace PModAqs.Sensor
         {
             StringBuilder stringBuilder = new StringBuilder();
 
-            stringBuilder.AppendLine($"{nameof(HardwareId)}: 0x{HardwareId:X2}");
-            stringBuilder.AppendLine($"{nameof(HardwareVersion)}: 0x{HardwareVersion:X2}");
-            stringBuilder.AppendLine($"{nameof(FirmwareBootVersion)}: {FirmwareBootVersion}");
-            stringBuilder.AppendLine($"{nameof(FirmwareAppVersion)}: {FirmwareAppVersion}");
+            stringBuilder.AppendLine($"{nameof(HardwareId)}:\t\t0x{HardwareId:X2}");
+            stringBuilder.AppendLine($"{nameof(HardwareVersion)}:\t0x{HardwareVersion:X2}");
+            stringBuilder.AppendLine($"{nameof(FirmwareBootVersion)}:\t{FirmwareBootVersion}");
+            stringBuilder.Append($"{nameof(FirmwareAppVersion)}:\t{FirmwareAppVersion}");
 
             return stringBuilder.ToString();
         }

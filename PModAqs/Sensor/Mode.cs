@@ -48,10 +48,10 @@ namespace PModAqs.Sensor
         {
             StringBuilder stringBuilder = new StringBuilder();
 
-            stringBuilder.AppendLine($"{nameof(Raw)}: [0x{Raw:X2}]");
-            stringBuilder.AppendLine($"{nameof(DriveMode)}: {DriveMode}");
-            stringBuilder.AppendLine($"{nameof(DataReady)}: {DataReady}");
-            stringBuilder.AppendLine($"{nameof(Threshold)}: {Threshold}");
+            stringBuilder.AppendLine($"{nameof(Raw)}:\t\t[0x{Raw:X2}]");
+            stringBuilder.AppendLine($"{nameof(DriveMode)}:\t{DriveMode}");
+            stringBuilder.AppendLine($"{nameof(DataReady)}:\t{DataReady}");
+            stringBuilder.Append($"{nameof(Threshold)}:\t{Threshold}");
 
             return stringBuilder.ToString();
         }

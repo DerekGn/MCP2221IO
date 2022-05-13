@@ -40,7 +40,7 @@ namespace PModAqs.Commands
             {
                 var error = sensor.GetError();
 
-                Console.WriteLine($"Error: {error} [0x{(byte)error:X2}]");
+                Console.WriteLine($"Error=> [0x{(byte)error:X2}] {error}");
 
                 return 0;
             });

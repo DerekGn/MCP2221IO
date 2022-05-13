@@ -36,6 +36,7 @@ namespace PModAqs
     [Subcommand(typeof(DataCommand))]
     [Subcommand(typeof(ErrorCommand))]
     [Subcommand(typeof(ModeCommand))]
+    [Subcommand(typeof(ReadRawDataCommand))]
     [Subcommand(typeof(ResetCommand))]
     [Subcommand(typeof(StatusCommand))]
     [Subcommand(typeof(StartCommand))]

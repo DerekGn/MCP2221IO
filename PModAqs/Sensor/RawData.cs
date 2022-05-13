@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace PModAqs.Sensor
 {
@@ -40,6 +41,31 @@ namespace PModAqs.Sensor
             {
                 throw new ArgumentOutOfRangeException(nameof(data), "Must contain 6 bytes");
             }
+
+            Current = (data[0] & 0xFC) >> 10;
+
+            Adc = (data[0] & 0x03) << 8;
+            Adc += data[1];
+        }
+
+        /// <summary>
+        /// The sensor current
+        /// </summary>
+        public int Current { get; private set; }
+
+        /// <summary>
+        /// The raw ADC
+        /// </summary>
+        public int Adc { get; private set; }
+
+        public override string ToString()
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+
+            stringBuilder.AppendLine($"{nameof(Current)}:\t[0x{Current:X4}] {Current}");
+            stringBuilder.Append($"{nameof(Adc)}:\t\t[0x{Adc:X4}] {Adc}");
+
+            return stringBuilder.ToString();
         }
     }
 }

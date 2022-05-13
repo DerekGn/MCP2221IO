@@ -29,7 +29,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PModAqs.Commands
 {
-    [Command(Description = "Write the sensor mode")]
+    [Command("write", Description = "Write the sensor mode")]
     internal class WriteModeCommand : BaseCommand
     {
         public WriteModeCommand(IServiceProvider serviceProvider) : base(serviceProvider)
@@ -37,7 +37,6 @@ namespace PModAqs.Commands
         }
 
         [Required]
-        [Range(DriveMode.Mode0, DriveMode.Mode4)]
         [Option(Templates.Mode, "The sensor drive mode", CommandOptionType.SingleValue)]
         public DriveMode Mode { get; set; }
 
@@ -45,7 +44,7 @@ namespace PModAqs.Commands
         {
             return ExecuteCommand((sensor) =>
             {
-                sensor.WriteMode(mode);
+                sensor.SetMode(Mode);
 
                 Console.WriteLine("Wrote mode");
 

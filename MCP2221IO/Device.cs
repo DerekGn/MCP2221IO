@@ -330,7 +330,7 @@ namespace MCP2221IO
         // <inheritdoc/>
         public void Close()
         {
-            Dispose();
+            HandleOperationExecution(nameof(Device), () => Dispose());
         }
 
         // <inheritdoc/>
@@ -835,6 +835,8 @@ namespace MCP2221IO
 
         protected virtual void Dispose(bool disposing)
         {
+            _logger.LogDebug($"Disposing {nameof(Device)}");
+
             if (!disposedValue)
             {
                 if (disposing)
@@ -850,7 +852,7 @@ namespace MCP2221IO
         {
             // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
             Dispose(disposing: true);
-            System.GC.SuppressFinalize(this);
+            GC.SuppressFinalize(this);
         }
 
         #endregion

@@ -69,8 +69,8 @@ namespace PModAqs.Sensor
         {
             StringBuilder stringBuilder = new StringBuilder();
 
-            stringBuilder.AppendLine($"{nameof(Co2)}:\t\t[0x{Co2:X4}] {Co2}");
-            stringBuilder.AppendLine($"{nameof(TVOC)}:\t\t[0x{TVOC:X4}] {TVOC}");
+            stringBuilder.AppendLine($"{nameof(Co2)}:\t\t[0x{Co2:X4}] {Co2}ppm");
+            stringBuilder.AppendLine($"{nameof(TVOC)}:\t\t[0x{TVOC:X4}] {TVOC}ppb");
             stringBuilder.AppendLine($"{nameof(Status)}:\t\t[0x{(byte)Status:X4}] {Status}");
             stringBuilder.AppendLine($"{nameof(Error)}:\t\t[0x{(byte)Error:X4}] {Error}");
             stringBuilder.AppendLine($"{nameof(RawData)} =>");

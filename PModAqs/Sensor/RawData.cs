@@ -42,7 +42,7 @@ namespace PModAqs.Sensor
                 throw new ArgumentOutOfRangeException(nameof(data), "Must contain 6 bytes");
             }
 
-            Current = (data[0] & 0xFC) >> 10;
+            Current = (data[0] & 0xFC) >> 2;
 
             Adc = (data[0] & 0x03) << 8;
             Adc += data[1];

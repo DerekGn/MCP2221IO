@@ -7,7 +7,7 @@ variables:
 name: v$(Major).$(Minor).$(Patch)
 
 trigger:
-- master
+- main
 
 pool:
   vmImage: windows-latest

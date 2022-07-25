@@ -1,3 +1,7 @@
+[![Build Status](https://derekgn.visualstudio.com/GitHub/_apis/build/status/DerekGn.MCP2221IO?branchName=main)](https://derekgn.visualstudio.com/GitHub/_build/latest?definitionId=12&branchName=main)
+
+[![NuGet Badge](https://buildstats.info/nuget/MCP2221IO)](https://www.nuget.org/packages/MCP2221IO/)
+
 # MCP2221IO
 
 A .Net Core library to interact with Usb [MCP2221](https://www.microchip.com/wwwproducts/en/MCP2221)/[MCP2221A](https://www.microchip.com/wwwproducts/en/MCP2221A) devices.

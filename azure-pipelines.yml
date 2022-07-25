@@ -18,7 +18,7 @@ steps:
     inputs:
       command: 'build'
       projects: $(BuildParameters.solution)
-      arguments: /p:Configuration=$(BuildConfiguration) 
+      configuration: $(BuildConfiguration)
   - task: DotNetCoreCLI@2
     displayName: "Run Unit Tests"
     inputs:

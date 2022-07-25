@@ -6,6 +6,20 @@
 
 A .Net Core library to interact with Usb [MCP2221](https://www.microchip.com/wwwproducts/en/MCP2221)/[MCP2221A](https://www.microchip.com/wwwproducts/en/MCP2221A) devices.
 
+## Installing MCP2221IO
+
+Install the MCP2221IO package via nuget package manager console:
+
+```ps
+Install-Package MCP2221IO
+```
+
+Or from the dot net command line console
+
+```cmd
+dotnet add package MCP2221IO
+```
+
 ## Supported Functions
 
 The following is the list of functions supported by the API.
@@ -145,3 +159,18 @@ device.SetI2cBusSpeed(int speed);
 
 ## MCP2221 Console Application
 
+A console application is available from nuget that allows command line access to the functions of a connected MCP2221 HID usb device. Type MCP2221Console -?|-h|--help to see the list of commands for the device.
+
+## Installing MCP2221IO.Console
+
+Install the MCP2221IO.Console package via nuget package manager console:
+
+```ps
+Install-Package MCP2221IO.Console
+```
+
+Or from the dot net command line console
+
+```cmd
+dotnet add package MCP2221IO.Console
+```

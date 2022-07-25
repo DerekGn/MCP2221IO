@@ -4,6 +4,15 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>MCP2221IOConsole</RootNamespace>
+    <PackageId>MCP2221IO.Console</PackageId>
+    <Authors>Derek Goslin</Authors>
+    <Product>MCP2221IO.Console</Product>
+    <Description>A .Net Core console application for interacting with a connected MCP2221 HID device</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/DerekGn/MCP2221IO</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/DerekGn/MCP2221IO</RepositoryUrl>
+    <PackageReleaseNotes>1.0.0 Initial Version</PackageReleaseNotes>
+    <Version>1.0.5</Version>
   </PropertyGroup>
 
   <ItemGroup>

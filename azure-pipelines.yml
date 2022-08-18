@@ -24,7 +24,7 @@ steps:
     inputs:
       command: 'test'
       projects: $(TestProject)
-      arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
+      arguments: '--configuration $(buildConfiguration) --collect:"XPlat Code Coverage"'
   - task: PublishCodeCoverageResults@1
     inputs:
       codeCoverageTool: 'Cobertura'

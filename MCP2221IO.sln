@@ -9,7 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MCP2221IO.UnitTests", "MCP2
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MCP2221IOConsole", "MCP2221IOConsole\MCP2221IOConsole.csproj", "{9F4F2107-93D5-4886-B6C9-DE1235F59538}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PModAqs", "PModAqs\PModAqs.csproj", "{2CF8A670-E4F9-4D71-BE18-6CEBF042B338}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PModAqs", "PModAqs\PModAqs.csproj", "{2CF8A670-E4F9-4D71-BE18-6CEBF042B338}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B9BD1691-5574-43F2-A98F-C7E7ADC54437}"
+	ProjectSection(SolutionItems) = preProject
+		azure-pipelines.yml = azure-pipelines.yml
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

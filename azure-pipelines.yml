@@ -25,11 +25,10 @@ steps:
       command: 'test'
       projects: $(TestProject)
       arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
-  - task: PublishTestResults@2
-    displayName: "Publish Test Results"
+  - task: PublishCodeCoverageResults@1
     inputs:
-      testRunner: VSTest
-      testResultsFiles: '**\*.trx'
+      codeCoverageTool: 'Cobertura'
+      summaryFileLocation: $(Agent.TempDirectory)/*/coverage.cobertura.xml # using ** instead of * finds duplicate coverage
   - task: DotNetCoreCLI@2
     displayName: "Pack Project"
     inputs:

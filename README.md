@@ -4,7 +4,7 @@
 
 # MCP2221IO
 
-A .Net Core library to interact with Usb [MCP2221](https://www.microchip.com/wwwproducts/en/MCP2221)/[MCP2221A](https://www.microchip.com/wwwproducts/en/MCP2221A) devices.
+A .Net Core library to interact with Usb [MCP2221](https://www.microchip.com/wwwproducts/en/MCP2221)/[MCP2221A](https://www.microchip.com/wwwproducts/en/MCP2221A) devices. For example the [ADM00559](https://www.microchip.com/en-us/development-tool/ADM00559) device.
 
 ## Installing MCP2221IO
 
@@ -174,3 +174,16 @@ Or from the dot net command line console
 ```cmd
 dotnet add package MCP2221IO.Console
 ```
+
+## Example Console Application
+
+The source code contains an example application for the PModAqs sensor which is based on the CCS811 see [here](https://digilent.com/reference/pmod/pmodaqs/start) for further information.
+
+The ADM00559 should be configured for 3.3v operation via the jumper selectable power supply. The ADM00559 should be connected to the PMosAqs device in the following way:
+
+ADM00559 J3 | PMosAqs
+---------|----------
+ Pin 2 (Vdd) | Pin 6 (Vcc)
+ Pin 3 (Gnd) | Pin 5 (Gnd)
+ Pin 4 (Sda) | Pin 4 (Sda)
+ Pin 5 (Scl) | Pin 3 (Scl)

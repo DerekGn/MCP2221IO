@@ -29,9 +29,9 @@ using System;
 
 namespace MCP2221IOConsole.Commands.Flash
 {
-    internal abstract class BaseWriteGpSetingsCommand : BaseCommand
+    internal abstract class BaseWriteGpSettingsCommand : BaseCommand
     {
-        protected BaseWriteGpSetingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
+        protected BaseWriteGpSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 

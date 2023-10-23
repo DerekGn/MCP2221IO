@@ -29,7 +29,7 @@ using System;
 namespace MCP2221IOConsole.Commands.Flash
 {
     [Command(Description = "Write GP1 power up settings")]
-    internal class WriteGp1SettingsCommand : BaseWriteGpSetingsCommand
+    internal class WriteGp1SettingsCommand : BaseWriteGpSettingsCommand
     {
         public WriteGp1SettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {

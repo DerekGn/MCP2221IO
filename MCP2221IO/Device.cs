@@ -594,7 +594,7 @@ namespace MCP2221IO
                 {
                     List<byte> writeData = new List<byte>() { command };
 
-                    I2cWriteData<I2cWriteDataNoStopResponse>(CommandCodes.WriteI2cData, address, writeData);
+                    I2cWriteData<I2cWriteDataNoStopResponse>(CommandCodes.WriteI2cDataNoStop, address, writeData);
 
                     var result = I2cReadData<I2cReadDataRepeatedStarteResponse>(CommandCodes.ReadI2cDataRepeatedStart, address, length);
 
@@ -621,7 +621,7 @@ namespace MCP2221IO
                         writeData.Add(Crc8.ComputeChecksum(writeData));
                     }
 
-                    I2cWriteData<I2cWriteDataResponse>(CommandCodes.WriteI2cDataNoStop, address, writeData);
+                    I2cWriteData<I2cWriteDataResponse>(CommandCodes.WriteI2cData, address, writeData);
                 });
         }
 

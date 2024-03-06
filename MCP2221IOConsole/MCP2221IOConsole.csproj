@@ -6,7 +6,10 @@
         <Nullable>enable</Nullable>
         <RootNamespace>MCP2221IOConsole</RootNamespace>
         <PackageId>MCP2221IO.Console</PackageId>
+        <Company>Derek Goslin</Company>
         <Authors>Derek Goslin</Authors>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <Copyright>Copyright © Derek Goslin 2022</Copyright>
         <Product>MCP2221IO.Console</Product>
         <Description>A .Net Core console application for interacting with a connected MCP2221 HID device</Description>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>

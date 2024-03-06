@@ -10,6 +10,7 @@
         </PackageReleaseNotes>
         <Company>Derek Goslin</Company>
         <Authors>Derek Goslin</Authors>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
         <Copyright>Copyright © Derek Goslin 2022</Copyright>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <RepositoryUrl>https://github.com/DerekGn/MCP2221IO</RepositoryUrl>

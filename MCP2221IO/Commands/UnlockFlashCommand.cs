@@ -49,7 +49,7 @@ namespace MCP2221IO.Commands
         {
             base.Serialize(stream);
 
-            stream.Write(Password.Bytes.ToArray());
+            stream.Write(Password.Bytes!.ToArray());
         }
     }
 }

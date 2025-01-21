@@ -55,5 +55,10 @@ namespace MCP2221IO.Commands
             stream.WriteByte(0);
             stream.WriteByte((byte)CommandCode);
         }
+
+        internal static void WriteDnc(Stream stream)
+        {
+            stream.WriteByte(0xFF);
+        }
     }
 }

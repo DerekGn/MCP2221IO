@@ -47,6 +47,8 @@ namespace MCP2221IO.Commands
         {
             base.Serialize(stream);
 
+            WriteDnc(stream);
+
             int update = 0x80;
             update |= (int)SramSettings.ClockDutyCycle << 3;
             update |= (int)SramSettings.ClockDivider & 0b111;

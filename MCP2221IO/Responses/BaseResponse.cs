@@ -47,10 +47,7 @@ namespace MCP2221IO.Responses
         // <inheritdoc/>
         public virtual void Deserialize(Stream stream)
         {
-            if (stream == null)
-            {
-                throw new ArgumentNullException(nameof(stream));
-            }
+            ArgumentNullException.ThrowIfNull(stream);
 
             if (stream.Length != 65)
             {

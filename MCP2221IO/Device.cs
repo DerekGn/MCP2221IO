@@ -587,10 +587,7 @@ namespace MCP2221IO
 
         private static void AssertAddress(I2cAddress address)
         {
-            if (address == null)
-            {
-                throw new ArgumentNullException(nameof(address));
-            }
+            ArgumentNullException.ThrowIfNull(address);
 
             if (address.Size != I2cAddressSize.SevenBit)
             {
@@ -758,15 +755,9 @@ namespace MCP2221IO
 
         private void I2cWriteData<T>(CommandCodes commandCode, I2cAddress address, IList<byte> data) where T : IResponse, new()
         {
-            if (address == null)
-            {
-                throw new ArgumentNullException(nameof(address));
-            }
+            ArgumentNullException.ThrowIfNull(address);
 
-            if (data == null)
-            {
-                throw new ArgumentNullException(nameof(data));
-            }
+            ArgumentNullException.ThrowIfNull(data);
 
             if (data.Count > IDevice.MaxI2cBlockSize)
             {

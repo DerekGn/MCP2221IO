@@ -33,3 +33,5 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Naming", "VSSpell001:Spell Check", Justification = "<Pending>", Scope = "member", Target = "~M:MCP2221IOConsole.Commands.Gpio.GpioWriteSettingsCommand.#ctor(System.IServiceProvider)")]
 [assembly: SuppressMessage("Naming", "VSSpell001:Spell Check", Justification = "<Pending>", Scope = "member", Target = "~M:MCP2221IOConsole.Commands.Sram.SramWriteGp1SettingsCommand.#ctor(System.IServiceProvider)")]
 [assembly: SuppressMessage("Naming", "VSSpell001:Spell Check", Justification = "<Pending>", Scope = "member", Target = "~M:MCP2221IOConsole.Commands.Sram.SramReadSettingsCommand.#ctor(System.IServiceProvider)")]
+[assembly: SuppressMessage("Naming", "VSSpell001:Spell Check", Justification = "<Pending>", Scope = "member", Target = "~M:MCP2221IOConsole.Commands.Gpio.GpioReadSettingsCommand.#ctor(System.IServiceProvider)")]
+[assembly: SuppressMessage("Naming", "VSSpell001:Spell Check", Justification = "<Pending>", Scope = "member", Target = "~M:MCP2221IOConsole.Commands.Gpio.GpioCommand.#ctor(System.IServiceProvider)")]

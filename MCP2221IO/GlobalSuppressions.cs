@@ -48,3 +48,8 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Naming", "VSSpell001:Spell Check", Justification = "<Pending>", Scope = "type", Target = "~T:MCP2221IO.Exceptions.GpioNotEnabledException")]
 [assembly: SuppressMessage("Naming", "VSSpell001:Spell Check", Justification = "<Pending>", Scope = "type", Target = "~T:MCP2221IO.Gpio.GpioPort")]
 [assembly: SuppressMessage("Naming", "VSSpell001:Spell Check", Justification = "<Pending>", Scope = "type", Target = "~T:MCP2221IO.Settings.SramSettings")]
+[assembly: SuppressMessage("Naming", "VSSpell001:Spell Check", Justification = "<Pending>", Scope = "member", Target = "~M:MCP2221IO.Commands.WriteGpioPortsCommand.#ctor(MCP2221IO.Gpio.GpioPort,MCP2221IO.Gpio.GpioPort,MCP2221IO.Gpio.GpioPort,MCP2221IO.Gpio.GpioPort)")]
+[assembly: SuppressMessage("Naming", "VSSpell001:Spell Check", Justification = "<Pending>", Scope = "member", Target = "~P:MCP2221IO.Commands.WriteGpioPortsCommand.GpioPort0")]
+[assembly: SuppressMessage("Naming", "VSSpell001:Spell Check", Justification = "<Pending>", Scope = "member", Target = "~P:MCP2221IO.Commands.WriteGpioPortsCommand.GpioPort1")]
+[assembly: SuppressMessage("Naming", "VSSpell001:Spell Check", Justification = "<Pending>", Scope = "member", Target = "~P:MCP2221IO.Commands.WriteGpioPortsCommand.GpioPort2")]
+[assembly: SuppressMessage("Naming", "VSSpell001:Spell Check", Justification = "<Pending>", Scope = "member", Target = "~P:MCP2221IO.Commands.WriteGpioPortsCommand.GpioPort3")]

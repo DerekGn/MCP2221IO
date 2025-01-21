@@ -44,7 +44,7 @@ namespace MCP2221IOConsole.Commands.Flash
             {
                 device.ReadGpSettings();
 
-                UpdateGpSetting(application, console, device, device.GpSettings!.Gp2PowerUpSetting, Designation);
+                UpdateGpSetting(application, console, device, device.GpSettings!.Gp2PowerUpSetting!, Designation);
 
                 return 0;
             });

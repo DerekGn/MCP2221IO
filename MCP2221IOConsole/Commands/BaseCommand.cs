@@ -28,6 +28,7 @@ using MCP2221IO;
 using MCP2221IO.Usb;
 using Microsoft.Extensions.Logging;
 using System;
+using System.IO;
 
 namespace MCP2221IOConsole.Commands
 {

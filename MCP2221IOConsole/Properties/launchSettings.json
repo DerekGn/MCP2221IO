@@ -2,7 +2,7 @@
   "profiles": {
     "MCP2221IOConsole": {
       "commandName": "Project",
-      "commandLineArgs": "status read-status"
+      "commandLineArgs": "reset"
     }
   }
 }

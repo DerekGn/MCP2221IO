@@ -671,6 +671,10 @@ namespace MCP2221IO
                     memberName,
                     sw.Elapsed.TotalMilliseconds);
             }
+            catch(IOException ex)
+            {
+                _logger.LogInformation(ex, "An exception occurred executing [{ClassName}].[{MemberName}]", className, memberName);
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An exception occurred executing [{ClassName}].[{MemberName}]", className, memberName);

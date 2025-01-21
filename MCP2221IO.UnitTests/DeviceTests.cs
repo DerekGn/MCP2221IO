@@ -22,7 +22,6 @@
 * SOFTWARE.
 */
 
-using FluentAssertions;
 using MCP2221IO.Commands;
 using MCP2221IO.Exceptions;
 using MCP2221IO.Gp;
@@ -35,6 +34,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -64,7 +64,7 @@ namespace MCP2221IO.UnitTests
             _device.CancelI2cBusTransfer();
 
             // Assert
-            _device.Status.Should().NotBeNull();
+            Assert.NotNull(_device.Status);
         }
 
         [Fact]
@@ -78,7 +78,7 @@ namespace MCP2221IO.UnitTests
             string serialNumber = _device.FactorySerialNumber!;
 
             // Assert
-            serialNumber.Should().NotBeNull();
+            Assert.NotNull(serialNumber);
 
             _output.WriteLine(serialNumber);
         }
@@ -94,7 +94,7 @@ namespace MCP2221IO.UnitTests
             string descriptor = _device.UsbManufacturerDescriptor;
 
             // Assert
-            descriptor.Should().NotBeNull();
+            Assert.NotNull(descriptor);
 
             _output.WriteLine(descriptor);
         }
@@ -110,7 +110,7 @@ namespace MCP2221IO.UnitTests
             string descriptor = _device.UsbProductDescriptor;
 
             // Assert
-            descriptor.Should().NotBeNull();
+           Assert.NotNull(descriptor);
 
             _output.WriteLine(descriptor);
         }
@@ -126,7 +126,7 @@ namespace MCP2221IO.UnitTests
             string descriptor = _device.UsbSerialNumberDescriptor;
 
             // Assert
-            descriptor.Should().NotBeNull();
+           Assert.NotNull(descriptor);
 
             _output.WriteLine(descriptor);
         }
@@ -149,7 +149,8 @@ namespace MCP2221IO.UnitTests
 
             // Assert
             _mockHidDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Exactly(4));
-            buffer.Should().NotBeNullOrEmpty();
+            Assert.NotNull(buffer);
+            Assert.NotEmpty(buffer);
         }
 
         [Fact]
@@ -159,12 +160,10 @@ namespace MCP2221IO.UnitTests
             // Arrange
 
             // Act
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
             Action act = () => { var buffer = _device.I2cReadData(null, 1); };
-#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
 
             // Assert
-            act.Should().Throw<ArgumentNullException>();
+            Assert.Throws<ArgumentNullException>(act);
         }
 
         [Fact]
@@ -185,7 +184,9 @@ namespace MCP2221IO.UnitTests
 
             // Assert
             _mockHidDevice.Verify(_ => _.WriteRead(It.IsAny<byte[]>()), Times.Exactly(4));
-            buffer.Should().NotBeNullOrEmpty();
+
+            Assert.NotNull(buffer);
+            Assert.NotEmpty(buffer);
         }
 
         [Fact]
@@ -200,7 +201,7 @@ namespace MCP2221IO.UnitTests
             var result = _device.I2cScanBusInternal(false, 9);
 
             // Assert
-            result.Should().NotBeEmpty();
+            Assert.NotEmpty(result);
         }
 
         [Fact]
@@ -215,7 +216,7 @@ namespace MCP2221IO.UnitTests
             var result = _device.I2cScanBusInternal(true, 9);
 
             // Assert
-            result.Should().NotBeEmpty();
+            Assert.NotEmpty(result);
         }
 
         [Fact]
@@ -245,12 +246,10 @@ namespace MCP2221IO.UnitTests
             // Arrange
 
             // Act
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
             Action act = () => { _device.I2cWriteData(null, new List<byte>()); };
-#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
 
             // Assert
-            act.Should().Throw<ArgumentNullException>();
+            Assert.Throws<ArgumentNullException>(() => act());
         }
 
         [Fact]
@@ -259,12 +258,10 @@ namespace MCP2221IO.UnitTests
             // Arrange
 
             // Act
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
             Action act = () => { _device.I2cWriteData(new I2cAddress(0x0A), null); };
-#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
 
             // Assert
-            act.Should().Throw<ArgumentNullException>();
+            Assert.Throws<ArgumentNullException>(() => act());
         }
 
         [Fact]
@@ -276,7 +273,7 @@ namespace MCP2221IO.UnitTests
             Action act = () => { _device.I2cWriteData(new I2cAddress(0x0A), new byte[0xFFFFF]); };
 
             // Assert
-            act.Should().Throw<ArgumentOutOfRangeException>();
+            Assert.Throws<ArgumentOutOfRangeException>(() => act());
         }
 
         [Fact]
@@ -344,7 +341,7 @@ namespace MCP2221IO.UnitTests
             _device.ReadChipSettings();
 
             // Assert
-            _device.ChipSettings.Should().NotBeNull();
+            Assert.NotNull(_device.ChipSettings);
 
             _output.WriteLine(_device.ChipSettings!.ToString());
         }
@@ -360,7 +357,7 @@ namespace MCP2221IO.UnitTests
             _device.ReadDeviceStatus();
 
             // Assert
-            _device.Status.Should().NotBeNull();
+            Assert.NotNull(_device.Status);
 
             _output.WriteLine(_device.Status!.ToString());
         }
@@ -395,7 +392,7 @@ namespace MCP2221IO.UnitTests
             _device.ReadGpSettings();
 
             // Assert
-            _device.GpSettings.Should().NotBeNull();
+            Assert.NotNull(_device.GpSettings);
 
             _output.WriteLine(_device.GpSettings!.ToString());
         }
@@ -411,7 +408,7 @@ namespace MCP2221IO.UnitTests
             _device.ReadSramSettings();
 
             // Assert
-            _device.SramSettings.Should().NotBeNull();
+            Assert.NotNull(_device.SramSettings);
 
             _output.WriteLine(_device.SramSettings!.ToString());
         }
@@ -439,7 +436,7 @@ namespace MCP2221IO.UnitTests
             _device.SetI2cBusSpeed(100);
 
             // Assert
-            _device.Status.Should().NotBeNull();
+            Assert.NotNull( _device.Status);
         }
 
         [Fact]
@@ -453,7 +450,7 @@ namespace MCP2221IO.UnitTests
             Action act = () => { _device.SetI2cBusSpeed(100); };
 
             // Assert
-            act.Should().Throw<I2cOperationException>();
+            Assert.Throws<I2cOperationException>(() => act());
         }
 
         [Fact]
@@ -470,7 +467,7 @@ namespace MCP2221IO.UnitTests
             _device.UsbManufacturerDescriptor = "UPDATED";
 
             // Assert
-            descriptor.Should().NotBeNull();
+            Assert.NotNull(descriptor);
         }
 
         [Fact]
@@ -487,7 +484,7 @@ namespace MCP2221IO.UnitTests
             _device.UsbProductDescriptor = "UPDATED";
 
             // Assert
-            descriptor.Should().NotBeNull();
+            Assert.NotNull(descriptor);
         }
 
         [Fact]
@@ -504,7 +501,7 @@ namespace MCP2221IO.UnitTests
             _device.UsbSerialNumberDescriptor = "SERIAL NUMBER";
 
             // Assert
-            descriptor.Should().NotBeNull();
+           Assert.NotNull(descriptor);
         }
 
         [Fact]
@@ -520,27 +517,28 @@ namespace MCP2221IO.UnitTests
             var result = _device.SmBusBlockRead(new I2cAddress(0x0B), 0x55, 5, true);
 
             // Assert
-            result.Should().NotBeEmpty();
+            Assert.NotEmpty(result);
         }
 
         [Fact]
         public void TestSmBusBlockWrite()
         {
-            byte[]? writeData = null;
+            List<byte> writeData = new List<byte>();
 
             // Arrange
             _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
                 .Returns(WriteReponse(CommandCodes.WriteI2cData))
                 .Callback((byte[] b) =>
                 {
-                    writeData = b;
+                    writeData.AddRange(b);
                 });
 
             // Act
             _device.SmBusBlockWrite(new I2cAddress(0x0B), 0xAA, new List<byte>() { 0x01, 0x02, 0x45 }, true);
 
             // Assert
-            writeData.Should().Contain(new List<byte>() { 0x16, 0xAA, 0x03, 0x01, 0x02, 0x45, 0x89 });
+            var expected = new List<byte>() { 0x16, 0xAA, 0x03, 0x01, 0x02, 0x45, 0x89 };
+            Assert.Equal(expected.Count, writeData.Intersect(expected).Count());
         }
 
         [Theory]
@@ -579,7 +577,7 @@ namespace MCP2221IO.UnitTests
             var result = _device.SmBusReadByte(new I2cAddress(10, I2cAddressSize.SevenBit), true);
 
             // Assert
-            result.Should().Be(0);
+            Assert.Equal(0, result);
         }
 
         [Fact]
@@ -595,7 +593,7 @@ namespace MCP2221IO.UnitTests
             var result = _device.SmBusReadByteCommand(new I2cAddress(10, I2cAddressSize.SevenBit), 0x55, true);
 
             // Assert
-            result.Should().Be(0x55);
+            Assert.Equal(0x55, result);
         }
 
         [Fact]
@@ -611,7 +609,7 @@ namespace MCP2221IO.UnitTests
             var result = _device.SmBusReadIntCommand(new I2cAddress(10, I2cAddressSize.SevenBit), 0x55, true);
 
             // Assert
-            result.Should().Be(0x55555555);
+            Assert.Equal(0x55555555, result);
         }
 
         [Fact]
@@ -627,7 +625,7 @@ namespace MCP2221IO.UnitTests
             var result = _device.SmBusReadLongCommand(new I2cAddress(10, I2cAddressSize.SevenBit), 0x55, true);
 
             // Assert
-            result.Should().Be(-6148914692668172971L);
+            Assert.Equal(-6148914692668172971L, result);
         }
 
         [Fact]
@@ -643,107 +641,112 @@ namespace MCP2221IO.UnitTests
             var result = _device.SmBusReadShortCommand(new I2cAddress(10, I2cAddressSize.SevenBit), 0x55, true);
 
             // Assert
-            result.Should().Be(-21931);
+            Assert.Equal(-21931, result);
         }
 
         [Fact]
         public void TestSmBusWriteByte()
         {
-            byte[]? writeData = null;
+            List<byte> writeData = new List<byte>();
 
             // Arrange
             _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
                 .Returns(WriteReponse(CommandCodes.WriteI2cData))
                 .Callback((byte[] b) =>
                 {
-                    writeData = b;
+                    writeData.AddRange(b);
                 });
 
             // Act
             _device.SmBusWriteByte(new I2cAddress(10, I2cAddressSize.SevenBit), 0x55, true);
 
             // Assert
-            writeData.Should().Contain(new List<byte>() { 0x14, 0x55, 0xAC });
+            var expected = new List<byte>() { 0x14, 0x55, 0xAC };
+            Assert.Equal(expected.Count, writeData.Intersect(expected).Count());
         }
 
         [Fact]
         public void TestSmBusWriteByteCommand()
         {
-            byte[]? writeData = null;
+            List<byte> writeData = new List<byte>();
 
             // Arrange
             _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
                 .Returns(WriteReponse(CommandCodes.WriteI2cData))
                 .Callback((byte[] b) =>
                 {
-                    writeData = b;
+                    writeData.AddRange(b);
                 });
 
             // Act
             _device.SmBusWriteByteCommand(new I2cAddress(10, I2cAddressSize.SevenBit), 0x55, 0xAA, true);
 
             // Assert
-            writeData.Should().Contain(new List<byte>() { 0x14, 0x55, 0xAA, 0x12 });
+            var expected = new List<byte>() { 0x14, 0x55, 0xAA, 0x12 };
+            Assert.Equal(expected.Count, writeData.Intersect(expected).Count());
         }
 
         [Fact]
         public void TestSmBusWriteIntCommand()
         {
-            byte[]? writeData = null;
+            List<byte> writeData = new List<byte>();
 
             // Arrange
             _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
                 .Returns(WriteReponse(CommandCodes.WriteI2cData))
                 .Callback((byte[] b) =>
                 {
-                    writeData = b;
+                    writeData.AddRange(b);
                 });
 
             // Act
             _device.SmBusWriteIntCommand(new I2cAddress(10, I2cAddressSize.SevenBit), 0x55, 0xFEED, true);
 
             // Assert
-            writeData.Should().Contain(new List<byte>() { 0x14, 0x55, 0xED, 0xFE, 0x00 });
+            var expected = new List<byte>() { 0x14, 0x55, 0xED, 0xFE, 0x00 };
+            Assert.Equal(expected.Count, writeData.Intersect(expected).Count());
         }
 
         [Fact]
         public void TestSmBusWriteLongCommand()
         {
-            byte[]? writeData = null;
+            List<byte> writeData = new List<byte>();
 
             // Arrange
             _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
                 .Returns(WriteReponse(CommandCodes.WriteI2cData))
                 .Callback((byte[] b) =>
                 {
-                    writeData = b;
+                    writeData.AddRange(b);
                 });
 
             // Act
             _device.SmBusWriteLongCommand(new I2cAddress(10, I2cAddressSize.SevenBit), 0x55, 0xFEED, true);
 
             // Assert
-            writeData.Should().Contain(new List<byte>() { 0x14, 0x55, 0xED, 0xFE, 0x00 });
+            var expected = new List<byte>() { 0x14, 0x55, 0xED, 0xFE, 0x00 };
+            Assert.Equal(expected.Count, writeData.Intersect(expected).Count());
         }
 
         [Fact]
         public void TestSmBusWriteShortCommand()
         {
-            byte[]? writeData = null;
+            List<byte> writeData = new List<byte>();
 
             // Arrange
             _mockHidDevice.Setup(_ => _.WriteRead(It.IsAny<byte[]>()))
                 .Returns(WriteReponse(CommandCodes.WriteI2cData))
                 .Callback((byte[] b) =>
                 {
-                    writeData = b;
+                    writeData.AddRange(b);
                 });
 
             // Act
             _device.SmBusWriteShortCommand(new I2cAddress(10, I2cAddressSize.SevenBit), 0x55, 2000, true);
 
             // Assert
-            writeData.Should().Contain(new List<byte>() { 0x14, 0x55, 0xD0, 0x07, 0x4B });
+            var expected = new List<byte>() { 0x14, 0x55, 0xD0, 0x07, 0x4B };
+            Assert.Equal(expected.Count, writeData.Intersect(expected).Count());
         }
 
         [Fact]
@@ -755,10 +758,10 @@ namespace MCP2221IO.UnitTests
                 .Returns(WriteFlashUnlockResponse());
 
             // Act
-            Action act = () => { _device.UnlockFlash(new Password("AA55AA55DEADBEEF")); };
+            var exception = Record.Exception(() => _device.UnlockFlash(new Password("AA55AA55DEADBEEF")));
 
             // Assert
-            act.Should().NotThrow();
+            Assert.Null(exception);
         }
 
         [Fact]

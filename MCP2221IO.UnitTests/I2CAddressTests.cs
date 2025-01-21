@@ -22,7 +22,6 @@
 * SOFTWARE.
 */
 
-using FluentAssertions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -47,20 +46,16 @@ namespace MCP2221IO.UnitTests
             I2cAddress address = new I2cAddress(0x08);
 
             // Assert
-            address.Size.Should().Be(I2cAddressSize.SevenBit);
-            address.WriteAddress.Should().Equal(new List<byte> { 0x10 });
-            address.ReadAddress.Should().Equal(new List<byte> { 0x11 });
+            Assert.Equal(I2cAddressSize.SevenBit, address.Size);
+            Assert.Equal(new List<byte> { 0x10 }, address.WriteAddress);
+            Assert.Equal(new List<byte> { 0x11 }, address.ReadAddress);
         }
 
         [Fact]
         [SuppressMessage("Minor Code Smell", "S1481:Unused local variables should be removed", Justification = "<Pending>")]
         public void TestSevenBitAddressException()
         {
-            // Arrange Act
-            Action act = () => { I2cAddress address = new I2cAddress(0x07); };
-
-            // Assert
-            act.Should().Throw<ArgumentOutOfRangeException>();
+            ArgumentException exception = Assert.Throws<ArgumentOutOfRangeException>(() => { I2cAddress address = new I2cAddress(0x07); });
         }
 
         [Theory]
@@ -74,20 +69,16 @@ namespace MCP2221IO.UnitTests
             I2cAddress i2cAddress = new I2cAddress(address, I2cAddressSize.TenBit);
 
             // Assert
-            i2cAddress.Size.Should().Be(I2cAddressSize.TenBit);
-            i2cAddress.WriteAddress.Should().Equal(new List<byte> { msb, lsb });
-            i2cAddress.ReadAddress.Should().Equal(new List<byte> { (byte)(msb + 1), lsb });
+            Assert.Equal(I2cAddressSize.TenBit, i2cAddress.Size);
+            Assert.Equal(new List<byte> { msb, lsb }, i2cAddress.WriteAddress);
+            Assert.Equal(new List<byte> { (byte)(msb + 1), lsb }, i2cAddress.ReadAddress);
         }
 
         [Fact]
         [SuppressMessage("Minor Code Smell", "S1481:Unused local variables should be removed", Justification = "<Pending>")]
         public void TestTenBitAddressException()
         {
-            // Arrange Act
-            Action act = () => { I2cAddress address = new I2cAddress(0x4FF, I2cAddressSize.TenBit); };
-
-            // Assert
-            act.Should().Throw<ArgumentOutOfRangeException>();
+            Assert.Throws<ArgumentOutOfRangeException>(() => { I2cAddress address = new I2cAddress(0x4FF, I2cAddressSize.TenBit); });
         }
     }
 }

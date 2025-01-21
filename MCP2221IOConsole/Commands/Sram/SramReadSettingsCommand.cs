@@ -34,13 +34,13 @@ namespace MCP2221IOConsole.Commands.Sram
         {
         }
 
-        protected override int OnExecute(CommandLineApplication app, IConsole console)
+        protected override int OnExecute(CommandLineApplication application, IConsole console)
         {
             return ExecuteCommand((device) =>
             {
                 device.ReadSramSettings();
 
-                console.WriteLine(device.SramSettings);
+                console.WriteLine(device.SramSettings!);
 
                 return 0;
             });

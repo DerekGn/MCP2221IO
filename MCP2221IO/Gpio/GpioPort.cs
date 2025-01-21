@@ -41,9 +41,14 @@ namespace MCP2221IO.Gpio
         public bool Enabled { get; private set; }
 
         /// <summary>
+        /// The GPIO port direction
+        /// </summary>
+        public bool? IsInput { get; set; }
+
+        /// <summary>
         /// The GPIO port value
         /// </summary>
-        public bool? Value 
+        public bool? Value
         {
             get => _value;
             set
@@ -59,11 +64,6 @@ namespace MCP2221IO.Gpio
             }
         }
 
-        /// <summary>
-        /// The GPIO port direction
-        /// </summary>
-        public bool? IsInput { get; set; }
-
         public override string ToString()
         {
             StringBuilder stringBuilder = new StringBuilder();
@@ -74,6 +74,15 @@ namespace MCP2221IO.Gpio
                 $"{nameof(Value)}: {Value,5} ");
 
             return stringBuilder.ToString();
+        }
+
+        internal static void Write(Stream stream, bool? value)
+        {
+            if (value.HasValue)
+            {
+                stream.WriteByte(0xFF);
+                stream.WriteByte((byte)(value.Value ? 0x01 : 0x00));
+            }
         }
 
         internal void Deserialize(Stream stream)
@@ -97,7 +106,7 @@ namespace MCP2221IO.Gpio
 
         internal void Serialize(Stream stream)
         {
-            if(Enabled)
+            if (Enabled)
             {
                 Write(stream, Value);
                 Write(stream, IsInput);
@@ -105,15 +114,6 @@ namespace MCP2221IO.Gpio
             else
             {
                 stream.Write(new byte[] { 0x00, 0x00, 0x00, 0x00 });
-            }
-        }
-
-        internal void Write(Stream stream, bool? value)
-        {
-            if(value.HasValue)
-            {
-                stream.WriteByte(0xFF);
-                stream.WriteByte((byte)(value.Value ? 0x01 : 0x00));
             }
         }
     }

@@ -41,10 +41,7 @@ namespace MCP2221IO.Settings
 
         public Password(IList<byte> bytes)
         {
-            if (bytes is null)
-            {
-                throw new ArgumentNullException(nameof(bytes));
-            }
+            ArgumentNullException.ThrowIfNull(bytes);
 
             if (bytes.Count > 8)
             {
@@ -55,13 +52,13 @@ namespace MCP2221IO.Settings
             Value = BitConverter.ToString(bytes.ToArray()).Replace("-", "");
         }
 
-        public string Value { get; private set; }
+        public string? Value { get; private set; }
 
-        public IReadOnlyList<byte> Bytes { get; private set; }
+        public IReadOnlyList<byte>? Bytes { get; private set; }
 
         public override string ToString()
         {
-            return Value;
+            return Value!;
         }
 
         /// <summary>

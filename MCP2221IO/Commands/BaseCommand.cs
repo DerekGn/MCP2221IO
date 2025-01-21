@@ -44,10 +44,7 @@ namespace MCP2221IO.Commands
         // <inheritdoc/>
         public virtual void Serialize(Stream stream)
         {
-            if (stream == null)
-            {
-                throw new ArgumentNullException(nameof(stream));
-            }
+            ArgumentNullException.ThrowIfNull(stream);
 
             if (stream.Length != 64)
             {

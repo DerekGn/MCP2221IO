@@ -67,7 +67,7 @@ namespace MCP2221IOConsole.Commands.Sram
         [Option(Templates.ClearInterrupt, "Clear Interrupt", CommandOptionType.SingleValue)]
         public bool ClearInterrupt { get; set; }
 
-        protected override int OnExecute(CommandLineApplication app, IConsole console)
+        protected override int OnExecute(CommandLineApplication application, IConsole console)
         {
             return ExecuteCommand((device) =>
             {
@@ -75,55 +75,55 @@ namespace MCP2221IOConsole.Commands.Sram
 
                 device.ReadSramSettings();
 
-                if (AdcRef.HasValue)
+                if (AdcRef.HasValue && device.SramSettings != null)
                 {
                     device.SramSettings.AdcRefOption = AdcRef.Value;
                     modified = true;
                 }
 
-                if(AdcVrmRef.HasValue)
+                if(AdcVrmRef.HasValue && device.SramSettings != null)
                 {
                     device.SramSettings.AdcRefVrm = AdcVrmRef.Value;
                     modified |= true;
                 }
 
-                if (ClockDivider.HasValue)
+                if (ClockDivider.HasValue && device.SramSettings != null)
                 {
                     device.SramSettings.ClockDivider = ClockDivider.Value;
                     modified |= true;
                 }
 
-                if (DutyCycle.HasValue)
+                if (DutyCycle.HasValue && device.SramSettings != null)
                 {
                     device.SramSettings.ClockDutyCycle = DutyCycle.Value;
                     modified |= true;
                 }
 
-                if (DacOutput.HasValue)
+                if (DacOutput.HasValue && device.SramSettings != null)
                 {
                     device.SramSettings.DacOutput = DacOutput.Value;
                     modified |= true;
                 }
 
-                if (DacRef.HasValue)
+                if (DacRef.HasValue && device.SramSettings != null)
                 {
                     device.SramSettings.DacRefOption = DacRef.Value;
                     modified |= true;
                 }
 
-                if (DacRefVrm.HasValue)
+                if (DacRefVrm.HasValue && device.SramSettings != null)
                 {
                     device.SramSettings.DacRefVrm = DacRefVrm.Value;
                     modified |= true;
                 }
 
-                if (InterruptNegativeEdge.HasValue)
+                if (InterruptNegativeEdge.HasValue && device.SramSettings != null)
                 {
                     device.SramSettings.InterruptNegativeEdge = InterruptNegativeEdge.Value;
                     modified |= true;
                 }
 
-                if (InterruptPositiveEdge.HasValue)
+                if (InterruptPositiveEdge.HasValue && device.SramSettings != null)
                 {
                     device.SramSettings.InterruptPositiveEdge = InterruptPositiveEdge.Value;
                     modified |= true;
@@ -139,7 +139,7 @@ namespace MCP2221IOConsole.Commands.Sram
                 else
                 {
                     console.Error.WriteLine("No update values specified");
-                    app.ShowHelp();
+                    application.ShowHelp();
                 }
 
                 return 0;

@@ -36,17 +36,17 @@ namespace MCP2221IOConsole.Commands.I2c
         {
         }
 
-        protected override int OnExecute(CommandLineApplication app, IConsole console)
+        protected override int OnExecute(CommandLineApplication application, IConsole console)
         {
             return ExecuteCommand((device) =>
             {
                 var address = ParseAddress();
 
-                console.WriteLine($"Writing [{Data.Count}] bytes To device [{address}]");
+                console.WriteLine("Writing [{Count}] bytes To device [{Address}]", Data!.Count, address);
 
                 device.I2cWriteData(address, Data);
 
-                console.WriteLine($"Wrote [{Data.Count}] bytes To device");
+                console.WriteLine("Wrote [{Data}] bytes To device", Data.Count);
 
                 return 0;
             });

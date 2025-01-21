@@ -32,13 +32,11 @@ namespace PModAqs.Sensor
 {
     internal class Ccs811 : ICcs811
     {
-        private const int Resistor = 100000;
-
         private readonly ILogger<ICcs811> _logger;
         private readonly I2cAddress _i2cAddress;
-        private IDevice _device;
+        private IDevice? _device;
 
-        public Ccs811(ILogger<ICcs811> logger, I2cAddress i2cAddress, IDevice device)
+        public Ccs811(ILogger<Ccs811> logger, I2cAddress i2cAddress, IDevice device)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _i2cAddress = i2cAddress ?? throw new ArgumentNullException(nameof(i2cAddress));
@@ -64,7 +62,7 @@ namespace PModAqs.Sensor
         // <inheritdoc/>
         public Mode GetMode()
         {
-            return new Mode(ReadRegister(Registers.Mode, 1).First());
+            return new Mode(ReadRegister(Registers.Mode, 1)[0]);
         }
 
         // <inheritdoc/>
@@ -82,25 +80,25 @@ namespace PModAqs.Sensor
         // <inheritdoc/>
         public Status GetStatus()
         {
-            return (Status)ReadRegister(Registers.Status, 1).First();
+            return (Status)ReadRegister(Registers.Status, 1)[0];
         }
 
         // <inheritdoc/>
         public Error GetError()
         {
-            return (Error)ReadRegister(Registers.ErrorId, 1).First();
+            return (Error)ReadRegister(Registers.ErrorId, 1)[0];
         }
 
         // <inheritdoc/>
         public void StartApplication()
         {
-            _device.I2cWriteData(_i2cAddress, new List<byte>() { (byte)Registers.ApplicationStart } );
+            _device!.I2cWriteData(_i2cAddress, new List<byte>() { (byte)Registers.ApplicationStart } );
         }
 
         // <inheritdoc/>
         public void Reset()
         {
-            _device.I2cWriteData(_i2cAddress, new List<byte>() { 0x11, 0xE5, 0x72, 0x8A });
+            _device!.I2cWriteData(_i2cAddress, new List<byte>() { 0x11, 0xE5, 0x72, 0x8A });
         }
 
         // <inheritdoc/>
@@ -112,7 +110,7 @@ namespace PModAqs.Sensor
         // <inheritdoc/>
         public void SetMode(DriveMode mode)
         {
-            _device.I2cWriteDataNoStop(_i2cAddress, new List<byte>() { (byte)Registers.Mode });
+            _device!.I2cWriteDataNoStop(_i2cAddress, new List<byte>() { (byte)Registers.Mode });
             
             var data = _device.I2cReadDataRepeatedStart(_i2cAddress, 1);
 
@@ -126,7 +124,7 @@ namespace PModAqs.Sensor
 
         private IList<byte> ReadRegister(Registers register, ushort count)
         {
-            _device.I2cWriteDataNoStop(_i2cAddress, new List<byte>() { (byte)register });
+            _device!.I2cWriteDataNoStop(_i2cAddress, new List<byte>() { (byte)register });
             return _device.I2cReadDataRepeatedStart(_i2cAddress, count);
         }
 

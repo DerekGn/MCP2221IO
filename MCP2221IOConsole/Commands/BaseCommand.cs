@@ -47,7 +47,7 @@ namespace MCP2221IOConsole.Commands
         public int Pid { get; set; } = 0x00DD;
 
         [Option(Templates.SerialNumber, "The MCP2221 instance serial number", CommandOptionType.SingleValue)]
-        public string Serial { get; set; }
+        public string Serial { get; set; } = string.Empty;
 
         protected int ExecuteCommand(Func<IDevice, int> action)
         {
@@ -59,8 +59,8 @@ namespace MCP2221IOConsole.Commands
 
                 if (hidDevice != null)
                 {
-                    using HidSharpHidDevice hidSharpHidDevice = new HidSharpHidDevice((ILogger<IHidDevice>)_serviceProvider.GetService(typeof(ILogger<IHidDevice>)), hidDevice);
-                    using MCP2221IO.Device device = new MCP2221IO.Device((ILogger<IDevice>)_serviceProvider.GetService(typeof(ILogger<IDevice>)), hidSharpHidDevice);
+                    using HidSharpHidDevice hidSharpHidDevice = new HidSharpHidDevice((ILogger<HidSharpHidDevice>)_serviceProvider.GetService(typeof(ILogger<HidSharpHidDevice>)), hidDevice);
+                    using MCP2221IO.Device device = new MCP2221IO.Device((ILogger<MCP2221IO.Device>)_serviceProvider.GetService(typeof(ILogger<MCP2221IO.Device>)), hidSharpHidDevice);
 
                     device.Open();
 
@@ -79,10 +79,10 @@ namespace MCP2221IOConsole.Commands
             return result;
         }
 
-        protected virtual int OnExecute(CommandLineApplication app, IConsole console)
+        protected virtual int OnExecute(CommandLineApplication application, IConsole console)
         {
             console.Error.WriteLine("You must specify a command. See --help for more details.");
-            app.ShowHelp();
+            application.ShowHelp();
 
             return 0;
         }

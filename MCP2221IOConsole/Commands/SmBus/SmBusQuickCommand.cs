@@ -38,7 +38,7 @@ namespace MCP2221IOConsole.Commands.SmBus
         [Option(Templates.Write, "A write quick command", CommandOptionType.SingleOrNoValue)]
         public bool Write { get; set; }
 
-        protected override int OnExecute(CommandLineApplication app, IConsole console)
+        protected override int OnExecute(CommandLineApplication application, IConsole console)
         {
             return ExecuteCommand((device) =>
             {

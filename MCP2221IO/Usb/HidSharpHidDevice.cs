@@ -31,11 +31,11 @@ namespace MCP2221IO.Usb
     public class HidSharpHidDevice : IHidDevice
     {
         private readonly ILogger<IHidDevice> _logger;
-        private HidDevice _hidDevice;
-        private HidStream _hidStream;
+        private HidDevice? _hidDevice;
+        private HidStream? _hidStream;
         private bool disposedValue;
 
-        public HidSharpHidDevice(ILogger<IHidDevice> logger, HidDevice hidDevice)
+        public HidSharpHidDevice(ILogger<HidSharpHidDevice> logger, HidDevice hidDevice)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _hidDevice = hidDevice ?? throw new ArgumentNullException(nameof(hidDevice));
@@ -43,23 +43,23 @@ namespace MCP2221IO.Usb
 
         public void Open()
         {
-            _hidStream = _hidDevice.Open();
+            _hidStream = _hidDevice!.Open();
         }
 
         public void Write(byte[] outBytes)
         {
-            _hidStream.Write(outBytes);
+            _hidStream!.Write(outBytes);
         }
 
         public byte[] WriteRead(byte[] outBytes)
         {
-            _logger.LogDebug($"Output HID Packet: [{BitConverter.ToString(outBytes).Replace("-", ",0x")}]");
+            _logger.LogDebug("Output HID Packet: [{Packet}]", BitConverter.ToString(outBytes).Replace("-", ",0x"));
 
-            _hidStream.Write(outBytes);
+            _hidStream!.Write(outBytes);
 
             var inBytes = _hidStream.Read();
 
-            _logger.LogDebug($"Input HID Packet: [{BitConverter.ToString(inBytes).Replace("-", ",0x")}]");
+            _logger.LogDebug("Input HID Packet: [{Packet}]", BitConverter.ToString(inBytes).Replace("-", ",0x"));
 
             return inBytes;
         }

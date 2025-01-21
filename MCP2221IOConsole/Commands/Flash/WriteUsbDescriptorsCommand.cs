@@ -43,7 +43,7 @@ namespace MCP2221IOConsole.Commands.Flash
         [Option(Templates.UsbSerialNumber, "The USB serial number string descriptor", CommandOptionType.SingleValue)]
         public (bool HasValue, string Value) SerialNumber { get; set; }
 
-        protected override int OnExecute(CommandLineApplication app, IConsole console)
+        protected override int OnExecute(CommandLineApplication application, IConsole console)
         {
             return ExecuteCommand((device) =>
             {
@@ -65,7 +65,7 @@ namespace MCP2221IOConsole.Commands.Flash
                 if(!(Manufacturer.HasValue || Product.HasValue || SerialNumber.HasValue))
                 {
                     console.Error.WriteLine("No update values specified");
-                    app.ShowHelp();
+                    application.ShowHelp();
                 }
 
                 return Manufacturer.HasValue || Product.HasValue || SerialNumber.HasValue ? 0 : -1;

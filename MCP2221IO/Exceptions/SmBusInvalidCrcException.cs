@@ -26,21 +26,25 @@ using System;
 
 namespace MCP2221IO.Exceptions
 {
-
-    [Serializable]
-    public class SmBusInvalidCrcException : System.Exception
+    public class SmBusInvalidCrcException : Exception
     {
-        public SmBusInvalidCrcException(byte expected, byte actual) : this(expected, actual, string.Empty) { }
-        public SmBusInvalidCrcException(byte expected, byte actual, string message) : this(expected, actual, message, null) { }
-        public SmBusInvalidCrcException(byte expected, byte actual, string message, System.Exception inner) : base(message, inner)
+        public SmBusInvalidCrcException(byte expected, byte actual)
         {
             Expected = expected;
             Actual = actual;
         }
 
-        protected SmBusInvalidCrcException(
-          System.Runtime.Serialization.SerializationInfo info,
-          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+        public SmBusInvalidCrcException(byte expected, byte actual, string message) : base(message)
+        {
+            Expected = expected;
+            Actual = actual;
+        }
+
+        public SmBusInvalidCrcException(byte expected, byte actual, string message, Exception inner) : base(message, inner)
+        {
+            Expected = expected;
+            Actual = actual;
+        }
 
         public byte Expected { get; private set; }
 

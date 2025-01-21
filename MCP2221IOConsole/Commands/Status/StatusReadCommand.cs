@@ -34,13 +34,13 @@ namespace MCP2221IOConsole.Commands.Status
         {
         }
 
-        protected override int OnExecute(CommandLineApplication app, IConsole console)
+        protected override int OnExecute(CommandLineApplication application, IConsole console)
         {
             return ExecuteCommand((device) =>
             {
                 device.ReadDeviceStatus();
 
-                console.WriteLine(device.Status);
+                console.WriteLine(device.Status!);
 
                 return 0;
             });

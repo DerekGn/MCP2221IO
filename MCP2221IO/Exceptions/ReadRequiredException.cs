@@ -26,15 +26,10 @@ using System;
 
 namespace MCP2221IO.Exceptions
 {
-
-    [Serializable]
     public class ReadRequiredException : Exception
     {
         public ReadRequiredException() { }
         public ReadRequiredException(string message) : base(message) { }
         public ReadRequiredException(string message, Exception inner) : base(message, inner) { }
-        protected ReadRequiredException(
-          System.Runtime.Serialization.SerializationInfo info,
-          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
     }
 }

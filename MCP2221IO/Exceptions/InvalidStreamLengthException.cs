@@ -26,15 +26,10 @@ using System;
 
 namespace MCP2221IO.Exceptions
 {
-
-    [System.Serializable]
     public class InvalidStreamLengthException : Exception
     {
         public InvalidStreamLengthException() { }
         public InvalidStreamLengthException(string message) : base(message) { }
         public InvalidStreamLengthException(string message, Exception inner) : base(message, inner) { }
-        protected InvalidStreamLengthException(
-          System.Runtime.Serialization.SerializationInfo info,
-          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
     }
 }

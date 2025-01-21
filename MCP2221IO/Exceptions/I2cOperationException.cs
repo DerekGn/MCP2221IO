@@ -27,18 +27,28 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace MCP2221IO.Exceptions
 {
-
-    [Serializable]
     [SuppressMessage("Minor Code Smell", "S101:Types should be named in PascalCase", Justification = "<Pending>")]
     public class I2cOperationException : Exception
     {
-        public I2cOperationException(byte executionResult) { ExecutionResult = executionResult; }
-        public I2cOperationException(string message) : this(0, message) { }
-        public I2cOperationException(byte executionResult, string message) : base(message) { ExecutionResult = executionResult; }
-        public I2cOperationException(byte executionResult, string message, Exception inner) : base(message, inner) { ExecutionResult = executionResult; }
-        protected I2cOperationException(
-          System.Runtime.Serialization.SerializationInfo info,
-          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+        public I2cOperationException(byte executionResult)
+        {
+            ExecutionResult = executionResult;
+        }
+
+        public I2cOperationException(string message) : base(message)
+        {
+            ExecutionResult = 0;
+        }
+
+        public I2cOperationException(byte executionResult, string message) : base(message)
+        {
+            ExecutionResult = executionResult;
+        }
+
+        public I2cOperationException(byte executionResult, string message, Exception inner) : base(message, inner)
+        {
+            ExecutionResult = executionResult;
+        }
 
         public byte ExecutionResult { get; private set; }
     }

@@ -29,7 +29,7 @@ using System.IO;
 namespace MCP2221IO.Commands
 {
     /// <summary>
-    /// 
+    /// Write sram settings command
     /// </summary>
     internal class WriteSramSettingsCommand : BaseCommand
     {
@@ -79,10 +79,10 @@ namespace MCP2221IO.Commands
 
             stream.WriteByte(0x80);
 
-            SramSettings.Gp0Settings.Serialize(stream);
-            SramSettings.Gp1Settings.Serialize(stream);
-            SramSettings.Gp2Settings.Serialize(stream);
-            SramSettings.Gp3Settings.Serialize(stream);
+            SramSettings.Gp0Settings!.Serialize(stream);
+            SramSettings.Gp1Settings!.Serialize(stream);
+            SramSettings.Gp2Settings!.Serialize(stream);
+            SramSettings.Gp3Settings!.Serialize(stream);
         }
     }
 }

@@ -43,45 +43,48 @@ namespace MCP2221IO
     /// </summary>
     public class Device : IDevice
     {
-        internal const int MaxPacketSize = 64;
         internal const int MaxBlockSize = 59;
+        internal const int MaxPacketSize = 64;
         internal bool _gpioPortsRead = false;
 
         private const int MaxRetries = 5;
 
         private readonly ILogger<IDevice> _logger;
-        private string _factorySerialNumber;
-        private IHidDevice _hidDevice;
+        private string? _factorySerialNumber;
+        private IHidDevice? _hidDevice;
 
-        public Device(ILogger<IDevice> logger, IHidDevice hidDevice)
+        public Device(ILogger<Device> logger, IHidDevice hidDevice)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _hidDevice = hidDevice ?? throw new ArgumentNullException(nameof(hidDevice));
         }
 
         // <inheritdoc/>
-        public DeviceStatus Status { get; internal set; }
+        public ChipSettings? ChipSettings { get; internal set; }
 
         // <inheritdoc/>
-        public ChipSettings ChipSettings { get; internal set; }
+        public string? FactorySerialNumber => GetFactorySerialNumber();
 
         // <inheritdoc/>
-        public GpSettings GpSettings { get; internal set; }
+        public GpioPort? GpioPort0 { get; internal set; }
 
         // <inheritdoc/>
-        public SramSettings SramSettings { get; internal set; }
+        public GpioPort? GpioPort1 { get; internal set; }
 
         // <inheritdoc/>
-        public GpioPort GpioPort0 { get; internal set; }
+        public GpioPort? GpioPort2 { get; internal set; }
 
         // <inheritdoc/>
-        public GpioPort GpioPort1 { get; internal set; }
+        public GpioPort? GpioPort3 { get; internal set; }
 
         // <inheritdoc/>
-        public GpioPort GpioPort2 { get; internal set; }
+        public GpSettings? GpSettings { get; internal set; }
 
         // <inheritdoc/>
-        public GpioPort GpioPort3 { get; internal set; }
+        public SramSettings? SramSettings { get; internal set; }
+
+        // <inheritdoc/>
+        public DeviceStatus? Status { get; internal set; }
 
         // <inheritdoc/>
         public string UsbManufacturerDescriptor
@@ -136,16 +139,99 @@ namespace MCP2221IO
         }
 
         // <inheritdoc/>
-        public string FactorySerialNumber => GetFactorySerialNumber();
-
-        // <inheritdoc/>
-        public void UnlockFlash(Password password)
+        public void CancelI2cBusTransfer()
         {
             HandleOperationExecution(
                 nameof(Device),
                 () =>
                 {
-                    ExecuteCommand<UnlockFlashResponse>(new UnlockFlashCommand(password));
+                    Status = ExecuteCommand<StatusSetParametersResponse>(new CancelI2cBusTransferCommand()).DeviceStatus;
+                });
+        }
+
+        // <inheritdoc/>
+        public void Close()
+        {
+            HandleOperationExecution(nameof(Device), () => Dispose());
+        }
+
+        // <inheritdoc/>
+        public IList<byte> I2cReadData(I2cAddress address, ushort length)
+        {
+            return HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    return I2cReadData<I2cReadDataResponse>(CommandCodes.ReadI2cData, address, length);
+                });
+        }
+
+        // <inheritdoc/>
+        public IList<byte> I2cReadDataRepeatedStart(I2cAddress address, ushort length)
+        {
+            return HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    return I2cReadData<I2cReadDataRepeatedStarteResponse>(CommandCodes.ReadI2cDataRepeatedStart, address, length);
+                });
+        }
+
+        // <inheritdoc/>
+        public IList<I2cAddress> I2cScanBus(bool useTenBitAddressing)
+        {
+            uint upperAddress = useTenBitAddressing ? I2cAddress.TenBitRangeUpper : I2cAddress.SevenBitRangeUpper;
+
+            return I2cScanBusInternal(useTenBitAddressing, upperAddress);
+        }
+
+        // <inheritdoc/>
+        public void I2cWriteData(I2cAddress address, IList<byte> data)
+        {
+            HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    I2cWriteData<I2cWriteDataResponse>(CommandCodes.WriteI2cData, address, data);
+                });
+        }
+
+        // <inheritdoc/>
+        public void I2cWriteDataNoStop(I2cAddress address, IList<byte> data)
+        {
+            HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    I2cWriteData<I2cWriteDataNoStopResponse>(CommandCodes.WriteI2cDataNoStop, address, data);
+                });
+        }
+
+        // <inheritdoc/>
+        public void I2cWriteDataRepeatStart(I2cAddress address, IList<byte> data)
+        {
+            HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    I2cWriteData<I2cWriteDataRepeatStartResponse>(CommandCodes.WriteI2cDataRepeatedStart, address, data);
+                });
+        }
+
+        // <inheritdoc/>
+        public void Open()
+        {
+            HandleOperationExecution(nameof(Device), () => _hidDevice!.Open());
+        }
+
+        // <inheritdoc/>
+        public void ReadChipSettings()
+        {
+            HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    ChipSettings = ExecuteCommand<ReadChipSettingsResponse>(new ReadChipSettingsCommand()).ChipSettings;
                 });
         }
 
@@ -161,13 +247,20 @@ namespace MCP2221IO
         }
 
         // <inheritdoc/>
-        public void ReadChipSettings()
+        public void ReadGpioPorts()
         {
             HandleOperationExecution(
                 nameof(Device),
                 () =>
                 {
-                    ChipSettings = ExecuteCommand<ReadChipSettingsResponse>(new ReadChipSettingsCommand()).ChipSettings;
+                    var response = ExecuteCommand<ReadGpioPortsResponse>(new ReadGpioPortsCommand());
+
+                    GpioPort0 = response.GpioPort0;
+                    GpioPort1 = response.GpioPort1;
+                    GpioPort2 = response.GpioPort2;
+                    GpioPort3 = response.GpioPort3;
+
+                    _gpioPortsRead = true;
                 });
         }
 
@@ -194,20 +287,203 @@ namespace MCP2221IO
         }
 
         // <inheritdoc/>
-        public void ReadGpioPorts()
+        public void Reset()
         {
             HandleOperationExecution(
                 nameof(Device),
                 () =>
                 {
-                    var response = ExecuteCommand<ReadGpioPortsResponse>(new ReadGpioPortsCommand());
+                    ExecuteCommand(new ResetCommand());
+                });
+        }
 
-                    GpioPort0 = response.GpioPort0;
-                    GpioPort1 = response.GpioPort1;
-                    GpioPort2 = response.GpioPort2;
-                    GpioPort3 = response.GpioPort3;
+        // <inheritdoc/>
+        public void SetI2cBusSpeed(int speed)
+        {
+            HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    int retryCount = 0;
 
-                    _gpioPortsRead = true;
+                    do
+                    {
+                        Status = ExecuteCommand<StatusSetParametersResponse>(new SetI2cBusSpeedCommand(speed)).DeviceStatus;
+
+                        retryCount++;
+                    } while (Status!.SpeedStatus != I2cSpeedStatus.Set && retryCount < MaxRetries);
+
+                    if (retryCount == MaxRetries)
+                    {
+                        throw new I2cOperationException("Unable to set I2C Speed exceeded retry count");
+                    }
+                });
+        }
+
+        // <inheritdoc/>
+        public IList<byte> SmBusBlockRead(I2cAddress address, byte command, byte count, bool errorCheck = false)
+        {
+            return HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    List<byte> writeData = new List<byte>() { command };
+
+                    I2cWriteData<I2cWriteDataNoStopResponse>(CommandCodes.WriteI2cDataNoStop, address, writeData);
+
+                    var result = I2cReadData<I2cReadDataRepeatedStarteResponse>(CommandCodes.ReadI2cDataRepeatedStart, address, count);
+
+                    if (errorCheck)
+                    {
+                        AssertPec(result);
+                    }
+
+                    return result;
+                });
+        }
+
+        // <inheritdoc/>
+        public void SmBusBlockWrite(I2cAddress address, byte command, IList<byte> block, bool errorCheck = false)
+        {
+            HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    AssertAddress(address);
+
+                    if (block.Count > IDevice.MaxSmBusBlockSize)
+                    {
+                        throw new ArgumentOutOfRangeException(nameof(block), $"Must be less than [0x{IDevice.MaxSmBusBlockSize}]");
+                    }
+
+                    List<byte> writeData = new List<byte>() { command, (byte)block.Count };
+                    writeData.AddRange(block);
+
+                    if (errorCheck)
+                    {
+                        writeData.Add(Crc8.ComputeChecksum(writeData));
+                    }
+
+                    I2cWriteData(address, writeData);
+                });
+        }
+
+        // <inheritdoc/>
+        public void SmBusQuickCommand(I2cAddress address, bool write)
+        {
+            HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    AssertAddress(address);
+
+                    if (write)
+                    {
+                        ExecuteCommand<I2cWriteDataResponse>(new I2cWriteDataCommand(CommandCodes.WriteI2cData, address, new List<byte>()));
+                    }
+                    else
+                    {
+                        ExecuteCommand<I2cReadDataResponse>(new I2cReadDataCommand(CommandCodes.ReadI2cData, address, 0));
+                    }
+                });
+        }
+
+        // <inheritdoc/>
+        public byte SmBusReadByte(I2cAddress address, bool errorCheck = false)
+        {
+            return HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    AssertAddress(address);
+
+                    var result = I2cReadData<I2cReadDataResponse>(CommandCodes.ReadI2cData, address, sizeof(byte));
+
+                    if (errorCheck)
+                    {
+                        AssertPec(result);
+                    }
+
+                    return result[0];
+                });
+        }
+
+        // <inheritdoc/>
+        public byte SmBusReadByteCommand(I2cAddress address, byte command, bool errorCheck = false)
+        {
+            return SmBusReadCommand(address, command, sizeof(byte), errorCheck)[0];
+        }
+
+        // <inheritdoc/>
+        public int SmBusReadIntCommand(I2cAddress address, byte command, bool errorCheck = false)
+        {
+            return BitConverter.ToInt32(SmBusReadCommand(address, command, sizeof(int), errorCheck).Take(sizeof(int)).ToArray());
+        }
+
+        // <inheritdoc/>
+        public long SmBusReadLongCommand(I2cAddress address, byte command, bool errorCheck = false)
+        {
+            return BitConverter.ToInt64(SmBusReadCommand(address, command, sizeof(long), errorCheck).Take(sizeof(long)).ToArray());
+        }
+
+        // <inheritdoc/>
+        public short SmBusReadShortCommand(I2cAddress address, byte command, bool errorCheck = false)
+        {
+            return BitConverter.ToInt16(SmBusReadCommand(address, command, sizeof(short), errorCheck).Take(sizeof(short)).ToArray());
+        }
+
+        // <inheritdoc/>
+        public void SmBusWriteByte(I2cAddress address, byte data, bool errorCheck = false)
+        {
+            HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    AssertAddress(address);
+
+                    List<byte> writeData = new List<byte>() { data };
+
+                    if (errorCheck)
+                    {
+                        writeData.Add(Crc8.ComputeChecksum(new List<byte>() { data }));
+                    }
+
+                    I2cWriteData(address, writeData);
+                });
+        }
+
+        // <inheritdoc/>
+        public void SmBusWriteByteCommand(I2cAddress address, byte command, byte data, bool errorCheck = false)
+        {
+            SmBusWriteCommand(address, command, errorCheck, data);
+        }
+
+        // <inheritdoc/>
+        public void SmBusWriteIntCommand(I2cAddress address, byte command, int data, bool errorCheck = false)
+        {
+            SmBusWriteCommand(address, command, errorCheck, BitConverter.GetBytes(data));
+        }
+
+        // <inheritdoc/>
+        public void SmBusWriteLongCommand(I2cAddress address, byte command, long data, bool errorCheck = false)
+        {
+            SmBusWriteCommand(address, command, errorCheck, BitConverter.GetBytes(data));
+        }
+
+        // <inheritdoc/>
+        public void SmBusWriteShortCommand(I2cAddress address, byte command, short data, bool errorCheck = false)
+        {
+            SmBusWriteCommand(address, command, errorCheck, BitConverter.GetBytes(data));
+        }
+
+        // <inheritdoc/>
+        public void UnlockFlash(Password password)
+        {
+            HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    ExecuteCommand<UnlockFlashResponse>(new UnlockFlashCommand(password));
                 });
         }
 
@@ -224,6 +500,22 @@ namespace MCP2221IO
                     }
 
                     ExecuteCommand<WriteFlashDataResponse>(new WriteChipSettingsCommand(ChipSettings, password));
+                });
+        }
+
+        // <inheritdoc/>
+        public void WriteGpioPorts()
+        {
+            HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    if (!_gpioPortsRead)
+                    {
+                        throw new ReadRequiredException($"Gpio ports must be read from the device");
+                    }
+
+                    ExecuteCommand<WriteGpioPortsResponse>(new WriteGpioPortsCommand(GpioPort0!, GpioPort1!, GpioPort2!, GpioPort3!));
                 });
         }
 
@@ -259,299 +551,6 @@ namespace MCP2221IO
                 });
         }
 
-        // <inheritdoc/>
-        public void WriteGpioPorts()
-        {
-            HandleOperationExecution(
-                nameof(Device),
-                () =>
-                {
-                    if (!_gpioPortsRead)
-                    {
-                        throw new ReadRequiredException($"Gpio ports must be read from the device");
-                    }
-
-                    ExecuteCommand<WriteGpioPortsResponse>(new WriteGpioPortsCommand(GpioPort0, GpioPort1, GpioPort2, GpioPort3));
-                });
-        }
-
-        // <inheritdoc/>
-        public void Reset()
-        {
-            HandleOperationExecution(
-                nameof(Device),
-                () =>
-                {
-                    ExecuteCommand(new ResetCommand());
-                });
-        }
-
-        // <inheritdoc/>
-        public void CancelI2cBusTransfer()
-        {
-            HandleOperationExecution(
-                nameof(Device),
-                () =>
-                {
-                    Status = ExecuteCommand<StatusSetParametersResponse>(new CancelI2cBusTransferCommand()).DeviceStatus;
-                });
-        }
-
-        // <inheritdoc/>
-        public void SetI2cBusSpeed(int speed)
-        {
-            HandleOperationExecution(
-                nameof(Device),
-                () =>
-                {
-                    int retryCount = 0;
-
-                    do
-                    {
-                        Status = ExecuteCommand<StatusSetParametersResponse>(new SetI2cBusSpeedCommand(speed)).DeviceStatus;
-
-                        retryCount++;
-
-                    } while (Status.SpeedStatus != I2cSpeedStatus.Set && retryCount < MaxRetries);
-
-                    if (retryCount == MaxRetries)
-                    {
-                        throw new I2cOperationException("Unable to set I2C Speed exceeded retry count");
-                    }
-                });
-        }
-
-        // <inheritdoc/>
-        public void Open()
-        {
-            HandleOperationExecution(nameof(Device), () => _hidDevice.Open());
-        }
-
-        // <inheritdoc/>
-        public void Close()
-        {
-            HandleOperationExecution(nameof(Device), () => Dispose());
-        }
-
-        // <inheritdoc/>
-        public void I2cWriteData(I2cAddress address, IList<byte> data)
-        {
-            HandleOperationExecution(
-                nameof(Device),
-                () =>
-                {
-                    I2cWriteData<I2cWriteDataResponse>(CommandCodes.WriteI2cData, address, data);
-                });
-        }
-
-        // <inheritdoc/>
-        public void I2cWriteDataRepeatStart(I2cAddress address, IList<byte> data)
-        {
-            HandleOperationExecution(
-                nameof(Device),
-                () =>
-                {
-                    I2cWriteData<I2cWriteDataRepeatStartResponse>(CommandCodes.WriteI2cDataRepeatedStart, address, data);
-                });
-        }
-
-        // <inheritdoc/>
-        public void I2cWriteDataNoStop(I2cAddress address, IList<byte> data)
-        {
-            HandleOperationExecution(
-                nameof(Device),
-                () =>
-                {
-                    I2cWriteData<I2cWriteDataNoStopResponse>(CommandCodes.WriteI2cDataNoStop, address, data);
-                });
-        }
-
-        // <inheritdoc/>
-        public IList<byte> I2cReadData(I2cAddress address, ushort length)
-        {
-            return HandleOperationExecution(
-                nameof(Device),
-                () =>
-                {
-                    return I2cReadData<I2cReadDataResponse>(CommandCodes.ReadI2cData, address, length);
-                });
-        }
-
-        // <inheritdoc/>
-        public IList<byte> I2cReadDataRepeatedStart(I2cAddress address, ushort length)
-        {
-            return HandleOperationExecution(
-                nameof(Device),
-                () =>
-                {
-                    return I2cReadData<I2cReadDataRepeatedStarteResponse>(CommandCodes.ReadI2cDataRepeatedStart, address, length);
-                });
-        }
-
-        // <inheritdoc/>
-        public IList<I2cAddress> I2cScanBus(bool useTenBitAddressing)
-        {
-            uint upperAddress = useTenBitAddressing ? I2cAddress.TenBitRangeUpper : I2cAddress.SevenBitRangeUpper;
-
-            return I2cScanBusInternal(useTenBitAddressing, upperAddress);
-        }
-
-        // <inheritdoc/>
-        public void SmBusQuickCommand(I2cAddress address, bool write)
-        {
-            HandleOperationExecution(
-                nameof(Device),
-                () =>
-                {
-                    AssertAddress(address);
-
-                    if (write)
-                    {
-                        ExecuteCommand<I2cWriteDataResponse>(new I2cWriteDataCommand(CommandCodes.WriteI2cData, address, new List<byte>()));
-                    }
-                    else
-                    {
-                        ExecuteCommand<I2cReadDataResponse>(new I2cReadDataCommand(CommandCodes.ReadI2cData, address, 0));
-                    }
-                });
-        }
-
-        // <inheritdoc/>
-        public byte SmBusReadByte(I2cAddress address, bool pec = false)
-        {
-            return HandleOperationExecution(
-                nameof(Device),
-                () =>
-                {
-                    AssertAddress(address);
-
-                    var result = I2cReadData<I2cReadDataResponse>(CommandCodes.ReadI2cData, address, sizeof(byte));
-
-                    if (pec)
-                    {
-                        AssertPec(result);
-                    }
-
-                    return result[0];
-                });
-        }
-
-        // <inheritdoc/>
-        public void SmBusWriteByte(I2cAddress address, byte data, bool pec = false)
-        {
-            HandleOperationExecution(
-                nameof(Device),
-                () =>
-                {
-                    AssertAddress(address);
-
-                    List<byte> writeData = new List<byte>() { data };
-
-                    if (pec)
-                    {
-                        writeData.Add(Crc8.ComputeChecksum(new List<byte>() { data }));
-                    }
-
-                    I2cWriteData(address, writeData);
-                });
-        }
-
-        // <inheritdoc/>
-        public byte SmBusReadByteCommand(I2cAddress address, byte command, bool pec = false)
-        {
-            return SmBusReadCommand(address, command, sizeof(byte), pec).First();
-        }
-
-        // <inheritdoc/>
-        public void SmBusWriteByteCommand(I2cAddress address, byte command, byte data, bool pec = false)
-        {
-            SmBusWriteCommand(address, command, pec, data);
-        }
-
-        // <inheritdoc/>
-        public short SmBusReadShortCommand(I2cAddress address, byte command, bool pec = false)
-        {
-            return BitConverter.ToInt16(SmBusReadCommand(address, command, sizeof(short), pec).Take(sizeof(short)).ToArray());
-        }
-
-        // <inheritdoc/>
-        public void SmBusWriteShortCommand(I2cAddress address, byte command, short data, bool pec = false)
-        {
-            SmBusWriteCommand(address, command, pec, BitConverter.GetBytes(data));
-        }
-
-        // <inheritdoc/>
-        public int SmBusReadIntCommand(I2cAddress address, byte command, bool pec = false)
-        {
-            return BitConverter.ToInt32(SmBusReadCommand(address, command, sizeof(int), pec).Take(sizeof(int)).ToArray());
-        }
-
-        // <inheritdoc/>
-        public void SmBusWriteIntCommand(I2cAddress address, byte command, int data, bool pec = false)
-        {
-            SmBusWriteCommand(address, command, pec, BitConverter.GetBytes(data));
-        }
-
-        // <inheritdoc/>
-        public long SmBusReadLongCommand(I2cAddress address, byte command, bool pec = false)
-        {
-            return BitConverter.ToInt64(SmBusReadCommand(address, command, sizeof(long), pec).Take(sizeof(long)).ToArray());
-        }
-
-        // <inheritdoc/>
-        public void SmBusWriteLongCommand(I2cAddress address, byte command, long data, bool pec = false)
-        {
-            SmBusWriteCommand(address, command, pec, BitConverter.GetBytes(data));
-        }
-
-        // <inheritdoc/>
-        public IList<byte> SmBusBlockRead(I2cAddress address, byte command, byte count, bool pec = false)
-        {
-            return HandleOperationExecution(
-                nameof(Device),
-                () =>
-                {
-                    List<byte> writeData = new List<byte>() { command };
-
-                    I2cWriteData<I2cWriteDataNoStopResponse>(CommandCodes.WriteI2cDataNoStop, address, writeData);
-
-                    var result = I2cReadData<I2cReadDataRepeatedStarteResponse>(CommandCodes.ReadI2cDataRepeatedStart, address, count);
-
-                    if (pec)
-                    {
-                        AssertPec(result);
-                    }
-
-                    return result;
-                });
-        }
-
-        // <inheritdoc/>
-        public void SmBusBlockWrite(I2cAddress address, byte command, IList<byte> block, bool pec = false)
-        {
-            HandleOperationExecution(
-                nameof(Device),
-                () =>
-                {
-                    AssertAddress(address);
-
-                    if(block.Count > IDevice.MaxSmBusBlockSize)
-                    {
-                        throw new ArgumentOutOfRangeException(nameof(block), $"Must be less than [0x{IDevice.MaxSmBusBlockSize}]");
-                    }
-
-                    List<byte> writeData = new List<byte>() { command, (byte)block.Count };
-                    writeData.AddRange(block);
-
-                    if (pec)
-                    {
-                        writeData.Add(Crc8.ComputeChecksum(writeData));
-                    }
-
-                    I2cWriteData(address, writeData );
-                });
-        }
-
         internal IList<I2cAddress> I2cScanBusInternal(bool useTenBitAddressing, uint upperAddress)
         {
             List<I2cAddress> result = new List<I2cAddress>();
@@ -562,13 +561,13 @@ namespace MCP2221IO
 
                 try
                 {
-                    _logger.LogDebug($"Probing Device Address [0x{address.Value:X}]");
+                    _logger.LogDebug("Probing Device Address [0x{Address:X}]", address.Value);
 
                     var response = I2cReadData(address, 1);
 
                     if (response.Count > 0)
                     {
-                        _logger.LogDebug($"Read [{response.Count}] byte from Device Address [0x{address.Value:X}]");
+                        _logger.LogDebug("Read [{Count}] byte from Device Address [0x{Address:X}]", response.Count, address.Value);
                     }
 
                     result.Add(address);
@@ -586,55 +585,9 @@ namespace MCP2221IO
             return result;
         }
 
-        private IList<byte> SmBusReadCommand(I2cAddress address, byte command, ushort length, bool pec)
+        private static void AssertAddress(I2cAddress address)
         {
-            return HandleOperationExecution(
-                nameof(Device),
-                () =>
-                {
-                    List<byte> writeData = new List<byte>() { command };
-
-                    I2cWriteData<I2cWriteDataNoStopResponse>(CommandCodes.WriteI2cDataNoStop, address, writeData);
-
-                    var result = I2cReadData<I2cReadDataRepeatedStarteResponse>(CommandCodes.ReadI2cDataRepeatedStart, address, length);
-
-                    if (pec)
-                    {
-                        AssertPec(result);
-                    }
-
-                    return result;
-                });
-        }
-
-        private void SmBusWriteCommand(I2cAddress address, byte command, bool pec, params byte[] data)
-        {
-            HandleOperationExecution(
-                nameof(Device),
-                () =>
-                {
-                    List<byte> writeData = new List<byte>() { command };
-                    writeData.AddRange(data);
-
-                    if (pec)
-                    {
-                        writeData.Add(Crc8.ComputeChecksum(writeData));
-                    }
-
-                    I2cWriteData<I2cWriteDataResponse>(CommandCodes.WriteI2cData, address, writeData);
-                });
-        }
-
-        private void HandleScanError(I2cAddress address, Exception ex)
-        {
-            _logger.LogWarning(ex, $"Device Address [0x{address.Value:X2}] did not respond");
-
-            CancelI2cBusTransfer();
-        }
-
-        private void AssertAddress(I2cAddress address)
-        {
-            if(address == null)
+            if (address == null)
             {
                 throw new ArgumentNullException(nameof(address));
             }
@@ -645,7 +598,7 @@ namespace MCP2221IO
             }
         }
 
-        private void AssertPec(IList<byte> result)
+        private static void AssertPec(IList<byte> result)
         {
             if (result.Count > 1)
             {
@@ -658,12 +611,114 @@ namespace MCP2221IO
             }
         }
 
-        private IList<byte> I2cReadData<T>(CommandCodes commandCode, I2cAddress address, ushort length) where T : IResponse, new()
+        private void ExecuteCommand(ICommand command)
         {
-            if (address == null)
+            var memoryStream = new MemoryStream(new byte[MaxPacketSize], true);
+
+            command.Serialize(memoryStream);
+
+            _hidDevice!.Write(memoryStream.ToArray());
+        }
+
+        private T ExecuteCommand<T>(ICommand command, bool checkResult = true) where T : IResponse, new()
+        {
+            var outStream = new MemoryStream(new byte[MaxPacketSize], true);
+            var inStream = new MemoryStream();
+
+            command.Serialize(outStream);
+
+            inStream.Write(_hidDevice!.WriteRead(outStream.ToArray()));
+
+            var result = new T();
+
+            result.Deserialize(inStream);
+
+            if (checkResult && result.ExecutionResult != 0)
             {
-                throw new ArgumentNullException(nameof(address));
+                throw new CommandExecutionFailedException($"Unexpected command execution status Expected: [0x00] Actual [0x{result.ExecutionResult:x}]");
             }
+
+            return result;
+        }
+
+        private string GetFactorySerialNumber()
+        {
+            return HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    if (String.IsNullOrWhiteSpace(_factorySerialNumber))
+                    {
+                        var response = ExecuteCommand<FactorySerialNumberResponse>(new ReadFactorySerialNumberCommand());
+
+                        _factorySerialNumber = response.SerialNumber;
+                    }
+
+                    return _factorySerialNumber;
+                });
+        }
+
+        [DebuggerStepThrough]
+        private void HandleOperationExecution(string className, Action operation, [CallerMemberName] string memberName = "")
+        {
+            Stopwatch sw = new Stopwatch();
+
+            try
+            {
+                sw.Start();
+                operation();
+                sw.Stop();
+
+                _logger.LogDebug("Executed [{ClassName}].[{MemberName}] in [{TotalMilliseconds}] ms",
+                    className,
+                    memberName,
+                    sw.Elapsed.TotalMilliseconds);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An exception occurred executing [{ClassName}].[{MemberName}]", className, memberName);
+
+                throw;
+            }
+        }
+
+        [DebuggerStepThrough]
+        private T HandleOperationExecution<T>(string className, Func<T> operation, [CallerMemberName] string memberName = "")
+        {
+            Stopwatch sw = new Stopwatch();
+            T result;
+
+            try
+            {
+                sw.Start();
+                result = operation();
+                sw.Stop();
+
+                _logger.LogDebug("Executed [{ClassName}].[{MemberName}] in [{TotalMilliseconds}] ms",
+                    className,
+                    memberName,
+                    sw.Elapsed.TotalMilliseconds);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An exception occurred executing [{ClassName}].[{MemberName}]", className, memberName);
+
+                throw;
+            }
+
+            return result;
+        }
+
+        private void HandleScanError(I2cAddress address, Exception ex)
+        {
+            _logger.LogWarning(ex, "Device Address [0x{Address:X2}] did not respond", address.Value);
+
+            CancelI2cBusTransfer();
+        }
+
+        private List<byte> I2cReadData<T>(CommandCodes commandCode, I2cAddress address, ushort length) where T : IResponse, new()
+        {
+            ArgumentNullException.ThrowIfNull(address);
 
             return HandleOperationExecution(
                 nameof(Device),
@@ -687,7 +742,7 @@ namespace MCP2221IO
                             throw new I2cOperationException(getResponse.ExecutionResult, $"{nameof(I2cReadData)} The read of i2c data failed with execution result code [0x{getResponse.ExecutionResult:x}]");
                         }
 
-                        if (getResponse.Data.Count > 0)
+                        if (getResponse.Data!.Count > 0)
                         {
                             result.AddRange(getResponse.Data);
                         }
@@ -738,100 +793,55 @@ namespace MCP2221IO
                 });
         }
 
-        private string GetFactorySerialNumber()
+        private IList<byte> SmBusReadCommand(I2cAddress address, byte command, ushort length, bool errorCheck)
         {
             return HandleOperationExecution(
                 nameof(Device),
                 () =>
                 {
-                    if (String.IsNullOrWhiteSpace(_factorySerialNumber))
-                    {
-                        var response = ExecuteCommand<FactorySerialNumberResponse>(new ReadFactorySerialNumberCommand());
+                    List<byte> writeData = new List<byte>() { command };
 
-                        _factorySerialNumber = response.SerialNumber;
+                    I2cWriteData<I2cWriteDataNoStopResponse>(CommandCodes.WriteI2cDataNoStop, address, writeData);
+
+                    var result = I2cReadData<I2cReadDataRepeatedStarteResponse>(CommandCodes.ReadI2cDataRepeatedStart, address, length);
+
+                    if (errorCheck)
+                    {
+                        AssertPec(result);
                     }
 
-                    return _factorySerialNumber;
+                    return result;
                 });
         }
 
-        private void ExecuteCommand(ICommand command)
+        private void SmBusWriteCommand(I2cAddress address, byte command, bool errorCheck, params byte[] data)
         {
-            var memoryStream = new MemoryStream(new byte[MaxPacketSize], true);
+            HandleOperationExecution(
+                nameof(Device),
+                () =>
+                {
+                    List<byte> writeData = new List<byte>() { command };
+                    writeData.AddRange(data);
 
-            command.Serialize(memoryStream);
+                    if (errorCheck)
+                    {
+                        writeData.Add(Crc8.ComputeChecksum(writeData));
+                    }
 
-            _hidDevice.Write(memoryStream.ToArray());
-        }
-
-        private T ExecuteCommand<T>(ICommand command, bool checkResult = true) where T : IResponse, new()
-        {
-            var outStream = new MemoryStream(new byte[MaxPacketSize], true);
-            var inStream = new MemoryStream();
-
-            command.Serialize(outStream);
-
-            inStream.Write(_hidDevice.WriteRead(outStream.ToArray()));
-
-            var result = new T();
-
-            result.Deserialize(inStream);
-
-            if (checkResult && result.ExecutionResult != 0)
-            {
-                throw new CommandExecutionFailedException($"Unexpected command execution status Expected: [0x00] Actual [0x{result.ExecutionResult:x}]");
-            }
-
-            return result;
-        }
-
-        [DebuggerStepThrough]
-        private void HandleOperationExecution(string className, Action operation, [CallerMemberName] string memberName = "")
-        {
-            Stopwatch sw = new Stopwatch();
-
-            try
-            {
-                sw.Start();
-                operation();
-                sw.Stop();
-
-                _logger.LogDebug($"Executed [{className}].[{memberName}] in [{sw.Elapsed.TotalMilliseconds}] ms");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"An exception occurred executing [{className}].[{memberName}] Reason: [{ex.Message}]");
-
-                throw;
-            }
-        }
-
-        [DebuggerStepThrough]
-        private T HandleOperationExecution<T>(string className, Func<T> operation, [CallerMemberName] string memberName = "")
-        {
-            Stopwatch sw = new Stopwatch();
-            T result;
-
-            try
-            {
-                sw.Start();
-                result = operation();
-                sw.Stop();
-
-                _logger.LogDebug($"Executed [{className}].[{memberName}] in [{sw.Elapsed.TotalMilliseconds}] ms");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"An exception occurred executing [{className}].[{memberName}] Reason: [{ex.Message}]");
-
-                throw;
-            }
-
-            return result;
+                    I2cWriteData<I2cWriteDataResponse>(CommandCodes.WriteI2cData, address, writeData);
+                });
         }
 
         #region Dispose
+
         private bool disposedValue;
+
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
 
         protected virtual void Dispose(bool disposing)
         {
@@ -848,13 +858,6 @@ namespace MCP2221IO
             }
         }
 
-        public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
-        }
-
-        #endregion
+        #endregion Dispose
     }
 }

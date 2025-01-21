@@ -33,9 +33,11 @@ namespace MCP2221IOConsole.Parsers
     {
         public Type TargetType => typeof(IList<byte>);
 
-        public object Parse(string argName, string value, CultureInfo culture)
+        public object Parse(string? argName, string? value, CultureInfo culture)
         {
-            if(value.Length % 2 != 0)
+            ArgumentNullException.ThrowIfNull(value);
+
+            if (value.Length % 2 != 0)
             {
                 throw new FormatException($"Invalid value specified for {argName}. '{value}' is not multiple of 2");
             }
@@ -46,7 +48,7 @@ namespace MCP2221IOConsole.Parsers
             {
                 if(!byte.TryParse(value.Substring(i, 2), NumberStyles.HexNumber, CultureInfo.CurrentCulture, out byte parsedValue))
                 {
-                    throw new FormatException($"Invalid value specified for {argName}. '{value}' is an invalid hex string");
+                    throw new FormatException($"Invalid value specified for {argName}.'{value}' is an invalid hex string");
                 }
 
                 data.Add(parsedValue);

@@ -40,7 +40,7 @@ namespace PModAqs.Commands
         [Option(Templates.Mode, "The sensor drive mode", CommandOptionType.SingleValue)]
         public DriveMode Mode { get; set; }
 
-        protected override int OnExecute(CommandLineApplication app, IConsole console)
+        protected override int OnExecute(CommandLineApplication application, IConsole console)
         {
             return ExecuteCommand((sensor) =>
             {

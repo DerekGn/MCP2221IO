@@ -32,6 +32,7 @@ namespace MCP2221IO.Responses
     {
         public FactorySerialNumberResponse() : base(CommandCodes.ReadFlashData)
         {
+            SerialNumber = string.Empty;
         }
 
         public string SerialNumber { get; set; }

@@ -26,15 +26,10 @@ using System;
 
 namespace MCP2221IO.Exceptions
 {
-
-    [Serializable]
     public class CommandExecutionFailedException : Exception
     {
         public CommandExecutionFailedException() { }
         public CommandExecutionFailedException(string message) : base(message) { }
         public CommandExecutionFailedException(string message, Exception inner) : base(message, inner) { }
-        protected CommandExecutionFailedException(
-          System.Runtime.Serialization.SerializationInfo info,
-          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
     }
 }

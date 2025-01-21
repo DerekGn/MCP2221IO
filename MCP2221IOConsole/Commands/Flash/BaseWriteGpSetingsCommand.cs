@@ -41,12 +41,12 @@ namespace MCP2221IOConsole.Commands.Flash
         [Option(Templates.GpValue, "The GP output value at power up when pin is set as output", CommandOptionType.SingleValue)]
         public (bool HasValue, bool Value) Value { get; set; }
 
-        internal void UpdateGpSetting<T>(CommandLineApplication app, IConsole console, IDevice device, GpSetting<T> gpio, (bool HasValue, T Value) designation) where T : Enum
+        internal void UpdateGpSetting<T>(CommandLineApplication application, IConsole console, IDevice device, GpSetting<T> gpio, (bool HasValue, T Value) designation) where T : Enum
         {
             if (!(IsInput.HasValue || Value.HasValue || designation.HasValue))
             {
                 console.Error.WriteLine("No update values specified");
-                app.ShowHelp();
+                application.ShowHelp();
             }
             else
             {

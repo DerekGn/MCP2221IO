@@ -32,7 +32,7 @@ namespace MCP2221IO.Settings
     /// A Gpio setting type
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class GpSetting<T> where T : System.Enum
+    public class GpSetting<T> where T : Enum
     {
         /// <summary>
         /// The current output value on the Gpio port
@@ -47,7 +47,7 @@ namespace MCP2221IO.Settings
         /// <summary>
         /// The current Gp settings port designation
         /// </summary>
-        public T Designation { get; set; }
+        public T? Designation { get; set; }
 
         public override string ToString()
         {
@@ -75,7 +75,7 @@ namespace MCP2221IO.Settings
         {
             int update = Value ? 0x10 : 0x00;
             update |= IsInput ? 0x08 : 0x00;
-            update |= (int)(object)Designation & 0b111;
+            update |= (int)(object)Designation! & 0b111;
 
             stream.WriteByte((byte)update);
         }

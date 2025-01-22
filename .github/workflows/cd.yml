@@ -26,6 +26,9 @@ jobs:
       - name: Publish
         uses: softprops/action-gh-release@v2.0.8
         with:
-          files: "*.nupkg"
+          files: |
+            "/home/runner/work/MCP2221IO/MCP2221IO/MCP2221IO/bin/Release/*.nupkg"
+            "/home/runner/work/MCP2221IO/MCP2221IO/PModAqs/bin/Release/*.nupkg"
+            "/home/runner/work/MCP2221IO/MCP2221IO/MCP2221IOConsole/bin/Release/*.nupkg"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

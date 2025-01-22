@@ -28,7 +28,7 @@ jobs:
         with:
           files: |
             /home/runner/work/MCP2221IO/MCP2221IO/MCP2221IO/bin/Release/MCP2221IO*.nupkg
-            "/home/runner/work/MCP2221IO/MCP2221IO/PModAqs/bin/Release/*.nupkg"
-            "/home/runner/work/MCP2221IO/MCP2221IO/MCP2221IOConsole/bin/Release/*.nupkg"
+            /home/runner/work/MCP2221IO/MCP2221IO/PModAqs/bin/Release/PModAqs*.nupkg
+            /home/runner/work/MCP2221IO/MCP2221IO/MCP2221IOConsole/bin/Release/MCP2221IO.Console*.nupkg
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

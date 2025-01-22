@@ -27,7 +27,7 @@ jobs:
         uses: softprops/action-gh-release@v2.0.8
         with:
           files: |
-            "/home/runner/work/MCP2221IO/MCP2221IO/MCP2221IO/bin/Release/*.nupkg"
+            "/home/runner/work/MCP2221IO/MCP2221IO/MCP2221IO/bin/Release/MCP2221IO*.nupkg"
             "/home/runner/work/MCP2221IO/MCP2221IO/PModAqs/bin/Release/*.nupkg"
             "/home/runner/work/MCP2221IO/MCP2221IO/MCP2221IOConsole/bin/Release/*.nupkg"
         env:

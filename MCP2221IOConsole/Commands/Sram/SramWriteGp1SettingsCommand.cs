@@ -38,13 +38,13 @@ namespace MCP2221IOConsole.Commands.Sram
         [Option(Templates.SramGpDesignation, "The GP 1 designation", CommandOptionType.SingleValue)]
         public (bool HasValue, Gp1Designation Value) Designation { get; set; }
 
-        protected override int OnExecute(CommandLineApplication app, IConsole console)
+        protected override int OnExecute(CommandLineApplication application, IConsole console)
         {
             return ExecuteCommand((device) =>
             {
                 device.ReadSramSettings();
 
-                UpdateSramGpSetting(app, console, device, device.SramSettings.Gp1Settings, Designation);
+                UpdateSramGpSetting(application, console, device, device.SramSettings!.Gp1Settings!, Designation);
 
                 return 0;
             });

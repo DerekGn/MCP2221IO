@@ -32,19 +32,19 @@ namespace MCP2221IOConsole.Parsers
     {
         public Type TargetType => typeof(T);
 
-        public object Parse(string argName, string value, CultureInfo culture)
+        public object Parse(string? argName, string? value, CultureInfo culture)
         {
-            return ParseInternal(argName, value, culture, ParseFunction);
+            return BaseIntValueParser<T>.ParseInternal(argName, value, culture, ParseFunction);
         }
 
         protected abstract (bool, T) ParseFunction(string value, CultureInfo culture, NumberStyles numberStyles);
 
-        private object ParseInternal(string argName, string value, CultureInfo culture,
+        private static object ParseInternal(string? argName, string? value, CultureInfo culture,
             Func<string, CultureInfo, NumberStyles, (bool, T)> valueParser)
         {
             (bool, T) parseResult;
-            
-            if (value.StartsWith("0x", StringComparison.InvariantCultureIgnoreCase))
+
+            if (value!.StartsWith("0x", StringComparison.InvariantCultureIgnoreCase))
             {
                 var strippedHexValue = value.Replace("0x", string.Empty).Replace("0X", string.Empty);
 
@@ -60,7 +60,7 @@ namespace MCP2221IOConsole.Parsers
                 throw new FormatException($"Invalid value specified for {argName}. '{value}' is not a valid number.");
             }
 
-            return parseResult.Item2;
+            return parseResult.Item2!;
         }
     }
 }

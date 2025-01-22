@@ -89,7 +89,7 @@ namespace MCP2221IOConsole.Commands.Flash
         [Option(Templates.Password, "The 8-byte password for Flash modifications protection", CommandOptionType.SingleValue)]
         public (bool HasValue, string Value) Password { get; set; }
 
-        protected override int OnExecute(CommandLineApplication app, IConsole console)
+        protected override int OnExecute(CommandLineApplication application, IConsole console)
         {
             return ExecuteCommand((device) =>
             {
@@ -97,97 +97,97 @@ namespace MCP2221IOConsole.Commands.Flash
 
                 device.ReadChipSettings();
 
-                if (AdcRef.HasValue)
+                if (AdcRef.HasValue && device.ChipSettings != null)
                 {
                     device.ChipSettings.AdcRefOption = AdcRef.Value;
                     modified = true;
                 }
 
-                if (AdcVrmRef.HasValue)
+                if (AdcVrmRef.HasValue && device.ChipSettings != null)
                 {
                     device.ChipSettings.AdcRefVrm = AdcVrmRef.Value;
                     modified |= true;
                 }
 
-                if (CdcSerialNumberEnable.HasValue)
+                if (CdcSerialNumberEnable.HasValue && device.ChipSettings != null)
                 {
                     device.ChipSettings.CdcSerialNumberEnable = CdcSerialNumberEnable.Value;
                     modified |= true;
                 }
 
-                if (ChipSecurity.HasValue)
+                if (ChipSecurity.HasValue && device.ChipSettings != null)
                 {
                     device.ChipSettings.ChipSecurity = ChipSecurity.Value;
                     modified |= true;
                 }
 
-                if (ClockDivider.HasValue)
+                if (ClockDivider.HasValue && device.ChipSettings != null)
                 {
                     device.ChipSettings.ClockDivider = ClockDivider.Value;
                     modified |= true;
                 }
 
-                if (DutyCycle.HasValue)
+                if (DutyCycle.HasValue && device.ChipSettings != null)
                 {
                     device.ChipSettings.ClockDutyCycle = DutyCycle.Value;
                     modified |= true;
                 }
 
-                if (DacOutput.HasValue)
+                if (DacOutput.HasValue && device.ChipSettings != null)
                 {
                     device.ChipSettings.DacOutput = DacOutput.Value;
                     modified |= true;
                 }
 
-                if (DacRef.HasValue)
+                if (DacRef.HasValue && device.ChipSettings != null)
                 {
                     device.ChipSettings.DacRefOption = DacRef.Value;
                     modified |= true;
                 }
 
-                if (DacRefVrm.HasValue)
+                if (DacRefVrm.HasValue && device.ChipSettings != null)
                 {
                     device.ChipSettings.DacRefVrm = DacRefVrm.Value;
                     modified |= true;
                 }
 
-                if (InterruptNegativeEdge.HasValue)
+                if (InterruptNegativeEdge.HasValue && device.ChipSettings != null)
                 {
                     device.ChipSettings.InterruptNegativeEdge = InterruptNegativeEdge.Value;
                     modified |= true;
                 }
 
-                if (InterruptPositiveEdge.HasValue)
+                if (InterruptPositiveEdge.HasValue && device.ChipSettings != null)
                 {
                     device.ChipSettings.InterruptPositiveEdge = InterruptPositiveEdge.Value;
                     modified |= true;
                 }
 
-                if (PowerRequestMa.HasValue)
+                if (PowerRequestMa.HasValue && device.ChipSettings != null)
                 {
                     device.ChipSettings.PowerRequestMa = PowerRequestMa.Value;
                     modified |= true;
                 }
 
-                if (NewPid.HasValue)
+                if (NewPid.HasValue && device.ChipSettings != null)
                 {
                     device.ChipSettings.Pid = NewPid.Value;
                     modified |= true;
                 }
 
-                if (NewVid.HasValue)
+                if (NewVid.HasValue && device.ChipSettings != null)
                 {
                     device.ChipSettings.Vid = NewVid.Value;
                     modified |= true;
                 }
 
-                if (RemoteWake.HasValue)
+                if (RemoteWake.HasValue && device.ChipSettings != null)
                 {
                     device.ChipSettings.RemoteWake = RemoteWake.Value;
                     modified |= true;
                 }
 
-                if (SelfPowered.HasValue)
+                if (SelfPowered.HasValue && device.ChipSettings != null)
                 {
                     device.ChipSettings.SelfPowered = SelfPowered.Value;
                     modified |= true;
@@ -195,7 +195,6 @@ namespace MCP2221IOConsole.Commands.Flash
 
                 if (modified)
                 {
-
                     Password password = MCP2221IO.Settings.Password.DefaultPassword;
 
                     if(Password.HasValue)
@@ -210,7 +209,7 @@ namespace MCP2221IOConsole.Commands.Flash
                 else
                 {
                     console.Error.WriteLine("No update values specified");
-                    app.ShowHelp();
+                    application.ShowHelp();
                 }
 
                 return 0;

@@ -33,13 +33,13 @@ namespace MCP2221IO.Settings
     /// </summary>
     public class GpSettings
     {
-        public GpSetting<Gp0Designation> Gp0PowerUpSetting { get; internal set; }
+        public GpSetting<Gp0Designation>? Gp0PowerUpSetting { get; internal set; }
 
-        public GpSetting<Gp1Designation> Gp1PowerUpSetting { get; internal set; }
+        public GpSetting<Gp1Designation>? Gp1PowerUpSetting { get; internal set; }
 
-        public GpSetting<Gp2Designation> Gp2PowerUpSetting { get; internal set; }
+        public GpSetting<Gp2Designation>? Gp2PowerUpSetting { get; internal set; }
 
-        public GpSetting<Gp3Designation> Gp3PowerUpSetting { get; internal set; }
+        public GpSetting<Gp3Designation>? Gp3PowerUpSetting { get; internal set; }
 
         public override string ToString()
         {
@@ -68,10 +68,10 @@ namespace MCP2221IO.Settings
 
         internal void Serialize(Stream stream)
         {
-            Gp0PowerUpSetting.Serialize(stream);
-            Gp1PowerUpSetting.Serialize(stream);
-            Gp2PowerUpSetting.Serialize(stream);
-            Gp3PowerUpSetting.Serialize(stream);
+            Gp0PowerUpSetting!.Serialize(stream);
+            Gp1PowerUpSetting!.Serialize(stream);
+            Gp2PowerUpSetting!.Serialize(stream);
+            Gp3PowerUpSetting!.Serialize(stream);
         }
     }
 }

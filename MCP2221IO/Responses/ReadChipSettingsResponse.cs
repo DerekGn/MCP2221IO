@@ -37,7 +37,7 @@ namespace MCP2221IO.Responses
         {
         }
 
-        public ChipSettings ChipSettings { get; private set; }
+        public ChipSettings? ChipSettings { get; private set; }
 
         public override void Deserialize(Stream stream)
         {

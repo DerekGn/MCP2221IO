@@ -33,12 +33,9 @@ namespace PModAqs.Sensor
     {
         public VersionInfo(IList<byte> data)
         {
-            if (data == null)
-            {
-                throw new ArgumentNullException(nameof(data));
-            }
+            ArgumentNullException.ThrowIfNull(data);
 
-            if(data.Count < 6)
+            if (data.Count < 6)
             {
                 throw new ArgumentOutOfRangeException(nameof(data), "Must contain 6 bytes");
             }

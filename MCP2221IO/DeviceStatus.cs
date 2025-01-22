@@ -87,7 +87,7 @@ namespace MCP2221IO
         public ushort I2cAddress { get; private set; }
 
         /// <summary>
-        /// 
+        /// If ACK was received from client value is false, else true
         /// </summary>
         public bool AckStatus { get; private set; }
 
@@ -114,17 +114,17 @@ namespace MCP2221IO
         /// <summary>
         /// The Hardware revision
         /// </summary>
-        public string HardwareRevision { get; private set; }
+        public string? HardwareRevision { get; private set; }
 
         /// <summary>
         /// The Firmware revision
         /// </summary>
-        public string FirmwareRevision { get; private set; }
+        public string? FirmwareRevision { get; private set; }
 
         /// <summary>
         /// ADC values
         /// </summary>
-        public IReadOnlyList<ushort> Adc { get; private set; }
+        public IReadOnlyList<ushort>? Adc { get; private set; }
 
         public override string ToString()
         {
@@ -149,7 +149,7 @@ namespace MCP2221IO
             stringBuilder.AppendLine($"{nameof(HardwareRevision)}: {HardwareRevision}");
             stringBuilder.AppendLine($"{nameof(FirmwareRevision)}: {FirmwareRevision}");
 
-            stringBuilder.AppendLine($"{nameof(Adc)}:\r\n[0x{Adc[0]:X4}]\r\n[0x{Adc[1]:X4}]\r\n[0x{Adc[2]:X4}]");
+            stringBuilder.AppendLine($"{nameof(Adc)}:\r\n[0x{Adc![0]:X4}]\r\n[0x{Adc[1]:X4}]\r\n[0x{Adc[2]:X4}]");
 
             return stringBuilder.ToString();
         }

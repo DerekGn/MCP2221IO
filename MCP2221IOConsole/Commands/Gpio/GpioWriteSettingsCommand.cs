@@ -39,7 +39,7 @@ namespace MCP2221IOConsole.Commands.Gpio
 
         [Range(0, 3)]
         [Option(Templates.GpioPorts, Description = "The GPIO ports")]
-        public int[] Ports { get; set; }
+        public int[]? Ports { get; set; }
 
         [Option(Templates.GpioIsInput, Description = "The GPIO pin is set as input if set")]
         public (bool HasValue, bool Value) IsInput { get; set; }
@@ -47,7 +47,7 @@ namespace MCP2221IOConsole.Commands.Gpio
         [Option(Templates.GpioValue, Description = "The GPIO pin value")]
         public (bool HasValue, bool Value) Value { get; set; }
 
-        protected override int OnExecute(CommandLineApplication app, IConsole console)
+        protected override int OnExecute(CommandLineApplication application, IConsole console)
         {
             return ExecuteCommand((device) =>
             {
@@ -65,19 +65,19 @@ namespace MCP2221IOConsole.Commands.Gpio
                     {
                         if (port == 0)
                         {
-                            updated |= UpdatePort(0, device.GpioPort0, console);
+                            updated |= UpdatePort(0, device.GpioPort0!, console);
                         }
                         else if (port == 1)
                         {
-                            updated |= UpdatePort(1, device.GpioPort1, console);
+                            updated |= UpdatePort(1, device.GpioPort1!, console);
                         }
                         else if (port == 2)
                         {
-                            updated |= UpdatePort(2, device.GpioPort2, console);
+                            updated |= UpdatePort(2, device.GpioPort2!, console);
                         }
                         else if (port == 3)
                         {
-                            updated |= UpdatePort(3, device.GpioPort3, console);
+                            updated |= UpdatePort(3, device.GpioPort3!, console);
                         }
                     }
 
@@ -96,7 +96,7 @@ namespace MCP2221IOConsole.Commands.Gpio
                 else
                 {
                     console.Error.WriteLine("No update values specified");
-                    app.ShowHelp();
+                    application.ShowHelp();
                 }
 
                 return result;

@@ -26,15 +26,10 @@ using System;
 
 namespace MCP2221IO.Exceptions
 {
-
-    [Serializable]
     public class SmBusInvalidAddressSizeException : Exception
     {
         public SmBusInvalidAddressSizeException() { }
         public SmBusInvalidAddressSizeException(string message) : base(message) { }
         public SmBusInvalidAddressSizeException(string message, Exception inner) : base(message, inner) { }
-        protected SmBusInvalidAddressSizeException(
-          System.Runtime.Serialization.SerializationInfo info,
-          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
     }
 }

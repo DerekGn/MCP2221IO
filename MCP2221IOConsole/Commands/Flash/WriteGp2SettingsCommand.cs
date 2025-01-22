@@ -38,13 +38,13 @@ namespace MCP2221IOConsole.Commands.Flash
         [Option(Templates.GpDesignation, "The GP2 power up designation", CommandOptionType.SingleValue)]
         public (bool HasValue, Gp2Designation Value) Designation { get; set; }
 
-        protected override int OnExecute(CommandLineApplication app, IConsole console)
+        protected override int OnExecute(CommandLineApplication application, IConsole console)
         {
             return ExecuteCommand((device) =>
             {
                 device.ReadGpSettings();
 
-                UpdateGpSetting(app, console, device, device.GpSettings.Gp2PowerUpSetting, Designation);
+                UpdateGpSetting(application, console, device, device.GpSettings!.Gp2PowerUpSetting!, Designation);
 
                 return 0;
             });

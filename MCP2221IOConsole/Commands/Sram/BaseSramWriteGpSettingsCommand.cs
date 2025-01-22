@@ -41,12 +41,12 @@ namespace MCP2221IOConsole.Commands.Sram
         [Option(Templates.SramGpValue, "The GP output value of the pin if set as output", CommandOptionType.SingleValue)]
         public (bool HasValue, bool Value) Value { get; set; }
 
-        internal void UpdateSramGpSetting<T>(CommandLineApplication app, IConsole console, IDevice device, GpSetting<T> gpio, (bool HasValue, T Value) designation) where T : Enum
+        internal void UpdateSramGpSetting<T>(CommandLineApplication application, IConsole console, IDevice device, GpSetting<T> gpio, (bool HasValue, T Value) designation) where T : Enum
         {
             if (!(IsInput.HasValue || Value.HasValue || designation.HasValue))
             {
                 console.Error.WriteLine("No update values specified");
-                app.ShowHelp();
+                application.ShowHelp();
             }
             else
             {

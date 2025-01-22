@@ -32,10 +32,7 @@ namespace PModAqs.Sensor
     {
         public RawData(IList<byte> data)
         {
-            if (data == null)
-            {
-                throw new ArgumentNullException(nameof(data));
-            }
+            ArgumentNullException.ThrowIfNull(data);
 
             if (data.Count < 2)
             {

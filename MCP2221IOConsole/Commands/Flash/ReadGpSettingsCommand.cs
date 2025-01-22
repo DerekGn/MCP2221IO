@@ -34,13 +34,13 @@ namespace MCP2221IOConsole.Commands.Flash
         {
         }
 
-        protected override int OnExecute(CommandLineApplication app, IConsole console)
+        protected override int OnExecute(CommandLineApplication application, IConsole console)
         {
             return ExecuteCommand((device) =>
             {
                 device.ReadGpSettings();
 
-                console.WriteLine(device.GpSettings);
+                console.WriteLine(device.GpSettings!);
 
                 return 0;
             });

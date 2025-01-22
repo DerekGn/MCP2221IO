@@ -64,27 +64,27 @@ namespace MCP2221IO.Settings
         /// <summary>
         /// The current password expressed as an 8 byte hex number
         /// </summary>
-        public Password Password { get; protected set; }
+        public Password? Password { get; protected set; }
 
         /// <summary>
         /// The GP0 settings
         /// </summary>
-        public GpSetting<Gp0Designation> Gp0Settings { get; internal set; }
+        public GpSetting<Gp0Designation>? Gp0Settings { get; internal set; }
 
         /// <summary>
         /// The GP1 settings
         /// </summary>
-        public GpSetting<Gp1Designation> Gp1Settings { get; internal set; }
+        public GpSetting<Gp1Designation>? Gp1Settings { get; internal set; }
 
         /// <summary>
         /// The GP2 settings
         /// </summary>
-        public GpSetting<Gp2Designation> Gp2Settings { get; internal set; }
+        public GpSetting<Gp2Designation>? Gp2Settings { get; internal set; }
 
         /// <summary>
         /// The GP3 settings
         /// </summary>
-        public GpSetting<Gp3Designation> Gp3Settings { get; internal set; }
+        public GpSetting<Gp3Designation>? Gp3Settings { get; internal set; }
 
         public override string ToString()
         {

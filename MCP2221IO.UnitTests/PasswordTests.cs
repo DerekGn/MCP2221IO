@@ -22,7 +22,6 @@
 * SOFTWARE.
 */
 
-using FluentAssertions;
 using MCP2221IO.Settings;
 using System.Collections.Generic;
 using Xunit;
@@ -49,23 +48,23 @@ namespace MCP2221IO.UnitTests
             Password password = new Password(bytes);
 
             // Assert
-            password.Value.Should().Be("AA55AA55AA55AA55");
-            password.Bytes.Should().Contain(bytes);
+            Assert.Equal("AA55AA55AA55AA55", password.Value);
+            Assert.Equal(bytes, password.Bytes);
         }
 
         [Fact]
         public void TestStringOk()
         {
             // Arrange
-            List<byte> bytes = new List<byte>() { 0xAA, 0x55, 0xAA, 0x55, 0xAA, 0x55, 0xAA, 0x55 };
+            List<byte> bytes = new List<byte>() { 0x55, 0xAA, 0x55, 0xAA, 0x55, 0xAA, 0x55, 0xAA };
             string test = "AA55AA55AA55AA55";
 
             // Act
             Password password = new Password(test);
 
             // Assert
-            password.Value.Should().Be("AA55AA55AA55AA55");
-            password.Bytes.Should().Contain(bytes);
+            Assert.Equal(test, password.Value);
+            Assert.Equal(bytes, password.Bytes);
         }
     }
 }

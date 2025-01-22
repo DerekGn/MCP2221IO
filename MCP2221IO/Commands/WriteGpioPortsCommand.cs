@@ -55,6 +55,8 @@ namespace MCP2221IO.Commands
         {
             base.Serialize(stream);
 
+            WriteDnc(stream);
+
             GpioPort0.Serialize(stream);
             GpioPort1.Serialize(stream);
             GpioPort2.Serialize(stream);

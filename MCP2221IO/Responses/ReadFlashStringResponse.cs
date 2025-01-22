@@ -32,6 +32,7 @@ namespace MCP2221IO.Responses
     {
         public ReadFlashStringResponse() : base(CommandCodes.ReadFlashData)
         {
+            Value = string.Empty;
         }
 
         public string Value { get; private set; }

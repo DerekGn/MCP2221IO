@@ -50,7 +50,7 @@ namespace MCP2221IOConsole
     [Subcommand(typeof(UnlockCommand))]
     class Program
     {
-        private static IConfiguration _configuration;
+        private static IConfiguration? _configuration;
 
         public static int Main(string[] args)
         {
@@ -95,7 +95,7 @@ namespace MCP2221IOConsole
         {
             var serviceCollection = new ServiceCollection()
                 .AddLogging(builder => builder.AddSerilog())
-                .AddSingleton(_configuration)
+                .AddSingleton(_configuration!)
                 .AddLogging();
 
             return serviceCollection.BuildServiceProvider();
@@ -111,10 +111,10 @@ namespace MCP2221IOConsole
                 .Build();
         }
 
-        private int OnExecute(CommandLineApplication app, IConsole console)
+        private int OnExecute(CommandLineApplication application, IConsole console)
         {
             console.WriteLine("You must specify a subcommand.");
-            app.ShowHelp();
+            application.ShowHelp();
             return 1;
         }
     }

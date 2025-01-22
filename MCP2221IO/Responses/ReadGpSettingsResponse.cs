@@ -40,7 +40,7 @@ namespace MCP2221IO.Responses
         /// <summary>
         /// The <see cref="GpSettings"/>
         /// </summary>
-        public GpSettings GpSettings { get; set; }
+        public GpSettings? GpSettings { get; set; }
 
         public override void Deserialize(Stream stream)
         {

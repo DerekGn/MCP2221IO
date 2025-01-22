@@ -40,7 +40,7 @@ namespace MCP2221IOConsole.Commands.SmBus
         [Option(Templates.Data, "The long value to write", CommandOptionType.SingleOrNoValue)]
         public int Data { get; set; }
 
-        protected override int OnExecute(CommandLineApplication app, IConsole console)
+        protected override int OnExecute(CommandLineApplication application, IConsole console)
         {
             return ExecuteCommand((device) =>
             {

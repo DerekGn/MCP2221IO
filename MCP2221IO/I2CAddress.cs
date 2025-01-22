@@ -66,9 +66,9 @@ namespace MCP2221IO
 
         public uint Value { get; private set; }
 
-        public IReadOnlyCollection<byte> ReadAddress { get; private set; }
+        public IReadOnlyCollection<byte>? ReadAddress { get; private set; }
 
-        public IReadOnlyCollection<byte> WriteAddress { get; private set; }
+        public IReadOnlyCollection<byte>? WriteAddress { get; private set; }
 
         public I2cAddressSize Size { get; }
 

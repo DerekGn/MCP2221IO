@@ -26,22 +26,27 @@ using System;
 
 namespace MCP2221IO.Exceptions
 {
-
-    [Serializable]
     public class GpioNotEnabledException : Exception
     {
         public GpioNotEnabledException()
         {
+            Port = 0;
         }
-        public GpioNotEnabledException(string message) : base(message)
+
+        public GpioNotEnabledException(int port)
         {
+            Port = port;
         }
-        public GpioNotEnabledException(string message, Exception inner) : base(message, inner)
+
+        public GpioNotEnabledException(int port, string message) : base(message)
         {
+            Port = port;
         }
-        protected GpioNotEnabledException(
-          System.Runtime.Serialization.SerializationInfo info,
-          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+
+        public GpioNotEnabledException(int port, string message, Exception inner) : base(message, inner)
+        {
+            Port = port;
+        }
 
         public int Port { get; private set; }
     }

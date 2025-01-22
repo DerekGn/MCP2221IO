@@ -55,7 +55,7 @@ namespace MCP2221IO.Commands
         {
             base.Serialize(stream);
             stream.WriteUShort((ushort)Data.Count);
-            stream.Write(Address.WriteAddress.ToArray());
+            stream.Write(Address.WriteAddress!.ToArray());
             stream.Write(Data.ToArray(), 0, Data.Count);
         }
     }

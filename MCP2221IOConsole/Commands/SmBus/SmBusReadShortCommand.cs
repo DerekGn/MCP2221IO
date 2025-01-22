@@ -35,7 +35,7 @@ namespace MCP2221IOConsole.Commands.SmBus
         {
         }
 
-        protected override int OnExecute(CommandLineApplication app, IConsole console)
+        protected override int OnExecute(CommandLineApplication application, IConsole console)
         {
             return ExecuteCommand((device) =>
             {

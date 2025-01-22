@@ -34,13 +34,13 @@ namespace MCP2221IO.Responses
         {
         }
 
-        public GpioPort GpioPort0 { get; private set; }
+        public GpioPort? GpioPort0 { get; private set; }
 
-        public GpioPort GpioPort1 { get; private set; }
+        public GpioPort? GpioPort1 { get; private set; }
 
-        public GpioPort GpioPort2 { get; private set; }
+        public GpioPort? GpioPort2 { get; private set; }
 
-        public GpioPort GpioPort3 { get; private set; }
+        public GpioPort? GpioPort3 { get; private set; }
 
         public override void Deserialize(Stream stream)
         {

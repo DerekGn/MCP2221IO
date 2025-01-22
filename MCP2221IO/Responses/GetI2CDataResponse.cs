@@ -40,7 +40,7 @@ namespace MCP2221IO.Responses
         {
         }
 
-        public IList<byte> Data { get; private set; }
+        public IList<byte>? Data { get; private set; }
 
         public override void Deserialize(Stream stream)
         {

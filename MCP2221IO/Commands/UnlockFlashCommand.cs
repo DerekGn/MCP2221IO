@@ -49,7 +49,9 @@ namespace MCP2221IO.Commands
         {
             base.Serialize(stream);
 
-            stream.Write(Password.Bytes.ToArray());
+            WriteDnc(stream);
+
+            stream.Write(Password.Bytes!.ToArray());
         }
     }
 }

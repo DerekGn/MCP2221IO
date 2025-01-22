@@ -1,4 +1,4 @@
-[![Build Status](https://derekgn.visualstudio.com/GitHub/_apis/build/status/DerekGn.MCP2221IO?branchName=main)](https://derekgn.visualstudio.com/GitHub/_build/latest?definitionId=12&branchName=main)
+![GitHub Actions](https://github.com/DerekGn/MCP2221IO/actions/workflows/build.yml/badge.svg)
 
 [![NuGet Badge](https://buildstats.info/nuget/MCP2221IO)](https://www.nuget.org/packages/MCP2221IO/)
 

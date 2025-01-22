@@ -39,9 +39,9 @@ namespace MCP2221IOConsole.Commands.SmBus
 
         [Required]
         [Option(Templates.I2cData, "The data to write. Input as a Hex string", CommandOptionType.SingleValue)]
-        public IList<byte> Data { get; set; }
+        public IList<byte>? Data { get; set; }
 
-        protected override int OnExecute(CommandLineApplication app, IConsole console)
+        protected override int OnExecute(CommandLineApplication application, IConsole console)
         {
             return ExecuteCommand((device) =>
             {
@@ -49,9 +49,9 @@ namespace MCP2221IOConsole.Commands.SmBus
 
                 console.WriteLine($"Writing a block of data to the SmBus device address [{deviceAddress}]");
 
-                device.SmBusBlockWrite(deviceAddress, Command, Data, Pec);
+                device.SmBusBlockWrite(deviceAddress, Command, Data!, Pec);
 
-                console.WriteLine($"Write [{Data.Count}] bytes to the SmBus device");
+                console.WriteLine("Write [{Count}] bytes to the SmBus device", Data!.Count);
 
                 return 0;
             });

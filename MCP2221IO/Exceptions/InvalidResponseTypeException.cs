@@ -26,14 +26,10 @@ using System;
 
 namespace MCP2221IO.Exceptions
 {
-    [Serializable]
     public class InvalidResponseTypeException : Exception
     {
         public InvalidResponseTypeException() { }
         public InvalidResponseTypeException(string message) : base(message) { }
-        public InvalidResponseTypeException(string message, System.Exception inner) : base(message, inner) { }
-        protected InvalidResponseTypeException(
-          System.Runtime.Serialization.SerializationInfo info,
-          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+        public InvalidResponseTypeException(string message, Exception inner) : base(message, inner) { }
     }
 }

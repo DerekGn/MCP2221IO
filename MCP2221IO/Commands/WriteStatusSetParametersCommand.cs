@@ -59,7 +59,9 @@ namespace MCP2221IO.Commands
         public override void Serialize(Stream stream)
         {
             base.Serialize(stream);
-            stream.WriteByte(0);
+            
+            WriteDnc(stream);
+            
             stream.WriteByte(_cancelCommand);
             stream.WriteByte(_setSpeed);
             stream.WriteByte(_divisor);

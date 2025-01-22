@@ -27,20 +27,20 @@ using System;
 
 namespace MCP2221IOConsole.Commands.Sram
 {
-    [Command(Name="read-settings", Description = "Read MCP2221 SRAM Settings")]
+    [Command(Name="read-sram-settings", Description = "Read MCP2221 SRAM Settings")]
     internal class SramReadSettingsCommand : BaseCommand
     {
         public SramReadSettingsCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
         }
 
-        protected override int OnExecute(CommandLineApplication app, IConsole console)
+        protected override int OnExecute(CommandLineApplication application, IConsole console)
         {
             return ExecuteCommand((device) =>
             {
                 device.ReadSramSettings();
 
-                console.WriteLine(device.SramSettings);
+                console.WriteLine(device.SramSettings!);
 
                 return 0;
             });

@@ -47,7 +47,7 @@ namespace MCP2221IO.Commands
 
             ChipSettings.Serialize(stream);
 
-            stream.Write(Password.Bytes.ToArray());
+            stream.Write(Password.Bytes!.ToArray());
         }
     }
 }

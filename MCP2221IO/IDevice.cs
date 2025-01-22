@@ -54,42 +54,42 @@ namespace MCP2221IO
         /// <summary>
         /// Get the device <see cref="DeviceStatus"/>
         /// </summary>
-        DeviceStatus Status { get; }
+        DeviceStatus? Status { get; }
 
         /// <summary>
         /// Get the device <see cref="ChipSettings"/>
         /// </summary>
-        ChipSettings ChipSettings { get; }
+        ChipSettings? ChipSettings { get; }
 
         /// <summary>
         /// The Flash <see cref="GpSettings"/>
         /// </summary>
-        GpSettings GpSettings { get; }
+        GpSettings? GpSettings { get; }
 
         /// <summary>
         /// The <see cref="Device"/> <see cref="SramSettings"/>
         /// </summary>
-        SramSettings SramSettings { get; }
+        SramSettings? SramSettings { get; }
 
         /// <summary>
         /// Gpio 0 port settings
         /// </summary>
-        GpioPort GpioPort0 { get; }
+        GpioPort? GpioPort0 { get; }
 
         /// <summary>
         /// Gpio 1 port settings
         /// </summary>
-        GpioPort GpioPort1 { get; }
+        GpioPort? GpioPort1 { get; }
 
         /// <summary>
         /// Gpio 2 port settings
         /// </summary>
-        GpioPort GpioPort2 { get; }
+        GpioPort? GpioPort2 { get; }
 
         /// <summary>
         /// Gpio 3 port settings
         /// </summary>
-        GpioPort GpioPort3 { get; }
+        GpioPort? GpioPort3 { get; }
 
         /// <summary>
         /// The USB manufacturer descriptor value
@@ -109,7 +109,7 @@ namespace MCP2221IO
         /// <summary>
         /// The factory serial number as a hex string
         /// </summary>
-        string FactorySerialNumber { get; }
+        string? FactorySerialNumber { get; }
 
         /// <summary>
         /// Unlock the flash
@@ -244,17 +244,17 @@ namespace MCP2221IO
         /// Read a byte from the bus
         /// </summary>
         /// <param name="address">The <see cref="I2cAddress"/></param>
-        /// <param name="pec">Read data with packet error check</param>
+        /// <param name="errorCheck">Perform packet error check on response</param>
         /// <returns>The byte read from the bus</returns>
-        byte SmBusReadByte(I2cAddress address, bool pec = false);
+        byte SmBusReadByte(I2cAddress address, bool errorCheck = false);
 
         /// <summary>
         /// Write a byte to the bus
         /// </summary>
         /// <param name="address">The <see cref="I2cAddress"/></param>
         /// <param name="data">The <see cref="byte"/> data to write</param>
-        /// <param name="pec">Send data with packet error check</param>
-        void SmBusWriteByte(I2cAddress address, byte data, bool pec = false);
+        /// <param name="errorCheck">Perform packet error check on response</param>
+        void SmBusWriteByte(I2cAddress address, byte data, bool errorCheck = false);
 
         /// <summary>
         /// Read a byte from the bus with a command code
@@ -263,7 +263,7 @@ namespace MCP2221IO
         /// <param name="command">The <see cref="byte"/> command</param>
         /// <param name="pec">Read data with packet error check</param>
         /// <returns>The byte read from the bus</returns>
-        byte SmBusReadByteCommand(I2cAddress address, byte command, bool pec = false);
+        byte SmBusReadByteCommand(I2cAddress address, byte command, bool errorCheck = false);
 
         /// <summary>
         /// Write a byte to the bus with a command code
@@ -271,8 +271,8 @@ namespace MCP2221IO
         /// <param name="address">The <see cref="I2cAddress"/></param>
         /// <param name="command">The <see cref="byte"/> command</param>
         /// <param name="data">The <see cref="byte"/> data</param>
-        /// <param name="pec">Send data with packet error check</param>
-        void SmBusWriteByteCommand(I2cAddress address, byte command, byte data, bool pec = false);
+        /// <param name="errorCheck">Perform packet error check on response</param>
+        void SmBusWriteByteCommand(I2cAddress address, byte command, byte data, bool errorCheck = false);
 
         /// <summary>
         /// Read a <see cref="short"/> from the bus with a command code
@@ -281,7 +281,7 @@ namespace MCP2221IO
         /// <param name="command">The <see cref="byte"/> command</param>
         /// <param name="pec">Read data with packet error check</param>
         /// <returns>The short read from the bus</returns>
-        short SmBusReadShortCommand(I2cAddress address, byte command, bool pec = false);
+        short SmBusReadShortCommand(I2cAddress address, byte command, bool errorCheck = false);
 
         /// <summary>
         /// Write a <see cref="short"/> to the bus with a command code
@@ -289,8 +289,8 @@ namespace MCP2221IO
         /// <param name="address">The <see cref="I2cAddress"/></param>
         /// <param name="command">The <see cref="byte"/> command</param>
         /// <param name="data">The <see cref="short"/> data</param>
-        /// <param name="pec">Send data with packet error check</param>
-        void SmBusWriteShortCommand(I2cAddress address, byte command, short data, bool pec = false);
+        /// <param name="errorCheck">Perform packet error check on response</param>
+        void SmBusWriteShortCommand(I2cAddress address, byte command, short data, bool errorCheck = false);
 
         /// <summary>
         /// Read a <see cref="int"/> from the bus with a command code
@@ -299,7 +299,7 @@ namespace MCP2221IO
         /// <param name="command">The <see cref="byte"/> command</param>
         /// <param name="pec">Read data with packet error check</param>
         /// <returns>Returns an <see cref="int"/> read from the bus</returns>
-        int SmBusReadIntCommand(I2cAddress address, byte command, bool pec = false);
+        int SmBusReadIntCommand(I2cAddress address, byte command, bool errorCheck = false);
 
         /// <summary>
         /// Write a <see cref="int"/> to the bus with a command code
@@ -307,8 +307,8 @@ namespace MCP2221IO
         /// <param name="address">The <see cref="I2cAddress"/></param>
         /// <param name="command">The <see cref="byte"/> command</param>
         /// <param name="data">The <see cref="short"/> data</param>
-        /// <param name="pec">Send data with packet error check</param>
-        void SmBusWriteIntCommand(I2cAddress address, byte command, int data, bool pec = false);
+        /// <param name="errorCheck">Perform packet error check on response</param>
+        void SmBusWriteIntCommand(I2cAddress address, byte command, int data, bool errorCheck = false);
 
         /// <summary>
         /// Read a <see cref="long"/> from the bus with a command code
@@ -317,7 +317,7 @@ namespace MCP2221IO
         /// <param name="command">The <see cref="byte"/> command</param>
         /// <param name="pec">Read data with packet error check</param>
         /// <returns>The long int value read from the bus</returns>
-        long SmBusReadLongCommand(I2cAddress address, byte command, bool pec = false);
+        long SmBusReadLongCommand(I2cAddress address, byte command, bool errorCheck = false);
 
         /// <summary>
         /// Write a <see cref="long"/> to the bus with a command code
@@ -325,8 +325,8 @@ namespace MCP2221IO
         /// <param name="address">The <see cref="I2cAddress"/></param>
         /// <param name="command">The <see cref="byte"/> command</param>
         /// <param name="data">The <see cref="short"/> data</param>
-        /// <param name="pec">Send data with packet error check</param>
-        void SmBusWriteLongCommand(I2cAddress address, byte command, long data, bool pec = false);
+        /// <param name="errorCheck">Perform packet error check on response</param>
+        void SmBusWriteLongCommand(I2cAddress address, byte command, long data, bool errorCheck = false);
 
         /// <summary>
         /// Read a block of bytes from the bus with a command code
@@ -336,7 +336,7 @@ namespace MCP2221IO
         /// <param name="count">The number of bytes to read from the bus</param>
         /// <param name="pec">Read data with packet error check</param>
         /// <returns>The <see cref="IList{T}"/> of <see cref="byte"/> read from the bus</returns>
-        IList<byte> SmBusBlockRead(I2cAddress address, byte command, byte count, bool pec = false);
+        IList<byte> SmBusBlockRead(I2cAddress address, byte command, byte count, bool errorCheck = false);
 
         /// <summary>
         /// Write a block of bytes to the bus with a command code
@@ -344,7 +344,7 @@ namespace MCP2221IO
         /// <param name="address">The <see cref="I2cAddress"/></param>
         /// <param name="command">The <see cref="byte"/> command</param>
         /// <param name="block">The <see cref="IList{T}"/> of <see cref="byte"/></param>
-        /// <param name="pec">Send data with packet error check</param>
-        void SmBusBlockWrite(I2cAddress address, byte command, IList<byte> block, bool pec = false);
+        /// <param name="errorCheck">Perform packet error check on response</param>
+        void SmBusBlockWrite(I2cAddress address, byte command, IList<byte> block, bool errorCheck = false);
     }
 }

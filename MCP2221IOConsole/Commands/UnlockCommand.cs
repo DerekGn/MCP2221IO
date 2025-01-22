@@ -34,13 +34,14 @@ namespace MCP2221IOConsole.Commands
     {
         public UnlockCommand(IServiceProvider serviceProvider) : base(serviceProvider)
         {
+            Password = string.Empty;
         }
 
         [Required]
         [Option(Templates.Password, "The 8 byte password value", CommandOptionType.SingleValue)]
         public string Password { get; set; }
 
-        protected override int OnExecute(CommandLineApplication app, IConsole console)
+        protected override int OnExecute(CommandLineApplication application, IConsole console)
         {
             return ExecuteCommand((device) =>
             {

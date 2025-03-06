@@ -9,6 +9,7 @@
             2.0.0 Upgraded to .net 7
             3.0.0 Upgraded to .net 8
             4.0.0 Added dnc byte to some command streams
+            4.0.1 Updated dependencies
         </PackageReleaseNotes>
         <Company>Derek Goslin</Company>
         <Authors>Derek Goslin</Authors>
@@ -21,10 +22,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="HidSharp" Version="2.1.0" />
-        <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.1" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.1" />
-        <PackageReference Include="System.Text.Json" Version="9.0.1" />
+        <PackageReference Include="HidSharp" Version="2.*" />
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="9.*" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.*" />
+        <PackageReference Include="System.Text.Json" Version="9.*" />
     </ItemGroup>
 
     <ItemGroup>

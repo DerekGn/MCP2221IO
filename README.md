@@ -1,6 +1,6 @@
 ![GitHub Actions](https://github.com/DerekGn/MCP2221IO/actions/workflows/build.yml/badge.svg)
 
-[![NuGet Badge](https://buildstats.info/nuget/MCP2221IO)](https://www.nuget.org/packages/MCP2221IO/)
+[![NuGet](https://img.shields.io/nuget/v/MCP2221IO.svg?style=flat-square)](https://www.nuget.org/packages/MCP2221IO/)
 
 # MCP2221IO
 

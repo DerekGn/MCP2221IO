@@ -25,6 +25,10 @@
     </ItemGroup>
 
     <ItemGroup>
+        <AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" />
+    </ItemGroup>
+
+    <ItemGroup>
         <ProjectReference Include="..\MCP2221IO\MCP2221IO.csproj" />
     </ItemGroup>
 

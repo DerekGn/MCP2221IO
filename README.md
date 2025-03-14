@@ -1,8 +1,8 @@
+# MCP2221IO
+
 ![GitHub Actions](https://github.com/DerekGn/MCP2221IO/actions/workflows/build.yml/badge.svg)
 
 [![NuGet](https://img.shields.io/nuget/v/MCP2221IO.svg?style=flat-square)](https://www.nuget.org/packages/MCP2221IO/)
-
-# MCP2221IO
 
 A .Net Core library to interact with Usb [MCP2221](https://www.microchip.com/wwwproducts/en/MCP2221)/[MCP2221A](https://www.microchip.com/wwwproducts/en/MCP2221A) devices. For example the [ADM00559](https://www.microchip.com/en-us/development-tool/ADM00559) device.
 

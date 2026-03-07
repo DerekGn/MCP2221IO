@@ -25,19 +25,11 @@
 using MCP2221IO.Settings;
 using System.Collections.Generic;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace MCP2221IO.UnitTests
 {
     public class PasswordTests
     {
-        private readonly ITestOutputHelper _output;
-
-        public PasswordTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
-
         [Fact]
         public void TestOk()
         {

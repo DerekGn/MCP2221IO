@@ -26,19 +26,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace MCP2221IO.UnitTests
 {
     public class I2cAddressTests
     {
-        private readonly ITestOutputHelper _output;
-
-        public I2cAddressTests(ITestOutputHelper output)
-        {
-            _output = output;
-        }
-
         [Fact]
         public void TestSevenBitAddress()
         {

@@ -1,16 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <Nullable>enable</Nullable>
-        <Version>4.0.1</Version>
+        <Version>5.0.0</Version>
         <PackageReleaseNotes>
-            1.0.0 Initial Version
-            2.0.0 Upgraded to .net 7
-            3.0.0 Upgraded to .net 8
-            4.0.0 Added dnc byte to some command streams
-            4.0.1 Updated dependencies
-        </PackageReleaseNotes>
+			1.0.0 Initial Version
+			2.0.0 Upgraded to .net 7
+			3.0.0 Upgraded to .net 8
+			4.0.0 Added dnc byte to some command streams
+			4.0.1 Updated dependencies
+			5.0.0 Updated Net Core 10
+		</PackageReleaseNotes>
         <Company>Derek Goslin</Company>
         <Authors>Derek Goslin</Authors>
         <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -23,9 +24,9 @@
 
     <ItemGroup>
         <PackageReference Include="HidSharp" Version="2.*" />
-        <PackageReference Include="Microsoft.Extensions.Logging" Version="9.*" />
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.*" />
-        <PackageReference Include="System.Text.Json" Version="9.*" />
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="10.*" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.*" />
+        <PackageReference Include="System.Text.Json" Version="10.*" />
     </ItemGroup>
 
     <ItemGroup>
